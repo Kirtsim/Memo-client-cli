@@ -1,0 +1,13 @@
+.clangd
+
+build
+log
+src/model/*.h
+src/model/*.cc
+
+compile_commands.json
+compile_flags.txt
+
+# VIM
+*.swp
+
