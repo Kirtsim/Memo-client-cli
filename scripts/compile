@@ -28,4 +28,7 @@ echo "*******************************"
 echo "++ Build successfull"
 echo ""
 
-rm $PROJECT_PATH/log/*.log
+if [ -d  $PROJECT_PATH/log ]
+then
+    rm $PROJECT_PATH/log/*.log
+fi
