@@ -38,7 +38,6 @@ int main(int argc, char** argv)
     client.deleteMemo("Test-memo-id-delete-102930143290");
     client.deleteTag("Test-tag-name-delete-");
 
-    std::cout << "Press <Enter> to stop the client." << std::endl << std::endl;
     std::cin.ignore();
 
     client.stop();
