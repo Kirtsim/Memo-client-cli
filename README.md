@@ -11,5 +11,5 @@ $ git clone git@github.com:Kirtsim/Memo-client-cli.git
 $ cd Memo-client-cli
 $ ./run
 ```
-The -run- script builds the project and starts the client. The client can be built without being started and vice versa. Execute `$ ./run help` to see all the options.
+The ***run*** script builds the project and starts the client. The client can be built without being started and vice versa. Execute `$ ./run help` to see all the options.
 If you only need to run the client, run the script as: `$ ./run client`.
