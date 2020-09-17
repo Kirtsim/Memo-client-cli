@@ -8,9 +8,23 @@ set(CMAKE_CXX_COMPILER /usr/bin/clang++)
 set(BASEPATH "${CMAKE_SOURCE_DIR}/src/")
 
 set(SOURCES src/main.cpp
-            src/Client.cpp)
+            src/Client.cpp
+            src/view/BaseView.cpp
+            src/view/MenuView.cpp
+            src/view/ListMemoView.cpp
+            src/remote/ListMemoCall.cpp
+            src/manager/ViewManager.cpp)
 
-set(HEADERS memo/Client.hpp)
+set(HEADERS memo/Client.hpp
+            src/view/IView.hpp
+            src/view/BaseView.hpp
+            src/view/MenuView.hpp
+            src/view/ListMemoView.hpp
+            src/remote/Call.hpp
+            src/remote/BaseCall.hpp
+            src/remote/ListMemoCall.hpp
+            src/manager/ViewManager.hpp)
+
 
 set(PROTO_SVC_FILES TagSvc.proto
                     MemoSvc.proto)

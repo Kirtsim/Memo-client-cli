@@ -3,7 +3,7 @@
 #include <iostream>
 #include <thread>
 
-using memo::client::Client;
+using memo::Client;
 
 int main(int argc, char** argv)
 {
@@ -24,24 +24,7 @@ int main(int argc, char** argv)
     const std::string ipAddress = argv[1];
     const std::string port = argv[2];
     Client client(ipAddress+":"+port);
-
-    // Spawn reader thread that loops indefinitely
-    std::thread thread_ = std::thread(&Client::AsyncCompleteRpc, &client);
-
-    client.memoSearch("Test title1");
-    client.tagSearch("Test tagName");
-    client.memoSearchById("Test-id-102934048320");
-    client.createMemo("Test-memo-create");
-    client.createTag("Test-tag-create");
-    client.updateMemo("Test-memo-update");
-    client.updateTag("Test-tag-update");
-    client.deleteMemo("Test-memo-id-delete-102930143290");
-    client.deleteTag("Test-tag-name-delete-");
-
-    std::cin.ignore();
-
-    client.stop();
-    thread_.join();
+    client.run();
 
     return 0;
 }

@@ -2,35 +2,30 @@
 #include "model/MemoSvc.grpc.pb.h"
 #include "model/TagSvc.grpc.pb.h"
 
-#include <grpcpp/impl/codegen/completion_queue.h>
 #include <string>
+#include <memory>
 
 namespace memo {
-namespace client {
+namespace manager {
+    class ViewManager;
+} // namespace manager
 
 class Client
 {
 public:
     explicit Client(const std::string& iAddress);
 
-    void memoSearch(const std::string& iTitle);
-    void memoSearchById(const std::string& iId);
-    void createMemo(const std::string& iTitle);
-    void updateMemo(const std::string& iTitle);
-    void deleteMemo(const std::string& iId);
-    void tagSearch(const std::string& iTitle);
-    void createTag(const std::string& iName);
-    void updateTag(const std::string& iName);
-    void deleteTag(const std::string& iName);
-    void stop();
-    void AsyncCompleteRpc();
+    /// Retrieves the top View from the ViewManager and displays it.
+    /// If theres is no view to be dipslayed the client terminates.
+    void run();
+
+    model::MemoSvc::Stub& getMemoStub();
+    model::TagSvc::Stub& getTagStub();
 
 private:
-
     std::unique_ptr<model::MemoSvc::Stub> memoStub_;
-    std::unique_ptr<model::TagSvc::Stub> tagStub_;
-    grpc::CompletionQueue cq_;
+    std::unique_ptr<model::TagSvc::Stub>  tagStub_;
+    std::shared_ptr<manager::ViewManager> viewManager_;
 };
 
-} // namespace client
 } // namespace memo
