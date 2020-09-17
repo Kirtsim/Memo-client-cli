@@ -6,15 +6,9 @@
 #include <memory>
 
 namespace memo {
-namespace remote{
-    class Call;
-}
 namespace manager {
     class ViewManager;
 } // namespace manager
-namespace view {
-    class Views;
-} // namespace view
 
 class Client
 {
