@@ -184,7 +184,10 @@ void ListMemoView::printMemosOnPage(const model::MemoSearchRs& iResponse, int iP
     {
         sstream << "[" << (i+1) << "] " << memos[i].title() << "\n";
     }
-    print(sstream.str());
+    sstream << "\n";
+    sstream << "page " << (currentPage_+1) << "/" << getPageCount(memoCount);
+
+    println(sstream.str());
 }
 
 void ListMemoView::setButtons(const model::MemoSearchRs& iResponse)
@@ -206,6 +209,13 @@ int ListMemoView::getMemoCountOnPage(const int iPage, const int iTotalCount) con
     const int indexOfFirst = getIndexOfFirstOnPage(iPage, iTotalCount);
     const int endIndex = std::min(iTotalCount, indexOfFirst + pageSize_);
     return endIndex - indexOfFirst;
+}
+
+int ListMemoView::getPageCount(int memoCount) const
+{
+    if (pageSize_ == 0)
+        return 0;
+    return memoCount / pageSize_ + 1;
 }
 
 } // namespace view

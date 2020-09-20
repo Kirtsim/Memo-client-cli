@@ -37,6 +37,7 @@ private:
     void setButtons(const model::MemoSearchRs& iResponse);
     int getIndexOfFirstOnPage(int iPage, int iTotalCount) const;
     int getMemoCountOnPage(int iPage, int iTotalCount) const;
+    int getPageCount(int memoCount) const;
 
 
     bool responseStatusOk_;
