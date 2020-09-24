@@ -126,6 +126,6 @@ target_link_libraries(memo_client_cli
     ${_REFLECTION}
     ${_GRPC_GRPCPP}
     ${_PROTOBUF_LIBPROTOBUF})
-
+target_link_libraries(memo_client_cli ncurses)
 # needed for "absolute" include paths
 target_include_directories(memo_client_cli PRIVATE ${BASEPATH})
