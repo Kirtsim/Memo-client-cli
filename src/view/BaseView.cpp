@@ -168,7 +168,7 @@ int BaseView::getWidth() const
 
 Size BaseView::getSize() const
 {
-    return { width_, height_ };
+    return { height_, width_ };
 }
 
 void BaseView::setPosY(int iY)
