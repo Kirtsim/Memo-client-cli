@@ -30,20 +30,16 @@ private:
 } // namespace view
 } // namespace memo
 
-//#include <ncursesw/curses.h>
-
 struct _win_st;
 
 using Window_t = _win_st;
 using WindowPtr_t = std::unique_ptr<Window_t>;
 
 namespace memo {
-    class Client;
-namespace manager {
-    class ViewManager;
-}
 namespace ui {
-namespace view {
+namespace widget {
+    class Text;
+} // namespace widget
 
 class BaseView : public IView
 {
@@ -70,11 +66,11 @@ public:
     int getWidth() const override;
     Size getSize() const override;
 
-    void setPosY(int iY) override;
-    void setPosX(int iX) override;
+    void setY(int iY) override;
+    void setX(int iX) override;
     void setPosition(const Position& iPos) override;
-    int getPosY() const override;
-    int getPosX() const override;
+    int getY() const override;
+    int getX() const override;
     Position getPosition() const override;
 
     void setParentView(const IView::Ptr& iParent) override;
@@ -87,6 +83,9 @@ public:
 //  void focus();
 
 protected:
+    virtual void populateWindow(Window_t& ioWindow);
+
+    void displayText(const widget::Text& iText);
     void eraseWindow();
     Size getParentSize() const;
     Position getParentPosition() const;
@@ -105,6 +104,5 @@ private:
     WindowPtr_t window_;
 };
 
-} // namespace view
 } // namespace ui
 } // namespace memo

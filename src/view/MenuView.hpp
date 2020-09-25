@@ -23,3 +23,29 @@ private:
 };
 } // namespace view
 } // namespace memo
+
+namespace memo {
+namespace ui {
+
+class MenuView : public BaseView
+{
+public:
+    explicit MenuView(const IView::Ptr& iParent=nullptr);
+    explicit MenuView(const Size& iSize, const IView::Ptr& iParent=nullptr);
+    MenuView(const Size& iSize, const Position& iPosition, const IView::Ptr& iParent=nullptr);
+    ~MenuView();
+
+    MenuView(const MenuView&) = delete;
+    MenuView(const MenuView&&) = delete;
+    MenuView& operator=(const MenuView&) = delete;
+
+    void focus() override;
+
+protected:
+    void populateWindow(Window_t& ioWindow) override;
+};
+
+} // namespace ui
+} // namespace memo
+
+

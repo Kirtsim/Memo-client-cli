@@ -106,3 +106,42 @@ void MenuView::handleInvalidOption()
 
 } // namespace view
 } // namespace memo
+
+#include "view/widget/Text.hpp"
+#include "view/tools/Tools.hpp"
+#include <ncursesw/curses.h>
+
+namespace memo {
+namespace ui {
+
+MenuView::MenuView(const IView::Ptr& iParent) :
+    MenuView({ LINES, COLS }, { 0, 0 }, iParent)
+{}
+
+MenuView::MenuView(const Size& iSize, const IView::Ptr& iParent) :
+    MenuView(iSize, { 0, 0 }, iParent)
+{}
+
+MenuView::MenuView(const Size& iSize, const Position& iPosition, const IView::Ptr& iParent) :
+    BaseView(iSize, iPosition, iParent)
+{}
+
+MenuView::~MenuView() = default;
+
+void MenuView::focus()
+{
+
+}
+
+void MenuView::populateWindow(Window_t& ioWindow)
+{
+    widget::Text title("| Welcome to the Memo-client-cli |\n");
+    tools::Tools::centerComponent(title, tools::CenterType::HORIZONTAL, *this);
+    title.setY(1);
+    displayText(title);
+}
+
+} // namespace ui
+} // namespace memo
+
+
