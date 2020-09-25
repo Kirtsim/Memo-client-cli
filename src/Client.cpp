@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include <grpcpp/grpcpp.h>
+#include <ncursesw/curses.h>
 
 namespace memo {
 
@@ -29,6 +30,21 @@ void Client::run()
         view->display();
     }
     std::cout << "Closing client.\n";
+}
+
+void Client::runcurses()
+{
+    initscr();
+    cbreak();
+    keypad(stdscr, TRUE);
+    noecho();
+    refresh();
+
+    ui::MenuView menu;
+    menu.refresh();
+
+    while(getch() != 'q');
+    endwin();
 }
 
 model::MemoSvc::Stub& Client::getMemoStub()

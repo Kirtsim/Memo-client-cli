@@ -41,11 +41,11 @@ void BaseView::println(const std::string& iContent) const
 } // namespace view
 } // namespace memo
 
+#include "view/widget/Text.hpp"
 #include <ncursesw/curses.h>
 
 namespace memo {
 namespace ui {
-namespace view {
 
 const Border BORDER_DEFAULT {
     ACS_HLINE, ACS_VLINE, ACS_HLINE, ACS_VLINE,
@@ -95,13 +95,24 @@ void BaseView::refresh()
     wresize(window_.get(), height_, width_);
     mvwin(window_.get(), y, x);
     box(window_.get(), border_.left, border_.top);
+
+    populateWindow(*window_);
     wrefresh(window_.get());
 }
 
+void BaseView::populateWindow(Window_t& ioWindow)
+{}
+
 Size BaseView::getParentSize() const
 {
-    if (parentView_) parentView_->getSize();
-    return { LINES, COLS }; // ncurses' defined dimensions
+    if (!parentView_)
+    {
+        Size size;
+        size.width = COLS;
+        size.height = LINES;
+        return size;
+    }
+    return parentView_->getSize();
 }
 
 Position BaseView::getParentPosition() const
@@ -171,35 +182,38 @@ Size BaseView::getSize() const
     return { height_, width_ };
 }
 
-void BaseView::setPosY(int iY)
+void BaseView::setY(int iY)
 {
     y_ = iY;
 }
 
-void BaseView::setPosX(int iX)
+void BaseView::setX(int iX)
 {
     x_ = iX;
 }
 
 void BaseView::setPosition(const Position& iPos)
 {
-    setPosY(iPos.y);
-    setPosX(iPos.x);
+    setY(iPos.y);
+    setX(iPos.x);
 }
 
-int BaseView::getPosY() const
+int BaseView::getY() const
 {
     return y_;
 }
 
-int BaseView::getPosX() const
+int BaseView::getX() const
 {
     return x_;
 }
 
 Position BaseView::getPosition() const
 {
-    return { y_, x_ };
+    Position position;
+    position.x = x_;
+    position.y = y_;
+    return position;
 }
 
 void BaseView::setParentView(const IView::Ptr& iParent)
@@ -223,11 +237,15 @@ Border BaseView::getBorder() const
     return border_;
 }
 
+void BaseView::displayText(const widget::Text& iText)
+{
+    mvwprintw(window_.get(), iText.getY(), iText.getX(), iText.getText().c_str());
+}
+
 Window_t& BaseView::getWindow()
 {
     return *window_;
 }
 
-} // namespace view
 } // namespace ui
 } // namespace memo

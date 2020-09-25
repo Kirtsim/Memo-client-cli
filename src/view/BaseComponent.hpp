@@ -33,5 +33,3 @@ private:
 
 } // namespace ui
 } // namespace memo
-
-

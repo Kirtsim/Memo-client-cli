@@ -9,17 +9,24 @@ set(BASEPATH "${CMAKE_SOURCE_DIR}/src/")
 
 set(SOURCES src/main.cpp
             src/Client.cpp
+            src/view/BaseComponent.cpp
             src/view/BaseView.cpp
             src/view/MenuView.cpp
             src/view/ListMemoView.cpp
+            src/view/widget/Text.cpp
+            src/view/tools/Tools.cpp
             src/remote/ListMemoCall.cpp
             src/manager/ViewManager.cpp)
 
 set(HEADERS memo/Client.hpp
+            src/view/IComponent.hpp
+            src/view/BaseComponent.hpp
             src/view/IView.hpp
             src/view/BaseView.hpp
             src/view/MenuView.hpp
             src/view/ListMemoView.hpp
+            src/view/widget/Text.hpp
+            src/view/tools/Tools.hpp
             src/remote/Call.hpp
             src/remote/BaseCall.hpp
             src/remote/ListMemoCall.hpp

@@ -1,8 +1,5 @@
 #include "view/widget/Text.hpp"
 
-#include <map>
-#include <algorithm>
-
 namespace memo {
 namespace ui {
 namespace widget {
@@ -61,6 +58,8 @@ Size TextSize(const std::string& iText)
         lineCount++;
         pos = iText.find('\n', lastPos + 1);
     }
+    maxLineLen = std::max(maxLineLen, static_cast<int>(iText.size()) - lastPos);
+
     Size size;
     size.width = maxLineLen;
     size.height = lineCount;

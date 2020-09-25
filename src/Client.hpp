@@ -19,6 +19,8 @@ public:
     /// If theres is no view to be dipslayed the client terminates.
     void run();
 
+    void runcurses();
+
     model::MemoSvc::Stub& getMemoStub();
     model::TagSvc::Stub& getTagStub();
 
