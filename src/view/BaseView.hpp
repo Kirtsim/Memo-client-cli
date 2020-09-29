@@ -30,6 +30,8 @@ private:
 } // namespace view
 } // namespace memo
 
+#include <unordered_set>
+
 struct _win_st;
 
 using Window_t = _win_st;
@@ -44,9 +46,9 @@ namespace widget {
 class BaseView : public IView
 {
 public:
-    explicit BaseView(const IView::Ptr& iParent=nullptr);
-    explicit BaseView(const Size& iSize, const IView::Ptr& iParent=nullptr);
-    BaseView(const Size& iSize, const Position& iPosition, const IView::Ptr& iParent=nullptr);
+    explicit BaseView(IView* iParent=nullptr);
+    explicit BaseView(const Size& iSize, IView* iParent=nullptr);
+    BaseView(const Size& iSize, const Position& iPosition, IView* iParent=nullptr);
 
     virtual ~BaseView();
     BaseView(const BaseView&) = delete;
@@ -55,6 +57,8 @@ public:
 
     void saveState() override;
     void refresh() override;
+
+    virtual void focus() override;
 
     void setVisible(bool iVisible) override;
     bool isVisible() const override;
@@ -73,18 +77,18 @@ public:
     int getX() const override;
     Position getPosition() const override;
 
-    void setParentView(const IView::Ptr& iParent) override;
-    const IView::Ptr& getParentView() override;
+    void setParentView(IView* iParent) override;
+    IView* getParentView() override;
 
     void setBorder(const Border& iBorder) override;
     Border getBorder() const override;
 
-/// *** IView methods not imlemented ***
-//  void focus();
-
 protected:
-    virtual void populateWindow(Window_t& ioWindow);
+    virtual void positionComponents(Window_t& ioWindow);
+    virtual void displayContent(Window_t& ioWindow);
 
+    void registerSubView(IView::Ptr iSubView);
+    void removeSubView(IView::Ptr iSubView);
     void displayText(const widget::Text& iText);
     void eraseWindow();
     Size getParentSize() const;
@@ -95,13 +99,14 @@ private:
     void applyBorder();
 
 private:
-    IView::Ptr parentView_;
+    IView* parentView_;
     int width_, height_;
     int x_, y_;
     Border border_;
 
     bool visible_;
     WindowPtr_t window_;
+    std::unordered_set<IView::Ptr> subViews_;
 };
 
 } // namespace ui

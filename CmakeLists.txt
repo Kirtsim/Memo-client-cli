@@ -11,7 +11,8 @@ set(SOURCES src/main.cpp
             src/Client.cpp
             src/view/BaseComponent.cpp
             src/view/BaseView.cpp
-            src/view/MenuView.cpp
+            src/view/home/HomeView.cpp
+            src/view/home/MenuView.cpp
             src/view/ListMemoView.cpp
             src/view/widget/Text.cpp
             src/view/tools/Tools.cpp
@@ -23,7 +24,8 @@ set(HEADERS memo/Client.hpp
             src/view/BaseComponent.hpp
             src/view/IView.hpp
             src/view/BaseView.hpp
-            src/view/MenuView.hpp
+            src/view/home/HomeView.hpp
+            src/view/home/MenuView.hpp
             src/view/ListMemoView.hpp
             src/view/widget/Text.hpp
             src/view/tools/Tools.hpp
@@ -134,5 +136,6 @@ target_link_libraries(memo_client_cli
     ${_GRPC_GRPCPP}
     ${_PROTOBUF_LIBPROTOBUF})
 target_link_libraries(memo_client_cli ncurses)
+target_link_libraries(memo_client_cli menu)
 # needed for "absolute" include paths
 target_include_directories(memo_client_cli PRIVATE ${BASEPATH})

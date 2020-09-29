@@ -38,6 +38,7 @@ class IView : public IComponent
 {
 public:
     using Ptr = std::shared_ptr<IView>;
+
     virtual ~IView() = default;
 
     virtual void refresh() = 0;
@@ -48,8 +49,8 @@ public:
     virtual void setVisible(bool visible) = 0;
     virtual bool isVisible() const = 0;
 
-    virtual void setParentView(const IView::Ptr& iParent) = 0;
-    virtual const IView::Ptr& getParentView() = 0;
+    virtual void setParentView(IView* iParent) = 0;
+    virtual IView* getParentView() = 0;
 
     virtual void setBorder(const Border& iBorder) = 0;
     virtual Border getBorder() const = 0;
