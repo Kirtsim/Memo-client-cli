@@ -1,4 +1,4 @@
-#include "view/MenuView.hpp"
+#include "view/home/HomeView.hpp"
 #include "view/ListMemoView.hpp"
 #include "Client.hpp"
 #include "manager/ViewManager.hpp"
@@ -11,14 +11,14 @@ namespace {
     const std::string kPROMPT = "> ";
 }
 
-MenuView::MenuView(Client& iClient, const std::shared_ptr<manager::ViewManager>& iViewManager) :
+HomeView::HomeView(Client& iClient, const std::shared_ptr<manager::ViewManager>& iViewManager) :
     BaseView(iClient, iViewManager)
 {
 }
 
-MenuView::~MenuView() = default;
+HomeView::~HomeView() = default;
 
-void MenuView::display()
+void HomeView::display()
 {
     printMenu();
     print(kPROMPT);
@@ -30,7 +30,7 @@ void MenuView::display()
     }
 }
 
-bool MenuView::processInput(const std::string& iInput)
+bool HomeView::processInput(const std::string& iInput)
 {
     if (iInput.size() > 1)
     {
@@ -80,7 +80,7 @@ bool MenuView::processInput(const std::string& iInput)
     return true;
 }
 
-void MenuView::printMenu() const
+void HomeView::printMenu() const
 {
     std::string options =
         "############################################################\n"
@@ -97,7 +97,7 @@ void MenuView::printMenu() const
     println(options);
 }
 
-void MenuView::handleInvalidOption()
+void HomeView::handleInvalidOption()
 {
     printMenu();
     println("Invalid option.");
@@ -107,41 +107,73 @@ void MenuView::handleInvalidOption()
 } // namespace view
 } // namespace memo
 
+#include "view/home/MenuView.hpp"
 #include "view/widget/Text.hpp"
 #include "view/tools/Tools.hpp"
-#include <ncursesw/curses.h>
+
+#include <ncursesw/menu.h>
 
 namespace memo {
 namespace ui {
 
-MenuView::MenuView(const IView::Ptr& iParent) :
-    MenuView({ LINES, COLS }, { 0, 0 }, iParent)
+
+///////////////////////////////////////////////////////////////
+/// HomeView
+///////////////////////////////////////////////////////////////
+
+HomeView::HomeView(IView* iParent) :
+    HomeView({ LINES, COLS }, { 0, 0 }, iParent)
 {}
 
-MenuView::MenuView(const Size& iSize, const IView::Ptr& iParent) :
-    MenuView(iSize, { 0, 0 }, iParent)
+HomeView::HomeView(const Size& iSize, IView* iParent) :
+    HomeView(iSize, { 0, 0 }, iParent)
 {}
 
-MenuView::MenuView(const Size& iSize, const Position& iPosition, const IView::Ptr& iParent) :
-    BaseView(iSize, iPosition, iParent)
-{}
-
-MenuView::~MenuView() = default;
-
-void MenuView::focus()
+HomeView::HomeView(const Size& iSize, const Position& iPosition, IView* iParent) :
+    BaseView(iSize, iPosition, iParent),
+    windowTitle_(new widget::Text("Welcome to the Memo-client-cli")),
+    errorStatus_(new widget::Text("SOME TEXT")),
+    menuView_(new MenuView)
 {
-
+    registerSubView(menuView_);
 }
 
-void MenuView::populateWindow(Window_t& ioWindow)
+HomeView::~HomeView() = default;
+
+void HomeView::focus()
 {
-    widget::Text title("| Welcome to the Memo-client-cli |\n");
-    tools::Tools::centerComponent(title, tools::CenterType::HORIZONTAL, *this);
-    title.setY(1);
-    displayText(title);
+    keypad(&getWindow(), TRUE);
+    int input;
+    while ((input = wgetch(&getWindow())) != 'q')
+        menuView_->processInput(input);
+    keypad(&getWindow(), FALSE);
+}
+
+void HomeView::setErrorStatus(const std::string& iStatus)
+{
+    errorStatus_->setText(iStatus);
+}
+
+void HomeView::positionComponents(Window_t& ioWindow)
+{
+    windowTitle_->setY(getY() + 2);
+    errorStatus_->setY(getY() + getHeight() - 2);
+    tools::Tools::centerComponent(*windowTitle_, tools::Center::HORIZONTAL, *this);
+    tools::Tools::centerComponent(*errorStatus_, tools::Center::HORIZONTAL, *this);
+
+    Size minMenuSize = menuView_->getMinimumRequiredSize();
+    menuView_->setWidth(minMenuSize.width + 4);
+    menuView_->setHeight(minMenuSize.height + 4);
+    tools::Tools::centerComponent(*menuView_,
+                                  tools::Center::HORIZONTAL | tools::Center::VERTICAL,
+                                  *this);
+}
+
+void HomeView::displayContent(Window_t& ioWindow)
+{
+    displayText(*windowTitle_);
+    displayText(*errorStatus_);
 }
 
 } // namespace ui
 } // namespace memo
-
-

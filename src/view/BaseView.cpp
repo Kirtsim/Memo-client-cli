@@ -52,15 +52,15 @@ const Border BORDER_DEFAULT {
     { ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LLCORNER }
 };
 
-BaseView::BaseView(const IView::Ptr& iParent) :
+BaseView::BaseView(IView* iParent) :
     BaseView({ LINES, COLS }, { 0, 0 }, iParent)
 {}
 
-BaseView::BaseView(const Size& iSize, const IView::Ptr& iParent) :
+BaseView::BaseView(const Size& iSize, IView* iParent) :
     BaseView(iSize, { 0, 0 }, iParent)
 {}
 
-BaseView::BaseView(const Size& iSize, const Position& iPosition, const IView::Ptr& iParent) :
+BaseView::BaseView(const Size& iSize, const Position& iPosition, IView* iParent) :
     parentView_(iParent),
     width_(iSize.width), height_(iSize.height),
     x_(iPosition.x), y_(iPosition.y),
@@ -91,17 +91,20 @@ void BaseView::refresh()
     const int y = parentPos.y + y_;
     const int x = parentPos.x + x_;
 
-    eraseWindow();
+    positionComponents(*window_);
+    displayContent(*window_);
+
     wresize(window_.get(), height_, width_);
     mvwin(window_.get(), y, x);
     box(window_.get(), border_.left, border_.top);
 
-    populateWindow(*window_);
     wrefresh(window_.get());
-}
 
-void BaseView::populateWindow(Window_t& ioWindow)
-{}
+    for (const auto& subView : subViews_)
+    {
+        subView->refresh();
+    }
+}
 
 Size BaseView::getParentSize() const
 {
@@ -216,12 +219,12 @@ Position BaseView::getPosition() const
     return position;
 }
 
-void BaseView::setParentView(const IView::Ptr& iParent)
+void BaseView::setParentView(IView* iParent)
 {
     parentView_ = iParent;
 }
 
-const IView::Ptr& BaseView::getParentView()
+IView* BaseView::getParentView()
 {
     return parentView_;
 }
@@ -246,6 +249,24 @@ Window_t& BaseView::getWindow()
 {
     return *window_;
 }
+
+void BaseView::registerSubView(IView::Ptr iSubView)
+{
+    subViews_.insert(iSubView);
+}
+
+void BaseView::removeSubView(IView::Ptr iSubView)
+{
+    subViews_.erase(iSubView);
+}
+
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+void BaseView::focus() {}
+void BaseView::displayContent(Window_t& ioWindow) {}
+void BaseView::positionComponents(Window_t& ioWindow) {}
+#pragma GCC diagnostic pop
 
 } // namespace ui
 } // namespace memo

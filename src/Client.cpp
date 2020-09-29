@@ -1,5 +1,5 @@
 #include "Client.hpp"
-#include "view/MenuView.hpp"
+#include "view/home/HomeView.hpp"
 #include "manager/ViewManager.hpp"
 
 #include <iostream>
@@ -18,7 +18,7 @@ Client::Client(const std::string& iAddress) :
                     grpc::InsecureChannelCredentials()))),
     viewManager_(new manager::ViewManager)
 {
-    viewManager_->addView(std::make_shared<view::MenuView>(*this, viewManager_));
+    viewManager_->addView(std::make_shared<view::HomeView>(*this, viewManager_));
 }
 
 void Client::run()
@@ -39,11 +39,15 @@ void Client::runcurses()
     keypad(stdscr, TRUE);
     noecho();
     refresh();
+    curs_set(0);
 
-    ui::MenuView menu;
-    menu.refresh();
+    ui::HomeView home;
+    home.refresh();
+    home.focus();
 
     while(getch() != 'q');
+
+    curs_set(1);
     endwin();
 }
 

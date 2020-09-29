@@ -12,10 +12,9 @@ struct Bounds
     int startX, endX;
 };
 
-enum CenterType
-{
-    HORIZONTAL = 1,
-    VERTICAL = 2,
+namespace Center {
+    const int HORIZONTAL = 1;
+    const int VERTICAL = 2;
 };
 
 class Tools
@@ -27,11 +26,11 @@ public:
     Tools& operator=(const Tools&&) = delete;
 
     /// Center the given ui component within a parent component
-    static void centerComponent(ui::IComponent& ioComponent, CenterType centerType,
+    static void centerComponent(ui::IComponent& ioComponent, int centerType,
                                 const ui::IComponent& iParent);
 
     /// Center the given ui component within the specified bounds
-    static void centerComponent(ui::IComponent& ioComponent, CenterType centerType,
+    static void centerComponent(ui::IComponent& ioComponent, int centerType,
                                 const Bounds& bounds);
 
     /// Retrieves the ui component's bounds
