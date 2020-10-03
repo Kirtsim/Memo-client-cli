@@ -20,6 +20,7 @@ set(SOURCES src/main.cpp
             src/manager/ViewManager.cpp)
 
 set(HEADERS memo/Client.hpp
+            src/controller/IController.hpp
             src/view/IComponent.hpp
             src/view/BaseComponent.hpp
             src/view/IView.hpp
