@@ -17,9 +17,11 @@ set(SOURCES src/main.cpp
             src/view/widget/Text.cpp
             src/view/tools/Tools.cpp
             src/remote/ListMemoCall.cpp
+            src/manager/ControllerManager.cpp
             src/manager/ViewManager.cpp)
 
 set(HEADERS memo/Client.hpp
+            src/controller/IController.hpp
             src/view/IComponent.hpp
             src/view/BaseComponent.hpp
             src/view/IView.hpp
@@ -32,6 +34,7 @@ set(HEADERS memo/Client.hpp
             src/remote/Call.hpp
             src/remote/BaseCall.hpp
             src/remote/ListMemoCall.hpp
+            src/manager/ControllerManager.hpp
             src/manager/ViewManager.hpp)
 
 
