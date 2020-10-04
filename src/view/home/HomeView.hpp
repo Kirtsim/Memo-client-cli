@@ -44,6 +44,8 @@ public:
     HomeView(const HomeView&&) = delete;
     HomeView& operator=(const HomeView&) = delete;
 
+    const std::shared_ptr<MenuView>& getMenuView();
+
     void focus() override;
 
     void setErrorStatus(const std::string& iStatus);
