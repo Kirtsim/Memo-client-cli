@@ -8,7 +8,10 @@
 namespace memo {
 namespace manager {
     class ViewManager;
+    class ControllerManager;
 } // namespace manager
+
+class Resources;
 
 class Client
 {
@@ -20,6 +23,7 @@ public:
     void run();
 
     void runcurses();
+    void runcontroller();
 
     model::MemoSvc::Stub& getMemoStub();
     model::TagSvc::Stub& getTagStub();
@@ -28,6 +32,8 @@ private:
     std::unique_ptr<model::MemoSvc::Stub> memoStub_;
     std::unique_ptr<model::TagSvc::Stub>  tagStub_;
     std::shared_ptr<manager::ViewManager> viewManager_;
+    std::shared_ptr<manager::ControllerManager> controllerManager_;
+    std::shared_ptr<Resources> resources_;
 };
 
 } // namespace memo

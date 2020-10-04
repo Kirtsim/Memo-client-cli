@@ -140,12 +140,17 @@ HomeView::HomeView(const Size& iSize, const Position& iPosition, IView* iParent)
 
 HomeView::~HomeView() = default;
 
+const std::shared_ptr<MenuView>& HomeView::getMenuView()
+{
+    return menuView_;
+}
+
 void HomeView::focus()
 {
     keypad(&getWindow(), TRUE);
-    int input;
-    while ((input = wgetch(&getWindow())) != 'q')
-        menuView_->processInput(input);
+//    int input;
+//    while ((input = wgetch(&getWindow())) != 'q')
+//        menuView_->processInput(input);
     keypad(&getWindow(), FALSE);
 }
 

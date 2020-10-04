@@ -33,8 +33,8 @@ MenuView::MenuView(const Size& iSize, const Position& iPosition, IView* iParent)
     menu_.reset(new_menu((ITEM**)menuItems_.data()));
     set_menu_win(menu_.get(), &getWindow());
     set_menu_sub(menu_.get(), menuSubWindow_.get());
-    set_menu_format(menu_.get(), 3, 2); // item rows & cols
-    set_menu_mark(menu_.get(), " >> "); // selection mark
+    setLayout(3, 2); // rows, cols
+    setSelectionMark(" >> ");
 
     post_menu(menu_.get());
 
@@ -52,24 +52,48 @@ MenuView::~MenuView()
     delwin(menuSubWindow_.release());
 }
 
-bool MenuView::processInput(unsigned int iInput)
+void MenuView::setMenuItems(const std::vector<MenuItem>& iItems)
 {
-    auto* menu = menu_.get();
-    switch (iInput)
-    {
-        case KEY_DOWN:
-            menu_driver(menu, REQ_DOWN_ITEM); refresh(); return true;
-        case KEY_UP:
-            menu_driver(menu, REQ_UP_ITEM); refresh(); return true;
-        case KEY_LEFT:
-            menu_driver(menu, REQ_LEFT_ITEM); refresh(); return true;
-        case KEY_RIGHT:
-            menu_driver(menu, REQ_RIGHT_ITEM); refresh(); return true;
-        case KEY_ENTER:
-            // TODO: execute
-            return true;
-    }
-    return false;
+    // TODO: setMenuItems implementation
+}
+
+void MenuView::setLayout(int iRows, int iCols)
+{
+    set_menu_format(menu_.get(), iRows, iCols);
+}
+
+void MenuView::setSelectionMark(const std::string& iMark)
+{
+    set_menu_mark(menu_.get(), iMark.c_str()); // selection mark
+}
+
+int MenuView::navigateMenuUp()
+{
+    menu_driver(menu_.get(), REQ_UP_ITEM);
+    return 0;
+}
+
+int MenuView::navigateMenuDown()
+{
+    menu_driver(menu_.get(), REQ_DOWN_ITEM);
+    return 0;
+}
+
+int MenuView::navigateMenuLeft()
+{
+    menu_driver(menu_.get(), REQ_LEFT_ITEM);
+    return 0;
+}
+
+int MenuView::navigateMenuRight()
+{
+    menu_driver(menu_.get(), REQ_RIGHT_ITEM);
+    return 0;
+}
+
+int MenuView::getSelected() const
+{
+    return 0;
 }
 
 void MenuView::positionComponents(Window_t& ioWindow)
@@ -85,5 +109,72 @@ Size MenuView::getMinimumRequiredSize() const
     scale_menu(menu_.get(), &size.height, &size.width);
     return size;
 }
+
+////////////////////////////////////////////////////////////////////////
+///                     MenuItem
+////////////////////////////////////////////////////////////////////////
+MenuItem::MenuItem() :
+    MenuItem(0, "", "")
+{}
+
+MenuItem::MenuItem(int iId, const std::string& iName, const std::string& iDescription) :
+    id_(iId),
+    name_(iName),
+    description_(iDescription)
+{}
+
+MenuItem::MenuItem(const MenuItem& iOther) :
+    id_(iOther.id_),
+    name_(iOther.name_),
+    description_(iOther.description_)
+{}
+
+MenuItem::MenuItem(const MenuItem&& iOther) :
+    id_(iOther.id_),
+    name_(std::move(iOther.name_)),
+    description_(std::move(iOther.description_))
+{}
+
+MenuItem& MenuItem::operator=(const MenuItem& iOther)
+{
+    if (this != &iOther)
+    {
+        id_ = iOther.id_;
+        name_ = iOther.name_;
+        description_ = iOther.description_;
+    }
+    return *this;
+}
+
+int MenuItem::getId()
+{
+    return id_;
+}
+
+void MenuItem::setId(int iId)
+{
+    id_ = iId;
+}
+
+const std::string& MenuItem::getName() const
+{
+    return name_;
+}
+
+void MenuItem::setName(const std::string& iName)
+{
+    name_ = iName;
+}
+
+const std::string& MenuItem::getDescription() const
+{
+    return description_;
+}
+
+void MenuItem::setDescription(const std::string iDescription)
+{
+    description_ = iDescription;
+}
+
 } // namespace ui
 } // namespace memo
