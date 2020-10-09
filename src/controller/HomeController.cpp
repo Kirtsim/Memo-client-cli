@@ -15,7 +15,9 @@ HomeController::HomeController(const ResourcesPtr_t& iResources) :
 
 void HomeController::processInput()
 {
-    unsigned int input = getch();
+    auto& cursesWindow = view()->getWindow();
+    keypad(&cursesWindow, TRUE);
+    unsigned int input = wgetch(&cursesWindow);
     switch (input)
     {
         case KEY_DOWN:
@@ -32,12 +34,13 @@ void HomeController::processInput()
             onMenuOptionSelected(selectedItem);
             break;
     }
+    keypad(&cursesWindow, FALSE);
 }
 
 
 void HomeController::onMenuOptionSelected(int iSelectedOption)
 {
-    // TODO: Implement
+    
 }
 
 } // namespace ctrl

@@ -34,7 +34,6 @@ private:
 
 struct _win_st;
 
-using Window_t = _win_st;
 using WindowPtr_t = std::unique_ptr<Window_t>;
 
 namespace memo {
@@ -83,6 +82,7 @@ public:
     void setBorder(const Border& iBorder) override;
     Border getBorder() const override;
 
+    Window_t& getWindow() override;
 protected:
     virtual void positionComponents(Window_t& ioWindow);
     virtual void displayContent(Window_t& ioWindow);
@@ -93,7 +93,6 @@ protected:
     void eraseWindow();
     Size getParentSize() const;
     Position getParentPosition() const;
-    Window_t& getWindow();
 
 private:
     void applyBorder();

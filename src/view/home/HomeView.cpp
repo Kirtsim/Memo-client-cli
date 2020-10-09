@@ -121,6 +121,15 @@ namespace ui {
 /// HomeView
 ///////////////////////////////////////////////////////////////
 
+const std::vector<MenuItem> HomeView::kMenuItems {
+    MenuItem(E_MenuItem::LIST_MEMOS,  "List Memos", ""),
+    MenuItem(E_MenuItem::LIST_TAGS,   "List Tags", ""),
+    MenuItem(E_MenuItem::CREATE_MEMO, "Create Memo", ""),
+    MenuItem(E_MenuItem::CREATE_TAG,  "Create Tag", ""),
+    MenuItem(E_MenuItem::DELETE_MEMO, "Delete Memo", ""),
+    MenuItem(E_MenuItem::DELETE_TAG,  "Delete Tag", ""),
+};
+
 HomeView::HomeView(IView* iParent) :
     HomeView({ LINES, COLS }, { 0, 0 }, iParent)
 {}
@@ -136,6 +145,7 @@ HomeView::HomeView(const Size& iSize, const Position& iPosition, IView* iParent)
     menuView_(new MenuView)
 {
     registerSubView(menuView_);
+    menuView_->setMenuItems(kMenuItems);
 }
 
 HomeView::~HomeView() = default;
@@ -147,11 +157,6 @@ const std::shared_ptr<MenuView>& HomeView::getMenuView()
 
 void HomeView::focus()
 {
-    keypad(&getWindow(), TRUE);
-//    int input;
-//    while ((input = wgetch(&getWindow())) != 'q')
-//        menuView_->processInput(input);
-    keypad(&getWindow(), FALSE);
 }
 
 void HomeView::setErrorStatus(const std::string& iStatus)

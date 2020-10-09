@@ -14,6 +14,7 @@ set(SOURCES src/main.cpp
             src/view/BaseView.cpp
             src/view/home/HomeView.cpp
             src/view/home/MenuView.cpp
+            src/view/home/MenuItem.cpp
             src/view/ListMemoView.cpp
             src/view/widget/Text.cpp
             src/view/tools/Tools.cpp
@@ -30,6 +31,7 @@ set(HEADERS memo/Client.hpp
             src/view/BaseView.hpp
             src/view/home/HomeView.hpp
             src/view/home/MenuView.hpp
+            src/view/home/MenuItem.hpp
             src/view/ListMemoView.hpp
             src/view/widget/Text.hpp
             src/view/tools/Tools.hpp
