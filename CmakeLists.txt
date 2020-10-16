@@ -1,15 +1,19 @@
 cmake_minimum_required (VERSION 3.0)
 
 project (Memo-server LANGUAGES CXX)
-add_compile_options(-std=c++17 -Wall -Wextra -Wsign-conversion)
+add_compile_options(-std=c++17 -g -fstandalone-debug -Wall -Wextra -Wsign-conversion)
 
 set(CMAKE_CXX_COMPILER /usr/bin/clang++)
+# Use the "gold-linker" to speed-up the linking phase
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=gold")
+
 # variable denoting where the "absolute" include paths start in
 set(BASEPATH "${CMAKE_SOURCE_DIR}/src/")
 
 set(SOURCES src/main.cpp
             src/Client.cpp
             src/context/Resources.cpp
+            src/controller/HomeController.cpp
             src/view/BaseComponent.cpp
             src/view/BaseView.cpp
             src/view/home/HomeView.cpp
@@ -24,6 +28,7 @@ set(SOURCES src/main.cpp
 
 set(HEADERS memo/Client.hpp
             src/context/Resources.hpp
+            src/controller/HomeController.hpp
             src/controller/IController.hpp
             src/view/IComponent.hpp
             src/view/BaseComponent.hpp
