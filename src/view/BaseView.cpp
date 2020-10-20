@@ -91,11 +91,12 @@ void BaseView::refresh()
     const int y = parentPos.y + y_;
     const int x = parentPos.x + x_;
 
+    wresize(window_.get(), height_, width_);
+    mvwin(window_.get(), y, x);
+
     positionComponents(*window_);
     displayContent(*window_);
 
-    wresize(window_.get(), height_, width_);
-    mvwin(window_.get(), y, x);
     box(window_.get(), border_.left, border_.top);
 
     wrefresh(window_.get());
