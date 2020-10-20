@@ -84,6 +84,7 @@ public:
 
     Window_t& getWindow() override;
 protected:
+    virtual void beforeViewResized();
     virtual void positionComponents(Window_t& ioWindow);
     virtual void displayContent(Window_t& ioWindow);
 
