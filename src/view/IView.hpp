@@ -16,6 +16,10 @@ public:
 
 #include "view/IComponent.hpp"
 
+struct _win_st;
+
+using Window_t = _win_st;
+
 namespace memo {
 namespace ui {
 
@@ -54,6 +58,8 @@ public:
 
     virtual void setBorder(const Border& iBorder) = 0;
     virtual Border getBorder() const = 0;
+
+    virtual Window_t& getWindow() = 0;
 };
 
 } // namespace ui

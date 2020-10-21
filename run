@@ -3,6 +3,7 @@
 RUN_CMAKE=0
 RUN_BUILD=0
 RUN_CLIENT=0
+RUN_DEBUG=0
 
 exit_on_fail() {
     if ! [ $? -eq 0 ]; then
@@ -49,7 +50,15 @@ case $key in
     shift
     ;;
     client)
-    RUN_CLIENT=1
+    if [ $RUN_DEBUG -ne 1 ]
+    then
+        RUN_CLIENT=1
+    fi
+    shift # past argument
+    ;;
+    debug)
+    RUN_CLIENT=0
+    RUN_DEBUG=1
     shift # past argument
     ;;
 esac
@@ -77,5 +86,17 @@ then
     	kirtsim/memo-server:dev \
     	bash -c "./build/memo_client_cli 172.20.20.20 8000"
 	exit_on_fail
+elif [ $RUN_DEBUG -eq 1 ]
+then
+     docker run --rm --privileged -it \
+		-e TERM=xterm-256color \
+		-w /home/memo-client-cli \
+		-v `pwd`:/home/memo-client-cli \
+		--name client_debug \
+		--net memo_network \
+		--cap-add=SYS_PTRACE \
+		--security-opt seccomp=unconfined \
+		kirtsim/memo-server:dev \
+		bash -c "lldb -- ./build/memo_client_cli 172.20.20.20 8000"
+	exit_on_fail
 fi
-

@@ -3,7 +3,7 @@
 #include "view/home/HomeView.hpp"
 #include "manager/ViewManager.hpp"
 #include "manager/ControllerManager.hpp"
-#include "controller/IController.hpp"
+#include "controller/HomeController.hpp"
 
 #include <iostream>
 
@@ -46,24 +46,8 @@ void Client::runcurses()
     refresh();
     curs_set(0);
 
-    ui::HomeView home;
-    home.refresh();
-    home.focus();
-
-    while(getch() != 'q');
-
-    curs_set(1);
-    endwin();
-}
-
-void Client::runcontroller()
-{
-    initscr();
-    cbreak();
-    keypad(stdscr, TRUE);
-    noecho();
-    refresh();
-    curs_set(0);
+    auto homeController = std::make_shared<ctrl::HomeController>(resources_);
+    controllerManager_->add(homeController);
 
     while (!controllerManager_->empty())
     {
@@ -80,8 +64,6 @@ void Client::runcontroller()
         view->refresh();
         controller->processInput();
     }
-
-    while(getch() != 'q');
 
     curs_set(1);
     endwin();

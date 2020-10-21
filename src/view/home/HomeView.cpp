@@ -121,6 +121,16 @@ namespace ui {
 /// HomeView
 ///////////////////////////////////////////////////////////////
 
+const std::vector<MenuItem> HomeView::kMenuItems {
+    MenuItem(E_MenuItem::LIST_MEMOS,  "List Memos", ""),
+    MenuItem(E_MenuItem::LIST_TAGS,   "List Tags", ""),
+    MenuItem(E_MenuItem::CREATE_MEMO, "Create Memo", ""),
+    MenuItem(E_MenuItem::CREATE_TAG,  "Create Tag", ""),
+    MenuItem(E_MenuItem::DELETE_MEMO, "Delete Memo", ""),
+    MenuItem(E_MenuItem::DELETE_TAG,  "Delete Tag", ""),
+    MenuItem(E_MenuItem::EXIT,		  "Exit", ""),
+};
+
 HomeView::HomeView(IView* iParent) :
     HomeView({ LINES, COLS }, { 0, 0 }, iParent)
 {}
@@ -131,11 +141,15 @@ HomeView::HomeView(const Size& iSize, IView* iParent) :
 
 HomeView::HomeView(const Size& iSize, const Position& iPosition, IView* iParent) :
     BaseView(iSize, iPosition, iParent),
-    windowTitle_(new widget::Text("Welcome to the Memo-client-cli")),
     errorStatus_(new widget::Text("SOME TEXT")),
+    windowTitle_(new widget::Text("Welcome to the Memo-client-cli")),
     menuView_(new MenuView)
 {
     registerSubView(menuView_);
+    menuView_->setMenuItems(kMenuItems);
+    menuView_->setSelectionMark(" * ");
+    menuView_->setLayout(Rows(4), Cols(2));
+    menuView_->applyMenuChanges();
 }
 
 HomeView::~HomeView() = default;
@@ -147,11 +161,6 @@ const std::shared_ptr<MenuView>& HomeView::getMenuView()
 
 void HomeView::focus()
 {
-    keypad(&getWindow(), TRUE);
-//    int input;
-//    while ((input = wgetch(&getWindow())) != 'q')
-//        menuView_->processInput(input);
-    keypad(&getWindow(), FALSE);
 }
 
 void HomeView::setErrorStatus(const std::string& iStatus)

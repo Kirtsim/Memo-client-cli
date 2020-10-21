@@ -24,6 +24,9 @@ private:
 } // namespace view
 } // namespace memo
 
+#include "view/home/MenuItem.hpp"
+#include <vector>
+
 namespace memo {
 namespace ui {
 namespace widget {
@@ -31,6 +34,11 @@ namespace widget {
 }
 
 class MenuView;
+
+enum E_MenuItem
+{
+    LIST_MEMOS, LIST_TAGS, CREATE_MEMO, CREATE_TAG, DELETE_MEMO, DELETE_TAG, EXIT
+};
 
 class HomeView : public BaseView
 {
@@ -55,6 +63,8 @@ protected:
     void displayContent(Window_t& ioWindow) override;
 
 private:
+    static const std::vector<MenuItem> kMenuItems;
+
     std::unique_ptr<widget::Text> errorStatus_;
     std::unique_ptr<widget::Text> windowTitle_;
     std::shared_ptr<MenuView> menuView_;
@@ -62,5 +72,3 @@ private:
 
 } // namespace ui
 } // namespace memo
-
-

@@ -91,11 +91,13 @@ void BaseView::refresh()
     const int y = parentPos.y + y_;
     const int x = parentPos.x + x_;
 
+    beforeViewResized();
+    wresize(window_.get(), height_, width_);
+    mvwin(window_.get(), y, x);
+
     positionComponents(*window_);
     displayContent(*window_);
 
-    wresize(window_.get(), height_, width_);
-    mvwin(window_.get(), y, x);
     box(window_.get(), border_.left, border_.top);
 
     wrefresh(window_.get());
@@ -264,6 +266,7 @@ void BaseView::removeSubView(IView::Ptr iSubView)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void BaseView::focus() {}
+void BaseView::beforeViewResized() {}
 void BaseView::displayContent(Window_t& ioWindow) {}
 void BaseView::positionComponents(Window_t& ioWindow) {}
 #pragma GCC diagnostic pop
