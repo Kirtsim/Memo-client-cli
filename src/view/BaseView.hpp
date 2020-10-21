@@ -83,6 +83,7 @@ public:
     Border getBorder() const override;
 
     Window_t& getWindow() override;
+
 protected:
     virtual void beforeViewResized();
     virtual void positionComponents(Window_t& ioWindow);

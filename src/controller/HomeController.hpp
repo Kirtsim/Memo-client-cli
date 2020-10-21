@@ -4,6 +4,7 @@
 namespace memo {
 namespace ui {
     class HomeView;
+    class MenuItem;
 } // namespace view
 namespace ctrl {
 
@@ -15,7 +16,7 @@ public:
     HomeController(const ResourcesPtr_t& iResources);
     void processInput() override;
 private:
-    void onMenuOptionSelected(int iSelectedOption);
+    void onMenuOptionSelected(std::pair<bool, ui::MenuItem> iSelectedOption);
 };
 
 } // namespace ctrl

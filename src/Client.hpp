@@ -23,7 +23,6 @@ public:
     void run();
 
     void runcurses();
-    void runcontroller();
 
     model::MemoSvc::Stub& getMemoStub();
     model::TagSvc::Stub& getTagStub();

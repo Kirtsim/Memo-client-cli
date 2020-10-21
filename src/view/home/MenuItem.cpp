@@ -22,7 +22,7 @@ MenuItem::MenuItem(const MenuItem& iOther) :
     description_(iOther.description_)
 {}
 
-MenuItem::MenuItem(const MenuItem&& iOther) :
+MenuItem::MenuItem(const MenuItem&& iOther) noexcept :
     id_(iOther.id_),
     name_(std::move(iOther.name_)),
     description_(std::move(iOther.description_))
@@ -39,7 +39,7 @@ MenuItem& MenuItem::operator=(const MenuItem& iOther)
     return *this;
 }
 
-int MenuItem::getId()
+int MenuItem::getId() const
 {
     return id_;
 }

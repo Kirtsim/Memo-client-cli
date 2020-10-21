@@ -59,7 +59,7 @@ public:
     virtual void setBorder(const Border& iBorder) = 0;
     virtual Border getBorder() const = 0;
 
-    virtual _win_st& getWindow() = 0;
+    virtual Window_t& getWindow() = 0;
 };
 
 } // namespace ui

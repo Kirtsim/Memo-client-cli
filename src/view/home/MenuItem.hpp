@@ -11,10 +11,10 @@ public:
     MenuItem();
     MenuItem(int iId, const std::string& iName, const std::string& iDescription="");
     MenuItem(const MenuItem& iOther);
-    MenuItem(const MenuItem&& iOther);
+    MenuItem(const MenuItem&& iOther) noexcept;
     MenuItem& operator=(const MenuItem& iOther);
 
-    int getId();
+    int getId() const;
     void setId(int iId);
 
     const std::string& getName() const;

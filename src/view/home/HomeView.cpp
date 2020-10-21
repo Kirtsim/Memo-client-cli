@@ -128,6 +128,7 @@ const std::vector<MenuItem> HomeView::kMenuItems {
     MenuItem(E_MenuItem::CREATE_TAG,  "Create Tag", ""),
     MenuItem(E_MenuItem::DELETE_MEMO, "Delete Memo", ""),
     MenuItem(E_MenuItem::DELETE_TAG,  "Delete Tag", ""),
+    MenuItem(E_MenuItem::EXIT,		  "Exit", ""),
 };
 
 HomeView::HomeView(IView* iParent) :
@@ -140,12 +141,15 @@ HomeView::HomeView(const Size& iSize, IView* iParent) :
 
 HomeView::HomeView(const Size& iSize, const Position& iPosition, IView* iParent) :
     BaseView(iSize, iPosition, iParent),
-    windowTitle_(new widget::Text("Welcome to the Memo-client-cli")),
     errorStatus_(new widget::Text("SOME TEXT")),
+    windowTitle_(new widget::Text("Welcome to the Memo-client-cli")),
     menuView_(new MenuView)
 {
     registerSubView(menuView_);
     menuView_->setMenuItems(kMenuItems);
+    menuView_->setSelectionMark(" * ");
+    menuView_->setLayout(Rows(4), Cols(2));
+    menuView_->applyMenuChanges();
 }
 
 HomeView::~HomeView() = default;

@@ -37,7 +37,7 @@ class MenuView;
 
 enum E_MenuItem
 {
-    LIST_MEMOS, LIST_TAGS, CREATE_MEMO, CREATE_TAG, DELETE_MEMO, DELETE_TAG
+    LIST_MEMOS, LIST_TAGS, CREATE_MEMO, CREATE_TAG, DELETE_MEMO, DELETE_TAG, EXIT
 };
 
 class HomeView : public BaseView
@@ -72,5 +72,3 @@ private:
 
 } // namespace ui
 } // namespace memo
-
-
