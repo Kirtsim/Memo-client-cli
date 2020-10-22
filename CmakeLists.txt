@@ -14,6 +14,7 @@ set(SOURCES src/main.cpp
             src/Client.cpp
             src/context/Resources.cpp
             src/controller/HomeController.cpp
+            src/view/ComponentParams.cpp
             src/view/BaseComponent.cpp
             src/view/BaseView.cpp
             src/view/home/HomeView.cpp
@@ -30,6 +31,7 @@ set(HEADERS memo/Client.hpp
             src/context/Resources.hpp
             src/controller/HomeController.hpp
             src/controller/IController.hpp
+            src/view/ComponentParams.hpp
             src/view/IComponent.hpp
             src/view/BaseComponent.hpp
             src/view/IView.hpp

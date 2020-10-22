@@ -1,17 +1,8 @@
 #pragma once
+#include "view/ComponentParams.hpp"
 
 namespace memo {
 namespace ui {
-
-struct Size
-{
-    int height, width;
-};
-
-struct Position
-{
-    int y, x;
-};
 
 class IComponent
 {

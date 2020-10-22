@@ -132,11 +132,14 @@ const std::vector<MenuItem> HomeView::kMenuItems {
 };
 
 HomeView::HomeView(IView* iParent) :
-    HomeView({ LINES, COLS }, { 0, 0 }, iParent)
-{}
+    HomeView( Size(Height(LINES), Width(COLS)),
+              Position(),
+              iParent )
+{
+}
 
 HomeView::HomeView(const Size& iSize, IView* iParent) :
-    HomeView(iSize, { 0, 0 }, iParent)
+    HomeView(iSize, Position(), iParent)
 {}
 
 HomeView::HomeView(const Size& iSize, const Position& iPosition, IView* iParent) :

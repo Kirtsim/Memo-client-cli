@@ -9,11 +9,11 @@ namespace {
 } // namespace
 
 Text::Text() :
-    Text("", { 0, 0 })
+    Text("", Position())
 {}
 
 Text::Text(const std::string& iText) :
-    Text(iText, { 0, 0 })
+    Text(iText, Position())
 {}
 
 Text::Text(const std::string& iText, const Position& iPosition) :
