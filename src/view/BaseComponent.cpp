@@ -4,11 +4,11 @@ namespace memo {
 namespace ui {
 
 BaseComponent::BaseComponent() :
-    BaseComponent({ 0, 0 }, { 0, 0 })
+    BaseComponent(Size(), Position())
 {}
 
 BaseComponent::BaseComponent(const Size& iSize) :
-    BaseComponent(iSize, { 0, 0 })
+    BaseComponent(iSize, Position())
 {}
 
 BaseComponent::BaseComponent(const Size& iSize, const Position& iPosition) :

@@ -53,11 +53,13 @@ const Border BORDER_DEFAULT {
 };
 
 BaseView::BaseView(IView* iParent) :
-    BaseView({ LINES, COLS }, { 0, 0 }, iParent)
+    BaseView( Size(Height(LINES), Width(COLS)),
+              Position(),
+              iParent )
 {}
 
 BaseView::BaseView(const Size& iSize, IView* iParent) :
-    BaseView(iSize, { 0, 0 }, iParent)
+    BaseView(iSize, Position(), iParent)
 {}
 
 BaseView::BaseView(const Size& iSize, const Position& iPosition, IView* iParent) :
@@ -123,7 +125,7 @@ Size BaseView::getParentSize() const
 Position BaseView::getParentPosition() const
 {
     if (parentView_) return parentView_->getPosition();
-    return { 0, 0 };
+    return Position(); // return 0, 0 coordinates
 }
 
 void BaseView::eraseWindow()
@@ -184,7 +186,7 @@ int BaseView::getWidth() const
 
 Size BaseView::getSize() const
 {
-    return { height_, width_ };
+    return { Height(height_), Width(width_) };
 }
 
 void BaseView::setY(int iY)

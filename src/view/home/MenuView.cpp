@@ -14,19 +14,19 @@ const std::vector<std::string> MenuView::kMenuItemNames {
 };
 
 MenuView::MenuView(IView* iParent) :
-    MenuView({ 0, 0 }, { 0, 0 }, iParent)
+    MenuView(Size(), Position(), iParent)
 {}
 
 MenuView::MenuView(const Size& iSize, IView* iParent) :
-    MenuView(iSize, { 0, 0 }, iParent)
+    MenuView(iSize, Position(), iParent)
 {}
 
 MenuView::MenuView(const Size& iSize, const Position& iPosition, IView* iParent) :
     BaseView(iSize, iPosition, iParent),
     menuWindow_(derwin(&getWindow(), 0, 0, 1, 1)),
     menu_(new_menu(nullptr)),
-    menuWindowSize_({ 0, 0 }),
-    menuWindowPos_({ 0, 0 }),
+    menuWindowSize_(Size()),
+    menuWindowPos_(Position()),
     menuWindowLayout_(Rows(0), Cols(0)),
     selectionMark_(""),
     menuItemsChanged_(false)
@@ -201,6 +201,22 @@ void MenuView::applyMenuChanges()
 
     post_menu(menu_.get());
 }
+
+MenuView::Layout::Layout(Rows iRows, Cols iCols) :
+    rows(iRows.value), cols(iCols.value)
+{
+}
+
+bool MenuView::Layout::operator==(const Layout& other)
+{
+    return rows == other.rows && cols == other.cols;
+}
+
+bool MenuView::Layout::operator!=(const Layout& other)
+{
+    return rows != other.rows || cols != other.cols;
+}
+
 
 } // namespace ui
 } // namespace memo

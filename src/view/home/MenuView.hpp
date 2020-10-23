@@ -1,6 +1,7 @@
 #pragma once
 #include "view/BaseView.hpp"
 #include "view/home/MenuItem.hpp"
+#include "view/ComponentParams.hpp"
 
 #include <string>
 #include <vector>
@@ -12,39 +13,18 @@ struct tagMENU;
 namespace memo {
 namespace ui {
 
-struct Rows
-{
-    explicit Rows(int iValue) : value(iValue) {}
-
-    int value;
-};
-
-struct Cols
-{
-    explicit Cols(int iValue) : value(iValue) {}
-
-    int value;
-};
-
 class MenuView : public BaseView
 {
     static const int MENU_ITEM_COUNT = 6;
     static const std::vector<std::string> kMenuItemNames;
 
-    struct Layout
+    class Layout
     {
-        Layout(Rows iRows, Cols iCols) :
-            rows(iRows.value), cols(iCols.value) {}
+    public:
+        Layout(Rows iRows, Cols iCols);
 
-        bool operator==(const Layout& other)
-        {
-            return rows == other.rows && cols == other.cols;
-        }
-
-        bool operator!=(const Layout& other)
-        {
-            return rows != other.rows || cols != other.cols;
-        }
+        bool operator==(const Layout& other);
+        bool operator!=(const Layout& other);
 
         int rows;
         int cols;
