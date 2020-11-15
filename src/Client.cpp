@@ -8,7 +8,7 @@
 #include <iostream>
 
 #include <grpcpp/grpcpp.h>
-#include <ncursesw/curses.h>
+#include <curses.h>
 
 namespace memo {
 

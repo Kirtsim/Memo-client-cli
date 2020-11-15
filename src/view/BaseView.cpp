@@ -42,7 +42,7 @@ void BaseView::println(const std::string& iContent) const
 } // namespace memo
 
 #include "view/widget/Text.hpp"
-#include <ncursesw/curses.h>
+#include <curses.h>
 
 namespace memo {
 namespace ui {
@@ -76,8 +76,7 @@ BaseView::~BaseView()
     if (window_)
     {
         eraseWindow();
-        auto* window = window_.release();
-        delwin(window);
+        delwin(window_);
     }
 }
 
@@ -94,15 +93,15 @@ void BaseView::refresh()
     const int x = parentPos.x + x_;
 
     beforeViewResized();
-    wresize(window_.get(), height_, width_);
-    mvwin(window_.get(), y, x);
+    wresize(window_, height_, width_);
+    mvwin(window_, y, x);
 
     positionComponents(*window_);
     displayContent(*window_);
 
-    box(window_.get(), border_.left, border_.top);
+    box(window_, border_.left, border_.top);
 
-    wrefresh(window_.get());
+    wrefresh(window_);
 
     for (const auto& subView : subViews_)
     {
@@ -131,15 +130,15 @@ Position BaseView::getParentPosition() const
 void BaseView::eraseWindow()
 {
     if (!window_) return;
-    wborder(window_.get(), ' ', ' ', ' ',' ',' ',' ',' ',' ');
-    wrefresh(window_.get());
+    wborder(window_, ' ', ' ', ' ',' ',' ',' ',' ',' ');
+    wrefresh(window_);
     applyBorder();
 }
 
 void BaseView::applyBorder()
 {
     if (!window_) return;
-    wborder(window_.get(),
+    wborder(window_,
             border_.left, border_.right,
             border_.top, border_.bottom,
             border_.corner.upperLeft,
@@ -246,7 +245,7 @@ Border BaseView::getBorder() const
 
 void BaseView::displayText(const widget::Text& iText)
 {
-    mvwprintw(window_.get(), iText.getY(), iText.getX(), iText.getText().c_str());
+    mvwprintw(window_, iText.getY(), iText.getX(), iText.getText().c_str());
 }
 
 Window_t& BaseView::getWindow()

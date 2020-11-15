@@ -29,6 +29,16 @@ Size::Size(Height iHeight, Width iWidth) :
 {
 }
 
+bool Size::operator==(const Size& iOther)
+{
+    return width == iOther.width && height == iOther.height;
+}
+
+bool Size::operator!=(const Size& iOther)
+{
+    return width != iOther.width && height != iOther.height;
+}
+
 Position::Position() : x(0), y(0)
 {
 }
@@ -37,6 +47,16 @@ Position::Position(PosX iX, PosY iY) :
     x(iX.value),
     y(iY.value)
 {
+}
+
+bool Position::operator==(const Position& iOther)
+{
+    return x == iOther.x && y == iOther.y;
+}
+
+bool Position::operator!=(const Position& iOther)
+{
+    return x != iOther.x && y != iOther.y;
 }
 
 } // namespace ui

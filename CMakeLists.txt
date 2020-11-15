@@ -1,11 +1,12 @@
 cmake_minimum_required (VERSION 3.0)
 
 project (Memo-server LANGUAGES CXX)
-add_compile_options(-std=c++17 -g -fstandalone-debug -Wall -Wextra -Wsign-conversion)
+add_compile_options(-std=c++17 -g -Wall -Wextra -Wsign-conversion)
 
-set(CMAKE_CXX_COMPILER /usr/bin/clang++)
 # Use the "gold-linker" to speed-up the linking phase
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=gold")
+if (UNIX AND NOT APPLE)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=gold")
+endif()
 
 # variable denoting where the "absolute" include paths start in
 set(BASEPATH "${CMAKE_SOURCE_DIR}/src/")
@@ -149,7 +150,9 @@ target_link_libraries(memo_client_cli
     ${_REFLECTION}
     ${_GRPC_GRPCPP}
     ${_PROTOBUF_LIBPROTOBUF})
-target_link_libraries(memo_client_cli ncurses)
+find_package(Curses REQUIRED)
+target_include_directories(memo_client_cli PRIVATE ${CURSES_DIRECTORIES})
+target_link_libraries(memo_client_cli ${CURSES_LIBRARIES})
 target_link_libraries(memo_client_cli menu)
 # needed for "absolute" include paths
 target_include_directories(memo_client_cli PRIVATE ${BASEPATH})

@@ -2,7 +2,7 @@
 #include "view/tools/Tools.hpp"
 
 #include <algorithm>
-#include <ncursesw/menu.h>
+#include <menu.h>
 
 namespace memo {
 namespace ui {
@@ -25,14 +25,16 @@ MenuView::MenuView(const Size& iSize, const Position& iPosition, IView* iParent)
     BaseView(iSize, iPosition, iParent),
     menuWindow_(derwin(&getWindow(), 0, 0, 1, 1)),
     menu_(new_menu(nullptr)),
+    oldMenuWindowSize_(Size()),
     menuWindowSize_(Size()),
+    oldMenuWindowPos_(Position()),
     menuWindowPos_(Position()),
     menuWindowLayout_(Rows(0), Cols(0)),
     selectionMark_(""),
     menuItemsChanged_(false)
 {
     set_menu_win(menu_.get(), &getWindow());
-    set_menu_sub(menu_.get(), menuWindow_.get());
+    set_menu_sub(menu_.get(), menuWindow_);
 
     // Do not show the item's description
     menu_opts_off(menu_.get(), O_SHOWDESC);
@@ -43,7 +45,7 @@ MenuView::~MenuView()
     unpost_menu(menu_.get());
     free_menu(menu_.release());
     freeTagItems(tagItems_);
-    delwin(menuWindow_.release());
+    delwin(menuWindow_);
 }
 
 void MenuView::setMenuItems(const std::vector<MenuItem>& iItems)
@@ -163,7 +165,7 @@ bool MenuView::menuChanged()
 
 bool MenuView::menuPositionChanged()
 {
-    return menuWindowPos_.x != menuWindow_->_begx || menuWindowPos_.y != menuWindow_->_begy;
+    return oldMenuWindowPos_ != menuWindowPos_;
 }
 
 bool MenuView::menuMarkerChanged()
@@ -174,10 +176,7 @@ bool MenuView::menuMarkerChanged()
 
 bool MenuView::menuSizeChanged()
 {
-    const int oldWidth = menuWindow_->_maxy - menuWindow_->_begy;
-    const int oldHeight = menuWindow_->_maxx - menuWindow_->_begx;
-
-    return oldWidth != menuWindowSize_.width || oldHeight != menuWindowSize_.height;
+    return oldMenuWindowSize_ != menuWindowSize_;
 }
 
 bool MenuView::menuLayoutChanged()
@@ -193,9 +192,9 @@ void MenuView::applyMenuChanges()
 
     set_menu_format(menu_.get(), menuWindowLayout_.rows, menuWindowLayout_.cols);
     if (menuSizeChanged())
-        wresize(menuWindow_.get(), menuWindowSize_.height, menuWindowSize_.width);
+        wresize(menuWindow_, menuWindowSize_.height, menuWindowSize_.width);
     if (menuPositionChanged())
-        mvderwin(menuWindow_.get(), menuWindowPos_.y, menuWindowPos_.x);
+        mvderwin(menuWindow_, menuWindowPos_.y, menuWindowPos_.x);
     set_menu_mark(menu_.get(), selectionMark_.c_str());
     menuItemsChanged_ = false;
 

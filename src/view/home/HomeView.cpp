@@ -111,7 +111,7 @@ void HomeView::handleInvalidOption()
 #include "view/widget/Text.hpp"
 #include "view/tools/Tools.hpp"
 
-#include <ncursesw/menu.h>
+#include <menu.h>
 
 namespace memo {
 namespace ui {

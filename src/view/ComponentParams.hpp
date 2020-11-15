@@ -40,6 +40,9 @@ struct Size
     Size();
     Size(Height iHeight, Width iWidth);
 
+    bool operator==(const Size& iOther);
+    bool operator!=(const Size& iOther);
+
     int height, width;
 };
 
@@ -47,6 +50,9 @@ struct Position
 {
     Position();
     Position(PosX iX, PosY iY);
+
+    bool operator==(const Position& iOther);
+    bool operator!=(const Position& iOther);
 
     int x, y;
 };
