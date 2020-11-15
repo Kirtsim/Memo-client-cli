@@ -11,3 +11,11 @@ compile_flags.txt
 # VIM
 *.swp
 
+# Qt creator
+*.cflags
+*.config
+*.creator
+*.user
+*.cxxflags
+*.files
+*.includes

@@ -69,7 +69,9 @@ private:
     WindowPtr_t menuWindow_;
     std::unique_ptr<tagMENU> menu_;
 
+    Size oldMenuWindowSize_;
     Size menuWindowSize_;
+    Position oldMenuWindowPos_;
     Position menuWindowPos_;
     Layout menuWindowLayout_;
     std::string selectionMark_;

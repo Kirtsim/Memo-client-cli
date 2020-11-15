@@ -2,7 +2,7 @@
 #include "view/home/HomeView.hpp"
 #include "view/home/MenuView.hpp"
 #include "manager/ControllerManager.hpp"
-#include <ncursesw/menu.h>
+#include <menu.h>
 
 namespace memo {
 namespace ctrl {

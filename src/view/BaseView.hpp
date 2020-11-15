@@ -34,7 +34,7 @@ private:
 
 struct _win_st;
 
-using WindowPtr_t = std::unique_ptr<Window_t>;
+using WindowPtr_t = Window_t*;
 
 namespace memo {
 namespace ui {
