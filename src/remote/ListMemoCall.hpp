@@ -8,7 +8,7 @@ namespace remote {
 class ListMemoCall : public BaseCall<model::MemoSvc::Stub, model::MemoSearchRs>
 {
 public:
-    using ReaderPtr_t = std::unique_ptr<grpc_impl::ClientAsyncResponseReader<model::MemoSearchRs>>;
+    using ReaderPtr_t = std::unique_ptr<grpc::ClientAsyncResponseReader<model::MemoSearchRs>>;
 
     ListMemoCall(model::MemoSvc::Stub& ioStub);
 

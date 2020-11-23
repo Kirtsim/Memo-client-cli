@@ -11,43 +11,8 @@ endif()
 # variable denoting where the "absolute" include paths start in
 set(BASEPATH "${CMAKE_SOURCE_DIR}/src/")
 
-set(SOURCES src/main.cpp
-            src/Client.cpp
-            src/context/Resources.cpp
-            src/controller/HomeController.cpp
-            src/view/ComponentParams.cpp
-            src/view/BaseComponent.cpp
-            src/view/BaseView.cpp
-            src/view/home/HomeView.cpp
-            src/view/home/MenuView.cpp
-            src/view/home/MenuItem.cpp
-            src/view/ListMemoView.cpp
-            src/view/widget/Text.cpp
-            src/view/tools/Tools.cpp
-            src/remote/ListMemoCall.cpp
-            src/manager/ControllerManager.cpp
-            src/manager/ViewManager.cpp)
-
-set(HEADERS memo/Client.hpp
-            src/context/Resources.hpp
-            src/controller/HomeController.hpp
-            src/controller/IController.hpp
-            src/view/ComponentParams.hpp
-            src/view/IComponent.hpp
-            src/view/BaseComponent.hpp
-            src/view/IView.hpp
-            src/view/BaseView.hpp
-            src/view/home/HomeView.hpp
-            src/view/home/MenuView.hpp
-            src/view/home/MenuItem.hpp
-            src/view/ListMemoView.hpp
-            src/view/widget/Text.hpp
-            src/view/tools/Tools.hpp
-            src/remote/Call.hpp
-            src/remote/BaseCall.hpp
-            src/remote/ListMemoCall.hpp
-            src/manager/ControllerManager.hpp
-            src/manager/ViewManager.hpp)
+file(GLOB_RECURSE SOURCES src/*.cpp)
+file(GLOB_RECURSE HEADERS src/*.hpp)
 
 
 set(PROTO_SVC_FILES TagSvc.proto
@@ -62,21 +27,30 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
+# OpenSSL
+if (APPLE)
+    # This is a bug in CMake that causes it to prefer the system version over
+    # the one in the specified ROOT folder.
+    set(OPENSSL_ROOT_DIR ${OPENSSL_ROOT_DIR} /usr/local/opt/openssl)
+    set(OPENSSL_CRYPTO_LIBRARY ${OPENSSL_ROOT_DIR}/lib/libcrypto.dylib CACHE FILEPATH "" FORCE)
+    set(OPENSSL_SSL_LIBRARY ${OPENSSL_ROOT_DIR}/lib/libssl.dylib CACHE FILEPATH "" FORCE)
+endif()
+find_package(OpenSSL REQUIRED)
 
 find_package(Threads REQUIRED)
 
 # Find Protobuf installation
 # Looks for protobuf-config.cmake file installed by Protobuf's cmake installation.
 set(protobuf_MODULE_COMPATIBLE TRUE)
-find_package(Protobuf CONFIG REQUIRED)
+find_package(Protobuf REQUIRED)
 message(STATUS "Using protobuf ${protobuf_VERSION}")
 
 set(_PROTOBUF_LIBPROTOBUF protobuf::libprotobuf)
 set(_REFLECTION gRPC::grpc++_reflection)
 if(CMAKE_CROSSCOMPILING)
-  find_program(_PROTOBUF_PROTOC protoc)
+   find_program(_PROTOBUF_PROTOC protoc)
 else()
-  set(_PROTOBUF_PROTOC $<TARGET_FILE:protobuf::protoc>)
+   set(_PROTOBUF_PROTOC $<TARGET_FILE:protobuf::protoc>)
 endif()
 
 # Find gRPC installation
@@ -86,14 +60,10 @@ message(STATUS "Using gRPC ${gRPC_VERSION}")
 
 set(_GRPC_GRPCPP gRPC::grpc++)
 if(CMAKE_CROSSCOMPILING)
-  find_program(_GRPC_CPP_PLUGIN_EXECUTABLE grpc_cpp_plugin)
+   find_program(_GRPC_CPP_PLUGIN_EXECUTABLE grpc_cpp_plugin)
 else()
-  set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:gRPC::grpc_cpp_plugin>)
+    set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:gRPC::grpc_cpp_plugin>)
 endif()
-
-# Proto file
-set(BLAH ${CMAKE_CURRENT_SOURCE_DIR}/src/model/proto/TagSvc.proto)
-list(APPEND BLAH ${CMAKE_CURRENT_SOURCE_DIR}/src/model/proto/MemoSvc.proto)
 
 # Generated sources
 set(PROTO_SRCS)
@@ -150,9 +120,12 @@ target_link_libraries(memo_client_cli
     ${_REFLECTION}
     ${_GRPC_GRPCPP}
     ${_PROTOBUF_LIBPROTOBUF})
+
 find_package(Curses REQUIRED)
-target_include_directories(memo_client_cli PRIVATE ${CURSES_DIRECTORIES})
-target_link_libraries(memo_client_cli ${CURSES_LIBRARIES})
-target_link_libraries(memo_client_cli menu)
+target_include_directories(memo_client_cli PRIVATE ${CURSES_INCLUDE_DIRS})
+target_link_libraries(memo_client_cli ncurses)
+find_library(MENU_LIB menu REQUIRED)
+target_link_libraries(memo_client_cli ${MENU_LIB})
+
 # needed for "absolute" include paths
 target_include_directories(memo_client_cli PRIVATE ${BASEPATH})

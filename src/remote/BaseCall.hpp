@@ -12,7 +12,7 @@ template<class Stub, class Reply>
 class BaseCall : public Call
 {
 public:
-    using ReaderPtr_t = std::unique_ptr<grpc_impl::ClientAsyncResponseReader<Reply>>;
+    using ReaderPtr_t = std::unique_ptr<grpc::ClientAsyncResponseReader<Reply>>;
 
     BaseCall(Stub& ioStub);
     virtual ~BaseCall();
