@@ -4,11 +4,11 @@
 #include "manager/ViewManager.hpp"
 #include "manager/ControllerManager.hpp"
 #include "controller/HomeController.hpp"
+#include "ncurses/functions.hpp"
 
 #include <iostream>
 
 #include <grpcpp/grpcpp.h>
-#include <curses.h>
 
 namespace memo {
 
@@ -39,12 +39,12 @@ void Client::run()
 
 void Client::runcurses()
 {
-    initscr();
-    cbreak();
-    keypad(stdscr, TRUE);
-    noecho();
-    refresh();
-    curs_set(0);
+    curses::InitCurses();
+    curses::LineBuffering(DISABLE);
+    curses::KeyPad(ENABLE);
+    curses::PrintTypedInput(DISABLE);
+    curses::CursorVisible(DISABLE);
+    curses::Refresh();
 
     auto homeController = std::make_shared<ctrl::HomeController>(resources_);
     controllerManager_->add(homeController);
@@ -65,8 +65,8 @@ void Client::runcurses()
         controller->processInput();
     }
 
-    curs_set(1);
-    endwin();
+    curses::CursorVisible(ENABLE);
+    curses::CloseCurses();
 }
 
 model::MemoSvc::Stub& Client::getMemoStub()

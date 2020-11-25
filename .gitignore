@@ -19,3 +19,6 @@ compile_flags.txt
 *.cxxflags
 *.files
 *.includes
+
+#Mac
+.DS_Store
