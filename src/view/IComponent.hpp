@@ -1,5 +1,5 @@
 #pragma once
-#include "view/ComponentParams.hpp"
+#include "utils/Structs.hpp"
 
 namespace memo {
 namespace ui {

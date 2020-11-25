@@ -1,7 +1,6 @@
 #pragma once
 #include "view/BaseView.hpp"
 #include "view/home/MenuItem.hpp"
-#include "view/ComponentParams.hpp"
 
 #include <string>
 #include <vector>
