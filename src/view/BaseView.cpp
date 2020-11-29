@@ -45,12 +45,14 @@ void BaseView::println(const std::string& iContent) const
 #include <curses.h>
 
 namespace memo {
-namespace ui {
 
 const Border BORDER_DEFAULT {
     ACS_HLINE, ACS_VLINE, ACS_HLINE, ACS_VLINE,
     { ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LLCORNER }
 };
+
+namespace ui {
+
 
 BaseView::BaseView(IView* iParent) :
     BaseView( Size(Height(LINES), Width(COLS)),

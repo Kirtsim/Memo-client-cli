@@ -56,4 +56,19 @@ struct Position
     int x, y;
 };
 
+struct Border
+{
+    unsigned int top, right, bottom, left;
+
+    struct Corner
+    {
+        unsigned int upperLeft;
+        unsigned int upperRight;
+        unsigned int lowerLeft;
+        unsigned int lowerRight;
+    } corner;
+};
+
+extern const Border BORDER_DEFAULT;
+
 } // namespace memo
