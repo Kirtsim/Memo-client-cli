@@ -23,21 +23,6 @@ using Window_t = _win_st;
 namespace memo {
 namespace ui {
 
-struct Border
-{
-    unsigned int top, right, bottom, left;
-
-    struct Corner
-    {
-        unsigned int upperLeft;
-        unsigned int upperRight;
-        unsigned int lowerLeft;
-        unsigned int lowerRight;
-    } corner;
-};
-
-extern const Border BORDER_DEFAULT;
-
 class IView : public IComponent
 {
 public:
