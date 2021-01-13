@@ -1,14 +1,12 @@
 #pragma once
 
-class _win_st;
+struct _win_st;
 
 namespace memo {
-    class Position;
-    class Size;
-    class Border;
+    struct Position;
+    struct Size;
+    struct Border;
 namespace curses {
-
-extern const Border kDefaultBorder;
 
 ///
 /// \brief An interface for a ncurses' WINDOW wrapper.
@@ -54,6 +52,8 @@ public:
     virtual bool setWindowBorder(const Border& newBorder) = 0;
 
     virtual const Border& windowBorder() const = 0;
+
+    virtual void erase() const = 0;
 
     ///
     /// \brief Get access to the underlying ncurses' WINDOW pointer.

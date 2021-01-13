@@ -39,8 +39,8 @@ struct Size
     Size();
     Size(Height iHeight, Width iWidth);
 
-    bool operator==(const Size& iOther);
-    bool operator!=(const Size& iOther);
+    bool operator==(const Size& iOther) const;
+    bool operator!=(const Size& iOther) const;
 
     int height, width;
 };
@@ -50,8 +50,8 @@ struct Position
     Position();
     Position(PosX iX, PosY iY);
 
-    bool operator==(const Position& iOther);
-    bool operator!=(const Position& iOther);
+    bool operator==(const Position& iOther) const;
+    bool operator!=(const Position& iOther) const;
 
     int x, y;
 };
@@ -69,6 +69,5 @@ struct Border
     } corner;
 };
 
-extern const Border BORDER_DEFAULT;
 
 } // namespace memo

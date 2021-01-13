@@ -41,21 +41,15 @@ void BaseView::println(const std::string& iContent) const
 } // namespace view
 } // namespace memo
 
+#include "ncurses/Window.hpp"
+#include "ncurses/functions.hpp"
 #include "view/widget/Text.hpp"
-#include <curses.h>
 
 namespace memo {
-
-const Border BORDER_DEFAULT {
-    ACS_HLINE, ACS_VLINE, ACS_HLINE, ACS_VLINE,
-    { ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LLCORNER }
-};
-
 namespace ui {
 
-
 BaseView::BaseView(IView* iParent) :
-    BaseView( Size(Height(LINES), Width(COLS)),
+    BaseView( curses::ScreenSize(),
               Position(),
               iParent )
 {}
@@ -64,22 +58,17 @@ BaseView::BaseView(const Size& iSize, IView* iParent) :
     BaseView(iSize, Position(), iParent)
 {}
 
-BaseView::BaseView(const Size& iSize, const Position& iPosition, IView* iParent) :
-    parentView_(iParent),
-    width_(iSize.width), height_(iSize.height),
-    x_(iPosition.x), y_(iPosition.y),
-    border_(BORDER_DEFAULT),
+BaseView::BaseView(const Size& size, const Position& position, IView* parent) :
+    parentView_(parent),
+    newPosition_(position),
+    newSize_(size),
+    newBorder_(curses::DefaultBorder()),
     visible_(true),
-    window_(newwin(height_, width_, 0, 0))
+    window_(std::make_shared<curses::Window>(position, size))
 {}
 
 BaseView::~BaseView()
 {
-    if (window_)
-    {
-        eraseWindow();
-        delwin(window_);
-    }
 }
 
 void BaseView::saveState()
@@ -89,21 +78,20 @@ void BaseView::refresh()
 {
     if (!visible_) return;
 
-    //Size parentSize = getParentSize();
-    Position parentPos = getParentPosition();
-    const int y = parentPos.y + y_;
-    const int x = parentPos.x + x_;
+    // Reposition relative to the parent
+    Position newPosition = getParentPosition();
+    newPosition.y += newPosition_.y;
+    newPosition.x += newPosition_.x;
 
     beforeViewResized();
-    wresize(window_, height_, width_);
-    mvwin(window_, y, x);
+    window_->setSize(newSize_);
+    window_->setPosition(newPosition);
 
     positionComponents(*window_);
     displayContent(*window_);
 
-    box(window_, border_.left, border_.top);
-
-    wrefresh(window_);
+    window_->setWindowBorder(newBorder_);
+    window_->redraw();
 
     for (const auto& subView : subViews_)
     {
@@ -114,39 +102,20 @@ void BaseView::refresh()
 Size BaseView::getParentSize() const
 {
     if (!parentView_)
-    {
-        Size size;
-        size.width = COLS;
-        size.height = LINES;
-        return size;
-    }
+        return curses::ScreenSize();
     return parentView_->getSize();
 }
 
 Position BaseView::getParentPosition() const
 {
-    if (parentView_) return parentView_->getPosition();
+    if (parentView_)
+        return parentView_->getPosition();
     return Position(); // return 0, 0 coordinates
 }
 
-void BaseView::eraseWindow()
+void BaseView::hideWindow()
 {
-    if (!window_) return;
-    wborder(window_, ' ', ' ', ' ',' ',' ',' ',' ',' ');
-    wrefresh(window_);
-    applyBorder();
-}
-
-void BaseView::applyBorder()
-{
-    if (!window_) return;
-    wborder(window_,
-            border_.left, border_.right,
-            border_.top, border_.bottom,
-            border_.corner.upperLeft,
-            border_.corner.upperRight,
-            border_.corner.lowerLeft,
-            border_.corner.lowerRight);
+    window_->erase();
 }
 
 void BaseView::setVisible(bool iVisible)
@@ -159,69 +128,64 @@ bool BaseView::isVisible() const
     return visible_;
 }
 
-void BaseView::setHeight(int iHeight)
+void BaseView::setHeight(int height)
 {
-    height_ = iHeight;
+    newSize_.height = height;
 }
 
-void BaseView::setWidth(int iWidth)
+void BaseView::setWidth(int width)
 {
-    width_ = iWidth;
+    newSize_.width = width;
 }
 
-void BaseView::setSize(const Size& iSize)
+void BaseView::setSize(const Size& size)
 {
-    setWidth(iSize.width);
-    setHeight(iSize.height);
+    newSize_ = size;
 }
 
 int BaseView::getHeight() const
 {
-    return height_;
+    return window_->height();
 }
 
 int BaseView::getWidth() const
 {
-    return width_;
+    return window_->width();
 }
 
 Size BaseView::getSize() const
 {
-    return { Height(height_), Width(width_) };
+    return window_->size();
 }
 
-void BaseView::setY(int iY)
+void BaseView::setY(int y)
 {
-    y_ = iY;
+    newPosition_.y = y;
 }
 
-void BaseView::setX(int iX)
+void BaseView::setX(int x)
 {
-    x_ = iX;
+    newPosition_.x = x;
 }
 
-void BaseView::setPosition(const Position& iPos)
+void BaseView::setPosition(const Position& pos)
 {
-    setY(iPos.y);
-    setX(iPos.x);
+    newPosition_ = pos;
 }
 
 int BaseView::getY() const
 {
-    return y_;
+    return window_->posY();
 }
 
 int BaseView::getX() const
 {
-    return x_;
+    return window_->posX();
 }
 
 Position BaseView::getPosition() const
 {
-    Position position;
-    position.x = x_;
-    position.y = y_;
-    return position;
+    return window_->position();
 }
 
 void BaseView::setParentView(IView* iParent)
@@ -234,23 +198,22 @@ IView* BaseView::getParentView()
     return parentView_;
 }
 
-void BaseView::setBorder(const Border& iBorder)
+void BaseView::setBorder(const Border& border)
 {
-    border_ = iBorder;
-    applyBorder();
+    newBorder_ = border;
 }
 
 Border BaseView::getBorder() const
 {
-    return border_;
+    return window_->windowBorder();
 }
 
 void BaseView::displayText(const widget::Text& iText)
 {
-    mvwprintw(window_, iText.getY(), iText.getX(), iText.getText().c_str());
+    curses::PrintText(iText.getText(), *window_, iText.getPosition());
 }
 
-Window_t& BaseView::getWindow()
+curses::IWindow& BaseView::getWindow()
 {
     return *window_;
 }
@@ -270,8 +233,8 @@ void BaseView::removeSubView(IView::Ptr iSubView)
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void BaseView::focus() {}
 void BaseView::beforeViewResized() {}
-void BaseView::displayContent(Window_t& ioWindow) {}
-void BaseView::positionComponents(Window_t& ioWindow) {}
+void BaseView::displayContent(curses::IWindow& ioWindow) {}
+void BaseView::positionComponents(curses::IWindow& ioWindow) {}
 #pragma GCC diagnostic pop
 
 } // namespace ui

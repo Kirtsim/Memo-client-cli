@@ -32,10 +32,6 @@ private:
 
 #include <unordered_set>
 
-struct _win_st;
-
-using WindowPtr_t = Window_t*;
-
 namespace memo {
 namespace ui {
 namespace widget {
@@ -82,17 +78,17 @@ public:
     void setBorder(const Border& iBorder) override;
     Border getBorder() const override;
 
-    Window_t& getWindow() override;
+    curses::IWindow& getWindow() override;
+    void hideWindow();
 
 protected:
     virtual void beforeViewResized();
-    virtual void positionComponents(Window_t& ioWindow);
-    virtual void displayContent(Window_t& ioWindow);
+    virtual void positionComponents(curses::IWindow& ioWindow);
+    virtual void displayContent(curses::IWindow& ioWindow);
 
     void registerSubView(IView::Ptr iSubView);
     void removeSubView(IView::Ptr iSubView);
     void displayText(const widget::Text& iText);
-    void eraseWindow();
     Size getParentSize() const;
     Position getParentPosition() const;
 
@@ -101,12 +97,12 @@ private:
 
 private:
     IView* parentView_;
-    int width_, height_;
-    int x_, y_;
-    Border border_;
+    Position newPosition_;
+    Size newSize_;
+    Border newBorder_;
 
     bool visible_;
-    WindowPtr_t window_;
+    std::shared_ptr<curses::IWindow> window_;
     std::unordered_set<IView::Ptr> subViews_;
 };
 
