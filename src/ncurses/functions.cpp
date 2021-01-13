@@ -1,16 +1,11 @@
 #include "ncurses/functions.hpp"
+#include "ncurses/IWindow.hpp"
 #include "utils/Structs.hpp"
 
 #include <ncurses.h>
 
 namespace memo {
 namespace curses {
-
-class Window
-{
-public:
-    WINDOW* getCursesWindow() const { return nullptr; }
-};
 
 void InitCurses()
 {
@@ -55,29 +50,64 @@ void KeyPad(bool enable)
     keypad(stdscr, enabled);
 }
 
+void KeyPad(const IWindow& window, bool enable)
+{
+    int enabled = enable ? TRUE : FALSE;
+    keypad(window.cursesWindow(), enabled);
+}
+
 int ReadChar()
 {
     return getch();
 }
 
-int ReadChar(const Window& window)
+int ReadChar(const IWindow& window)
 {
-    return wgetch(window.getCursesWindow());
+    return wgetch(window.cursesWindow());
 }
 
-int ReadCharAt(const Position &position)
+int ReadCharAt(const Position& position)
 {
     return mvgetch(position.y, position.x);
 }
 
-int ReadCharAt(const Window &window, const Position &position)
+int ReadCharAt(const IWindow& window, const Position& position)
 {
-    return mvwgetch(window.getCursesWindow(), position.y, position.x);
+    return mvwgetch(window.cursesWindow(), position.y, position.x);
 }
 
+int ScreenWidth()
+{
+    return COLS;
+}
 
+int ScreenHeight()
+{
+    return LINES;
+}
 
+Size ScreenSize()
+{
+    return { Height(LINES), Width(COLS) };
+}
 
+int PrintText(const std::string& text, const Position& position)
+{
+    return mvprintw(position.y, position.x, text.c_str());
+}
+
+int PrintText(const std::string& text, const IWindow& window, const Position& position)
+{
+    return mvwprintw(window.cursesWindow(), position.y, position.x, text.c_str());
+}
+
+Border DefaultBorder()
+{
+    return {
+        ACS_HLINE, ACS_VLINE, ACS_HLINE, ACS_VLINE,
+        { ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LLCORNER }
+    };
+}
 
 } // namespace curses
 } // namespace memo
