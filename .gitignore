@@ -22,3 +22,6 @@ compile_flags.txt
 
 #Mac
 .DS_Store
+
+#VS Code
+.vscode
