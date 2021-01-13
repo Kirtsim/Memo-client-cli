@@ -1,6 +1,8 @@
 #include "view/home/MenuView.hpp"
 #include "view/tools/Tools.hpp"
+#include "ncurses/SubWindow.hpp"
 
+#include <memory>
 #include <algorithm>
 #include <menu.h>
 
@@ -23,7 +25,7 @@ MenuView::MenuView(const Size& iSize, IView* iParent) :
 
 MenuView::MenuView(const Size& iSize, const Position& iPosition, IView* iParent) :
     BaseView(iSize, iPosition, iParent),
-    menuWindow_(derwin(&getWindow(), 0, 0, 1, 1)),
+    menuWindow_(std::make_unique<curses::SubWindow>(getWindow(), Position( PosX(1), PosY(1) ))),
     menu_(new_menu(nullptr)),
     oldMenuWindowSize_(Size()),
     menuWindowSize_(Size()),
@@ -33,9 +35,8 @@ MenuView::MenuView(const Size& iSize, const Position& iPosition, IView* iParent)
     selectionMark_(""),
     menuItemsChanged_(false)
 {
-    set_menu_win(menu_.get(), &getWindow());
-    set_menu_sub(menu_.get(), menuWindow_);
-
+    set_menu_win(menu_.get(), getWindow().cursesWindow());
+    set_menu_sub(menu_.get(), menuWindow_->cursesWindow());
     // Do not show the item's description
     menu_opts_off(menu_.get(), O_SHOWDESC);
 }
@@ -45,7 +46,6 @@ MenuView::~MenuView()
     unpost_menu(menu_.get());
     free_menu(menu_.release());
     freeTagItems(tagItems_);
-    delwin(menuWindow_);
 }
 
 void MenuView::setMenuItems(const std::vector<MenuItem>& iItems)
@@ -113,7 +113,7 @@ int MenuView::navigateMenuRight()
 std::pair<bool, MenuItem> MenuView::getSelected() const
 {
     std::pair<bool, MenuItem> selection(false, { -1, "", "" });
-    auto* selectedItem = current_item(menu_.get());
+    auto selectedItem = current_item(menu_.get());
     if (selectedItem)
     {
         std::string name = item_name(selectedItem);
@@ -130,13 +130,7 @@ std::pair<bool, MenuItem> MenuView::getSelected() const
     return selection;
 }
 
-void MenuView::beforeViewResized()
-{
-    if (menuChanged())
-        unpost_menu(menu_.get());
-}
-
-void MenuView::positionComponents(Window_t& ioWindow)
+void MenuView::positionComponents(curses::IWindow& ioWindow)
 {
     auto* selectedItem = current_item(menu_.get());
 
@@ -165,7 +159,7 @@ bool MenuView::menuChanged()
 
 bool MenuView::menuPositionChanged()
 {
-    return oldMenuWindowPos_ != menuWindowPos_;
+    return menuWindow_->position() != menuWindowPos_;
 }
 
 bool MenuView::menuMarkerChanged()
@@ -176,7 +170,7 @@ bool MenuView::menuMarkerChanged()
 
 bool MenuView::menuSizeChanged()
 {
-    return oldMenuWindowSize_ != menuWindowSize_;
+    return menuWindow_->size() != menuWindowSize_;
 }
 
 bool MenuView::menuLayoutChanged()
@@ -190,11 +184,12 @@ void MenuView::applyMenuChanges()
 {
     if (!menuChanged()) return;
 
+    unpost_menu(menu_.get());
     set_menu_format(menu_.get(), menuWindowLayout_.rows, menuWindowLayout_.cols);
     if (menuSizeChanged())
-        wresize(menuWindow_, menuWindowSize_.height, menuWindowSize_.width);
+        menuWindow_->setSize(menuWindowSize_);
     if (menuPositionChanged())
-        mvderwin(menuWindow_, menuWindowPos_.y, menuWindowPos_.x);
+        menuWindow_->setPosition(menuWindowPos_);
     set_menu_mark(menu_.get(), selectionMark_.c_str());
     menuItemsChanged_ = false;
 
@@ -206,12 +201,12 @@ MenuView::Layout::Layout(Rows iRows, Cols iCols) :
 {
 }
 
-bool MenuView::Layout::operator==(const Layout& other)
+bool MenuView::Layout::operator==(const Layout& other) const
 {
     return rows == other.rows && cols == other.cols;
 }
 
-bool MenuView::Layout::operator!=(const Layout& other)
+bool MenuView::Layout::operator!=(const Layout& other) const
 {
     return rows != other.rows || cols != other.cols;
 }

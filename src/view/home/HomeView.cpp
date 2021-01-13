@@ -110,8 +110,7 @@ void HomeView::handleInvalidOption()
 #include "view/home/MenuView.hpp"
 #include "view/widget/Text.hpp"
 #include "view/tools/Tools.hpp"
-
-#include <menu.h>
+#include "ncurses/functions.hpp"
 
 namespace memo {
 namespace ui {
@@ -120,7 +119,6 @@ namespace ui {
 ///////////////////////////////////////////////////////////////
 /// HomeView
 ///////////////////////////////////////////////////////////////
-
 const std::vector<MenuItem> HomeView::kMenuItems {
     MenuItem(E_MenuItem::LIST_MEMOS,  "List Memos", ""),
     MenuItem(E_MenuItem::LIST_TAGS,   "List Tags", ""),
@@ -132,7 +130,7 @@ const std::vector<MenuItem> HomeView::kMenuItems {
 };
 
 HomeView::HomeView(IView* iParent) :
-    HomeView( Size(Height(LINES), Width(COLS)),
+    HomeView( curses::ScreenSize(),
               Position(),
               iParent )
 {
@@ -144,9 +142,9 @@ HomeView::HomeView(const Size& iSize, IView* iParent) :
 
 HomeView::HomeView(const Size& iSize, const Position& iPosition, IView* iParent) :
     BaseView(iSize, iPosition, iParent),
-    errorStatus_(new widget::Text("SOME TEXT")),
-    windowTitle_(new widget::Text("Welcome to the Memo-client-cli")),
-    menuView_(new MenuView)
+    errorStatus_(std::make_unique<widget::Text>("SOME TEXT")),
+    windowTitle_(std::make_unique<widget::Text>("Welcome to the Memo-client-cli")),
+    menuView_(std::make_shared<MenuView>())
 {
     registerSubView(menuView_);
     menuView_->setMenuItems(kMenuItems);
@@ -171,7 +169,7 @@ void HomeView::setErrorStatus(const std::string& iStatus)
     errorStatus_->setText(iStatus);
 }
 
-void HomeView::positionComponents(Window_t& ioWindow)
+void HomeView::positionComponents(curses::IWindow& ioWindow)
 {
     windowTitle_->setY(getY() + 2);
     errorStatus_->setY(getY() + getHeight() - 2);
@@ -186,7 +184,7 @@ void HomeView::positionComponents(Window_t& ioWindow)
                                   *this);
 }
 
-void HomeView::displayContent(Window_t& ioWindow)
+void HomeView::displayContent(curses::IWindow& ioWindow)
 {
     displayText(*windowTitle_);
     displayText(*errorStatus_);

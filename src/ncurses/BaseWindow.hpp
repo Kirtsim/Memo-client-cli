@@ -25,6 +25,8 @@ public:
 
     virtual ~BaseWindow() = default;
 
+    virtual bool redraw() override;
+
     virtual bool setPosition(const Position& newPosition) override;
 
     virtual bool setX(const int newX) override;
@@ -54,6 +56,8 @@ public:
     virtual bool setWindowBorder(const Border& newBorder) override;
 
     virtual const Border& windowBorder() const override;
+
+    virtual void erase() const override;
 
 protected:
     bool deleteCursesWindow(_win_st*& window);

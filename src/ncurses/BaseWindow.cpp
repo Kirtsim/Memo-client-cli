@@ -1,19 +1,15 @@
 #include "ncurses/BaseWindow.hpp"
+#include "ncurses/functions.hpp"
 
 #include <ncurses.h>
 
 namespace memo {
 namespace curses {
 
-const Border kDefaultBorder {
-    ACS_HLINE, ACS_VLINE, ACS_HLINE, ACS_VLINE,
-    { ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LLCORNER }
-};
-
 BaseWindow::BaseWindow(const Position& position, const Size& size) :
     position_(position),
     size_(size),
-    border_(kDefaultBorder)
+    border_(DefaultBorder())
 {
 }
 
@@ -49,6 +45,21 @@ BaseWindow& BaseWindow::operator=(BaseWindow&& other)
         border_ = other.border_;
     }
     return *this;
+}
+
+bool BaseWindow::redraw()
+{
+    int status = wborder(cursesWindow(), ' ', ' ', ' ',' ',' ',' ',' ',' ');
+    if (status != OK)
+        return false;
+
+    status = box(cursesWindow(), border_.left, border_.top);
+    if (status == OK)
+    {
+        status = wrefresh(cursesWindow());
+        setWindowBorder(border_);
+    }
+    return status == OK;
 }
 
 bool BaseWindow::setPosition(const Position& newPosition)
@@ -150,6 +161,11 @@ bool BaseWindow::setWindowBorder(const Border& newBorder)
 const Border& BaseWindow::windowBorder() const
 {
     return border_;
+}
+
+void BaseWindow::erase() const
+{
+    wborder(cursesWindow(), ' ', ' ', ' ',' ',' ',' ',' ',' ');
 }
 
 bool BaseWindow::deleteCursesWindow(_win_st*& window)

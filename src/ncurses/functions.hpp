@@ -1,15 +1,15 @@
 #pragma once
+#include "utils/Structs.hpp"
+#include <string>
 
 namespace memo {
-    class Position;
-
 
 const bool ENABLE = true;
 const bool DISABLE = false;
 
 namespace curses {
 
-    class Window;
+    class IWindow;
 
 ///
 /// \brief Initializes the main screen. Needs to be called before calling other
@@ -61,7 +61,7 @@ void KeyPad(bool enable);
 /// arrow keys, ...).
 /// \param enable True/false. Whether or not to enable special keys.
 ///
-void KeyPad(const Window& window, bool enable);
+void KeyPad(const IWindow& window, bool enable);
 
 ///
 /// \brief Reads the next input character typed by the user. The blocks the main thread
@@ -75,7 +75,7 @@ int ReadChar();
 /// operation blocks the main thread and waits for the user input.
 /// \return Integer representation of the read character.
 ///
-int ReadChar(const Window& window);
+int ReadChar(const IWindow& window);
 
 ///
 /// \brief Reads the next input character typed by the user from the specified position
@@ -91,7 +91,32 @@ int ReadCharAt(const Position& position);
 /// operation blocks the main thread and waits for the user input.
 /// \return Integer representation of the read character.
 ///
-int ReadCharAt(const Window& window, const Position& position);
+int ReadCharAt(const IWindow& window, const Position& position);
+
+///
+/// \brief Prints the given text at the specified position on the screen.
+/// \param text Text to print
+/// \param position Position on the screen.
+/// \return curses error code
+///
+int PrintText(const std::string& text, const Position& position);
+
+///
+/// \brief Prints the given text at the specified position in the window.
+/// \param text Text to print
+/// \param window Window on which to print
+/// \param position Position on the screen
+/// \return curses error code
+///
+int PrintText(const std::string& text, const IWindow& window, const Position& position);
+
+Size ScreenSize();
+
+int ScreenWidth();
+
+int ScreenHeight();
+
+Border DefaultBorder();
 
 }
 }

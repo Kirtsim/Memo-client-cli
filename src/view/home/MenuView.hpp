@@ -10,6 +10,9 @@ struct tagITEM;
 struct tagMENU;
 
 namespace memo {
+namespace curses {
+    class SubWindow;
+} // namespace curses
 namespace ui {
 
 class MenuView : public BaseView
@@ -22,8 +25,8 @@ class MenuView : public BaseView
     public:
         Layout(Rows iRows, Cols iCols);
 
-        bool operator==(const Layout& other);
-        bool operator!=(const Layout& other);
+        bool operator==(const Layout& other) const;
+        bool operator!=(const Layout& other) const;
 
         int rows;
         int cols;
@@ -50,8 +53,7 @@ public:
     void applyMenuChanges();
 
 protected:
-    void beforeViewResized() override;
-    void positionComponents(Window_t& ioWindow) override;
+    void positionComponents(curses::IWindow& ioWindow) override;
 
 private:
     void freeTagItems(std::vector<tagITEM*>& ioTagItems);
@@ -65,7 +67,7 @@ private:
 
     std::vector<MenuItem> menuItems_;
     std::vector<tagITEM*> tagItems_;
-    WindowPtr_t menuWindow_;
+    std::unique_ptr<curses::SubWindow> menuWindow_;
     std::unique_ptr<tagMENU> menu_;
 
     Size oldMenuWindowSize_;

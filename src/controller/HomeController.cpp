@@ -2,12 +2,12 @@
 #include "view/home/HomeView.hpp"
 #include "view/home/MenuView.hpp"
 #include "manager/ControllerManager.hpp"
-#include <menu.h>
+
+#include "ncurses/functions.hpp"
+#include "ncurses/keys.hpp"
 
 namespace memo {
 namespace ctrl {
-
-const unsigned int kKeyEnter = 10;
 
 HomeController::HomeController(const ResourcesPtr_t& iResources) :
     BaseController(iResources)
@@ -18,33 +18,40 @@ HomeController::HomeController(const ResourcesPtr_t& iResources) :
 
 void HomeController::processInput()
 {
-    auto& cursesWindow = view()->getWindow();
-    keypad(&cursesWindow, TRUE);
-    int input = wgetch(&cursesWindow);
+    auto& cursesWindow = view()->getMenuView()->getWindow();
 
-    switch (input)
+    curses::KeyPad(cursesWindow, ENABLE);
+    const int input = curses::ReadChar(cursesWindow);
+    if (input == curses::Key::kDown)
     {
-        case KEY_DOWN:
-            view()->getMenuView()->navigateMenuDown();
-            break;
-        case KEY_UP:
-            view()->getMenuView()->navigateMenuUp();
-            break;
-        case KEY_LEFT:
-            view()->getMenuView()->navigateMenuLeft();
-            break;
-        case KEY_RIGHT:
-            view()->getMenuView()->navigateMenuRight();
-            break;
-        case kKeyEnter:
-        {
-            const auto& selection = view()->getMenuView()->getSelected();
-            onMenuOptionSelected(selection);
-        } break;
-        default:
-            view()->setErrorStatus("Unprocessed Key code: " + std::to_string(input));
+        view()->getMenuView()->navigateMenuDown();
     }
-    keypad(&cursesWindow, FALSE);
+    else if (input == curses::Key::kUp)
+    {
+        view()->getMenuView()->navigateMenuUp();
+    }
+    else if (input == curses::Key::kLeft)
+    {
+        view()->getMenuView()->navigateMenuLeft();
+    }
+    else if (input == curses::Key::kRight)
+    {
+        view()->getMenuView()->navigateMenuRight();
+    }
+    else if (input == curses::Key::kEnter)
+    {
+        const auto& selection = view()->getMenuView()->getSelected();
+        onMenuOptionSelected(selection);
+    }
+    else if (input == 'q')
+    {
+        getResources()->getControllerManager()->pop();
+    }
+    else
+    {
+        view()->setErrorStatus("Unprocessed Key code: " + std::to_string(input));
+    }
+    curses::KeyPad(DISABLE);
 }
 
 

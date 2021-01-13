@@ -2,24 +2,19 @@
 
 #include <iostream>
 #include <thread>
+#include <locale>
 
 using memo::Client;
 
 int main(int argc, char** argv)
 {
-  	try
-  	{
-  	    if (argc != 3)
-  	    {
-  	      std::cerr << "Usage: http_server <address> <port>\n";
-  	      std::cerr << "Ex   : http_server 127.0.0.1 8000\n";
-  	      return 1;
-        }
-  	}
-  	catch (std::exception& e)
-  	{
-        std::cout << "exception:\n" << e.what() << std::endl;
-  	}
+    if (argc != 3)
+    {
+        std::cerr << "Usage: http_server <address> <port>\n";
+        std::cerr << "Ex   : http_server 127.0.0.1 8000\n";
+        return 1;
+    }
+    setlocale(LC_ALL, "");
 
     const std::string ipAddress = argv[1];
     const std::string port = argv[2];

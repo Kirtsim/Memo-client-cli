@@ -28,12 +28,12 @@ Size::Size(Height iHeight, Width iWidth) :
 {
 }
 
-bool Size::operator==(const Size& iOther)
+bool Size::operator==(const Size& iOther) const
 {
     return width == iOther.width && height == iOther.height;
 }
 
-bool Size::operator!=(const Size& iOther)
+bool Size::operator!=(const Size& iOther) const
 {
     return width != iOther.width && height != iOther.height;
 }
@@ -48,12 +48,12 @@ Position::Position(PosX iX, PosY iY) :
 {
 }
 
-bool Position::operator==(const Position& iOther)
+bool Position::operator==(const Position& iOther) const
 {
     return x == iOther.x && y == iOther.y;
 }
 
-bool Position::operator!=(const Position& iOther)
+bool Position::operator!=(const Position& iOther) const
 {
     return x != iOther.x && y != iOther.y;
 }

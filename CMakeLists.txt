@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 3.0)
 
 project (Memo-server LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
 add_compile_options(-std=c++17 -g -Wall -Wextra -Wsign-conversion)
 
 # Use the "gold-linker" to speed-up the linking phase
@@ -26,6 +27,7 @@ list(APPEND PROTO_FILES ${PROTO_SVC_FILES})
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
 
 # OpenSSL
 if (APPLE)
@@ -121,11 +123,29 @@ target_link_libraries(memo_client_cli
     ${_GRPC_GRPCPP}
     ${_PROTOBUF_LIBPROTOBUF})
 
-find_package(Curses REQUIRED)
-target_include_directories(memo_client_cli PRIVATE ${CURSES_INCLUDE_DIRS})
-target_link_libraries(memo_client_cli ncurses)
-find_library(MENU_LIB menu REQUIRED)
-target_link_libraries(memo_client_cli ${MENU_LIB})
+# Link ncurses libs
+set(CURSES_NEED_NCURSES TRUE)
+set(curses_lib_dir)
+set(curses_include_dir)
+if (CURSES_DIR)
+    message("Searching for ncurses in: " ${CURSES_DIR})
+    find_library(NCURSES_LIB ncurses PATHS ${CURSES_DIR}/lib REQUIRED)
+    find_library(MENU_LIB menu PATHS ${CURSES_DIR}/lib REQUIRED)
+    set(curses_lib_dir ${CURSES_DIR}/lib)
+    set(curses_include_dir ${CURSES_DIR}/include)
+else()
+    find_package(Curses REQUIRED)
+    find_library(menu_lib menu REQUIRED)
+    get_filename_component(curses_lib_dir ${menu_lib} DIRECTORY)
+    get_filename_component(curses_dir ${curses_lib_dir} DIRECTORY)
+    set(curses_include_dir ${curses_lib_dir}/include)
+endif()
+
+message("Linked ncurses library directory: " ${curses_lib_dir})
+message("Ncurses include directory: " ${curses_include_dir})
+target_include_directories(memo_client_cli PRIVATE ${curses_include_dir})
+target_link_directories(memo_client_cli PRIVATE ${curses_lib_dir})
+target_link_libraries(memo_client_cli ncurses menu)
 
 # needed for "absolute" include paths
 target_include_directories(memo_client_cli PRIVATE ${BASEPATH})
