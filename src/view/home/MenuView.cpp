@@ -128,7 +128,7 @@ std::pair<bool, MenuItem> MenuView::getSelected() const
     return selection;
 }
 
-void MenuView::positionComponents(curses::IWindow& ioWindow)
+void MenuView::positionComponents()
 {
     auto* selectedItem = current_item(menu_.get());
 

@@ -169,7 +169,7 @@ void HomeView::setErrorStatus(const std::string& iStatus)
     errorStatus_->setText(iStatus);
 }
 
-void HomeView::positionComponents(curses::IWindow& ioWindow)
+void HomeView::positionComponents()
 {
     windowTitle_->setY(getY() + 2);
     errorStatus_->setY(getY() + getHeight() - 2);
@@ -184,7 +184,7 @@ void HomeView::positionComponents(curses::IWindow& ioWindow)
                                   *this);
 }
 
-void HomeView::displayContent(curses::IWindow& ioWindow)
+void HomeView::displayContent()
 {
     displayText(*windowTitle_);
     displayText(*errorStatus_);

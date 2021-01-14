@@ -83,8 +83,8 @@ public:
 
 protected:
     virtual void beforeViewResized();
-    virtual void positionComponents(curses::IWindow& ioWindow);
-    virtual void displayContent(curses::IWindow& ioWindow);
+    virtual void positionComponents();
+    virtual void displayContent();
 
     void registerSubView(IView::Ptr iSubView);
     void removeSubView(IView::Ptr iSubView);

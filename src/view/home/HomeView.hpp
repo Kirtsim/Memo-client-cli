@@ -59,8 +59,8 @@ public:
     void setErrorStatus(const std::string& iStatus);
 
 protected:
-    void positionComponents(curses::IWindow& ioWindow) override;
-    void displayContent(curses::IWindow& ioWindow) override;
+    void positionComponents() override;
+    void displayContent() override;
 
 private:
     static const std::vector<MenuItem> kMenuItems;

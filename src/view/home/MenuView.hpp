@@ -53,7 +53,7 @@ public:
     void applyMenuChanges();
 
 protected:
-    void positionComponents(curses::IWindow& ioWindow) override;
+    void positionComponents() override;
 
 private:
     void freeTagItems(std::vector<tagITEM*>& ioTagItems);

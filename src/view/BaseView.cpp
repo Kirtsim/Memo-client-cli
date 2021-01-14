@@ -83,12 +83,11 @@ void BaseView::refresh()
     newPosition.y += newPosition_.y;
     newPosition.x += newPosition_.x;
 
-    beforeViewResized();
     window_->setSize(newSize_);
     window_->setPosition(newPosition);
 
-    positionComponents(*window_);
-    displayContent(*window_);
+    positionComponents();
+    displayContent();
 
     window_->setWindowBorder(newBorder_);
     window_->redraw();
@@ -233,8 +232,8 @@ void BaseView::removeSubView(IView::Ptr iSubView)
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void BaseView::focus() {}
 void BaseView::beforeViewResized() {}
-void BaseView::displayContent(curses::IWindow& ioWindow) {}
-void BaseView::positionComponents(curses::IWindow& ioWindow) {}
+void BaseView::displayContent() {}
+void BaseView::positionComponents() {}
 #pragma GCC diagnostic pop
 
 } // namespace ui
