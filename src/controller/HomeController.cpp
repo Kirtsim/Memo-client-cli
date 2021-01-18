@@ -9,8 +9,8 @@
 namespace memo {
 namespace ctrl {
 
-HomeController::HomeController(const ResourcesPtr_t& iResources) :
-    BaseController(iResources)
+HomeController::HomeController(const ResourcesPtr_t& resources) :
+    BaseController(resources)
 {
     auto view = std::make_shared<ui::HomeView>();
     setView(view);
@@ -55,16 +55,16 @@ void HomeController::processInput()
 }
 
 
-void HomeController::onMenuOptionSelected(std::pair<bool, ui::MenuItem> iSelectedOption)
+void HomeController::onMenuOptionSelected(std::pair<bool, ui::MenuItem> selectedOption)
 {
     const auto& home_view = view();
-    if (!iSelectedOption.first)
+    if (!selectedOption.first)
     {
         home_view->setErrorStatus("Nothing selected");
         return;
     }
 
-    const auto& menuItem  = iSelectedOption.second;
+    const auto& menuItem  = selectedOption.second;
     switch (menuItem.getId())
     {
         case ui::E_MenuItem::CREATE_MEMO:

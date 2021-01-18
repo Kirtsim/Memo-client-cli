@@ -23,7 +23,7 @@ class MenuView : public BaseView
     class Layout
     {
     public:
-        Layout(Rows iRows, Cols iCols);
+        Layout(Rows rows, Cols cols);
 
         bool operator==(const Layout& other) const;
         bool operator!=(const Layout& other) const;
@@ -33,14 +33,14 @@ class MenuView : public BaseView
     };
 
 public:
-    explicit MenuView(IView* iParent=nullptr);
-    explicit MenuView(const Size& iSize, IView* iParent=nullptr);
-    MenuView(const Size& iSize, const Position& iPosition, IView* iParent=nullptr);
+    explicit MenuView(IView* parent=nullptr);
+    explicit MenuView(const Size& size, IView* parent=nullptr);
+    MenuView(const Size& size, const Position& position, IView* parent=nullptr);
     ~MenuView();
 
-    void setMenuItems(const std::vector<MenuItem>& iItems);
-    void setLayout(Rows iRows, Cols iCols);
-    void setSelectionMark(const std::string& iMark);
+    void setMenuItems(const std::vector<MenuItem>& items);
+    void setLayout(Rows rows, Cols cols);
+    void setSelectionMark(const std::string& mark);
 
     int navigateMenuUp();
     int navigateMenuDown();

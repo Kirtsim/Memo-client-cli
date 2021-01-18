@@ -4,19 +4,19 @@
 namespace memo {
 namespace manager {
 
-void ViewManager::addView(const ViewPtr_t& iView)
+void ViewManager::addView(const ViewPtr_t& view)
 {
-    addView(iView, false);
+    addView(view, false);
 }
 
-void ViewManager::addView(const ViewPtr_t& iView, const bool iCacheCurrent)
+void ViewManager::addView(const ViewPtr_t& view, const bool cacheCurrent)
 {
-    if (!iCacheCurrent && !views_.empty())
+    if (!cacheCurrent && !views_.empty())
     {
         viewsToDestroyLater_.push_back(views_.back());
         popView();
     }
-    views_.push_back(iView);
+    views_.push_back(view);
 }
 
 ViewManager::ViewPtr_t ViewManager::getCurrentView()

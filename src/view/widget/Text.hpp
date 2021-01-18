@@ -11,19 +11,19 @@ class Text : public ui::BaseComponent
 {
 public:
     Text();
-    explicit Text(const std::string& iText);
-    Text(const std::string& iText, const Position& iPosition);
+    explicit Text(const std::string& text);
+    Text(const std::string& text, const Position& position);
 
     ~Text();
 
-    void setText(const std::string& iText);
+    void setText(const std::string& text);
     const std::string& getText() const;
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-    void setHeight(int iHeight) override {};
-    void setWidth(int iWidth) override {};
-    void setSize(const Size& iSize) override {};
+    void setHeight(int height) override {};
+    void setWidth(int width) override {};
+    void setSize(const Size& size) override {};
 #pragma GCC diagnostic pop
 
     int length();

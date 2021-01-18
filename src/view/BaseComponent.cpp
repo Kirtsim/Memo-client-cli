@@ -7,30 +7,30 @@ BaseComponent::BaseComponent() :
     BaseComponent(Size(), Position())
 {}
 
-BaseComponent::BaseComponent(const Size& iSize) :
-    BaseComponent(iSize, Position())
+BaseComponent::BaseComponent(const Size& size) :
+    BaseComponent(size, Position())
 {}
 
-BaseComponent::BaseComponent(const Size& iSize, const Position& iPosition) :
-    size_(iSize), position_(iPosition)
+BaseComponent::BaseComponent(const Size& size, const Position& position) :
+    size_(size), position_(position)
 {}
 
 BaseComponent::~BaseComponent() = default;
 
 
-void BaseComponent::setHeight(int iHeight)
+void BaseComponent::setHeight(int height)
 {
-    size_.height = iHeight;
+    size_.height = height;
 }
 
-void BaseComponent::setWidth(int iWidth)
+void BaseComponent::setWidth(int width)
 {
-    size_.width = iWidth;
+    size_.width = width;
 }
 
-void BaseComponent::setSize(const Size& iSize)
+void BaseComponent::setSize(const Size& size)
 {
-    size_= iSize;
+    size_= size;
 }
 
 int BaseComponent::getHeight() const
@@ -58,9 +58,9 @@ void BaseComponent::setX(int iX)
     position_.x = iX;
 }
 
-void BaseComponent::setPosition(const Position& iPos)
+void BaseComponent::setPosition(const Position& pos)
 {
-    position_ = iPos;
+    position_ = pos;
 }
 
 int BaseComponent::getY() const

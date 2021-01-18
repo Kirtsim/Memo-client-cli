@@ -9,19 +9,19 @@ class MenuItem
 {
 public:
     MenuItem();
-    MenuItem(int iId, const std::string& iName, const std::string& iDescription="");
-    MenuItem(const MenuItem& iOther);
-    MenuItem(const MenuItem&& iOther) noexcept;
-    MenuItem& operator=(const MenuItem& iOther);
+    MenuItem(int id, const std::string& name, const std::string& description="");
+    MenuItem(const MenuItem& other);
+    MenuItem(const MenuItem&& other) noexcept;
+    MenuItem& operator=(const MenuItem& other);
 
     int getId() const;
-    void setId(int iId);
+    void setId(int id);
 
     const std::string& getName() const;
-    void setName(const std::string& iName);
+    void setName(const std::string& name);
 
     const std::string& getDescription() const;
-    void setDescription(const std::string iDescription);
+    void setDescription(const std::string description);
 
 private:
     int id_;

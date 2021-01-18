@@ -9,16 +9,16 @@ class IComponent
 public:
     virtual ~IComponent() = default;
 
-    virtual void setHeight(int iHeight) = 0;
-    virtual void setWidth(int iWidth) = 0;
-    virtual void setSize(const Size& iSize) = 0;
+    virtual void setHeight(int height) = 0;
+    virtual void setWidth(int width) = 0;
+    virtual void setSize(const Size& size) = 0;
     virtual int getHeight() const = 0;
     virtual int getWidth() const = 0;
     virtual Size getSize() const = 0;
 
-    virtual void setY(int iY) = 0;
-    virtual void setX(int iX) = 0;
-    virtual void setPosition(const Position& iPos) = 0;
+    virtual void setY(int y) = 0;
+    virtual void setX(int x) = 0;
+    virtual void setPosition(const Position& pos) = 0;
     virtual int getY() const = 0;
     virtual int getX() const = 0;
     virtual Position getPosition() const = 0;

@@ -8,20 +8,20 @@ class BaseComponent : public IComponent
 {
 public:
     BaseComponent();
-    explicit BaseComponent(const Size& iSize);
-    BaseComponent(const Size& iSize, const Position& iPosition);
+    explicit BaseComponent(const Size& size);
+    BaseComponent(const Size& size, const Position& position);
     virtual ~BaseComponent();
 
-    virtual void setHeight(int iHeight) override;
-    virtual void setWidth(int iWidth) override;
-    virtual void setSize(const Size& iSize) override;
+    virtual void setHeight(int height) override;
+    virtual void setWidth(int width) override;
+    virtual void setSize(const Size& size) override;
     virtual int getHeight() const override;
     virtual int getWidth() const override;
     virtual Size getSize() const override;
 
     virtual void setY(int iY) override;
     virtual void setX(int iX) override;
-    virtual void setPosition(const Position& iPos) override;
+    virtual void setPosition(const Position& pos) override;
     virtual int getY() const override;
     virtual int getX() const override;
     virtual Position getPosition() const override;

@@ -43,9 +43,9 @@ enum E_MenuItem
 class HomeView : public BaseView
 {
 public:
-    explicit HomeView(IView* iParent=nullptr);
-    explicit HomeView(const Size& iSize, IView* iParent=nullptr);
-    HomeView(const Size& iSize, const Position& iPosition, IView* iParent=nullptr);
+    explicit HomeView(IView* parent=nullptr);
+    explicit HomeView(const Size& size, IView* parent=nullptr);
+    HomeView(const Size& size, const Position& position, IView* parent=nullptr);
     ~HomeView();
 
     HomeView(const HomeView&) = delete;
@@ -56,7 +56,7 @@ public:
 
     void focus() override;
 
-    void setErrorStatus(const std::string& iStatus);
+    void setErrorStatus(const std::string& status);
 
 protected:
     void positionComponents() override;

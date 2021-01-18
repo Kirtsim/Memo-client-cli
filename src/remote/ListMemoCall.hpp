@@ -10,15 +10,15 @@ class ListMemoCall : public BaseCall<model::MemoSvc::Stub, model::MemoSearchRs>
 public:
     using ReaderPtr_t = std::unique_ptr<grpc::ClientAsyncResponseReader<model::MemoSearchRs>>;
 
-    ListMemoCall(model::MemoSvc::Stub& ioStub);
+    ListMemoCall(model::MemoSvc::Stub& stub);
 
     ListMemoCall(const ListMemoCall&) = delete;
     ListMemoCall& operator=(const ListMemoCall&) = delete;
 
 protected:
-    ReaderPtr_t makeCall(model::MemoSvc::Stub& iStub,
-                         grpc::ClientContext& iContext,
-                         grpc::CompletionQueue& iCompletionQueue) override;
+    ReaderPtr_t makeCall(model::MemoSvc::Stub& stub,
+                         grpc::ClientContext& context,
+                         grpc::CompletionQueue& completionQueue) override;
 
 private:
     model::MemoSearchRq request_;

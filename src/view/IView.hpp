@@ -37,10 +37,10 @@ public:
     virtual void setVisible(bool visible) = 0;
     virtual bool isVisible() const = 0;
 
-    virtual void setParentView(IView* iParent) = 0;
+    virtual void setParentView(IView* parent) = 0;
     virtual IView* getParentView() = 0;
 
-    virtual void setBorder(const Border& iBorder) = 0;
+    virtual void setBorder(const Border& border) = 0;
     virtual Border getBorder() const = 0;
 
     virtual curses::IWindow& getWindow() = 0;

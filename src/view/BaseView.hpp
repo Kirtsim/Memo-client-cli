@@ -12,15 +12,15 @@ namespace view {
 class BaseView : public IView
 {
 public:
-    BaseView(Client& iClient, const std::shared_ptr<manager::ViewManager>& iViewManager);
+    BaseView(Client& client, const std::shared_ptr<manager::ViewManager>& viewManager);
     virtual ~BaseView();
 
 protected:
     const std::shared_ptr<manager::ViewManager>& getViewManager();
     Client& getClient();
     std::string readInput();
-    void print(const std::string& iContent) const;
-    void println(const std::string& iContent) const;
+    void print(const std::string& content) const;
+    void println(const std::string& content) const;
 
 private:
     Client& client_;
@@ -41,9 +41,9 @@ namespace widget {
 class BaseView : public IView
 {
 public:
-    explicit BaseView(IView* iParent=nullptr);
-    explicit BaseView(const Size& iSize, IView* iParent=nullptr);
-    BaseView(const Size& iSize, const Position& iPosition, IView* iParent=nullptr);
+    explicit BaseView(IView* parent=nullptr);
+    explicit BaseView(const Size& size, IView* parent=nullptr);
+    BaseView(const Size& size, const Position& position, IView* parent=nullptr);
 
     virtual ~BaseView();
     BaseView(const BaseView&) = delete;
@@ -55,27 +55,27 @@ public:
 
     virtual void focus() override;
 
-    void setVisible(bool iVisible) override;
+    void setVisible(bool visible) override;
     bool isVisible() const override;
 
-    void setHeight(int iHeight) override;
-    void setWidth(int iWidth) override;
-    void setSize(const Size& iSize) override;
+    void setHeight(int height) override;
+    void setWidth(int width) override;
+    void setSize(const Size& size) override;
     int getHeight() const override;
     int getWidth() const override;
     Size getSize() const override;
 
     void setY(int iY) override;
     void setX(int iX) override;
-    void setPosition(const Position& iPos) override;
+    void setPosition(const Position& pos) override;
     int getY() const override;
     int getX() const override;
     Position getPosition() const override;
 
-    void setParentView(IView* iParent) override;
+    void setParentView(IView* parent) override;
     IView* getParentView() override;
 
-    void setBorder(const Border& iBorder) override;
+    void setBorder(const Border& border) override;
     Border getBorder() const override;
 
     curses::IWindow& getWindow() override;
@@ -86,9 +86,9 @@ protected:
     virtual void positionComponents();
     virtual void displayContent();
 
-    void registerSubView(IView::Ptr iSubView);
-    void removeSubView(IView::Ptr iSubView);
-    void displayText(const widget::Text& iText);
+    void registerSubView(IView::Ptr subView);
+    void removeSubView(IView::Ptr subView);
+    void displayText(const widget::Text& text);
     Size getParentSize() const;
     Position getParentPosition() const;
 

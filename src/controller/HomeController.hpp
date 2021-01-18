@@ -13,10 +13,10 @@ class HomeController : public BaseController<ui::HomeView>
     using ResourcesPtr_t = std::shared_ptr<Resources>;
 
 public:
-    HomeController(const ResourcesPtr_t& iResources);
+    HomeController(const ResourcesPtr_t& resources);
     void processInput() override;
 private:
-    void onMenuOptionSelected(std::pair<bool, ui::MenuItem> iSelectedOption);
+    void onMenuOptionSelected(std::pair<bool, ui::MenuItem> selectedOption);
 };
 
 } // namespace ctrl

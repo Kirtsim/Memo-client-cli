@@ -12,12 +12,12 @@
 
 namespace memo {
 
-Client::Client(const std::string& iAddress) :
+Client::Client(const std::string& address) :
     memoStub_(model::MemoSvc::NewStub(grpc::CreateChannel(
-                    iAddress,
+                    address,
                     grpc::InsecureChannelCredentials()))),
     tagStub_(model::TagSvc::NewStub(grpc::CreateChannel(
-                    iAddress,
+                    address,
                     grpc::InsecureChannelCredentials()))),
     viewManager_(new manager::ViewManager),
     controllerManager_(new manager::ControllerManager),

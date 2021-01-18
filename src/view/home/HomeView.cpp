@@ -129,19 +129,19 @@ const std::vector<MenuItem> HomeView::kMenuItems {
     MenuItem(E_MenuItem::EXIT,		  "Exit", ""),
 };
 
-HomeView::HomeView(IView* iParent) :
+HomeView::HomeView(IView* parent) :
     HomeView( curses::ScreenSize(),
               Position(),
-              iParent )
+              parent )
 {
 }
 
-HomeView::HomeView(const Size& iSize, IView* iParent) :
-    HomeView(iSize, Position(), iParent)
+HomeView::HomeView(const Size& size, IView* parent) :
+    HomeView(size, Position(), parent)
 {}
 
-HomeView::HomeView(const Size& iSize, const Position& iPosition, IView* iParent) :
-    BaseView(iSize, iPosition, iParent),
+HomeView::HomeView(const Size& size, const Position& position, IView* parent) :
+    BaseView(size, position, parent),
     errorStatus_(std::make_unique<widget::Text>("SOME TEXT")),
     windowTitle_(std::make_unique<widget::Text>("Welcome to the Memo-client-cli")),
     menuView_(std::make_shared<MenuView>())
@@ -164,9 +164,9 @@ void HomeView::focus()
 {
 }
 
-void HomeView::setErrorStatus(const std::string& iStatus)
+void HomeView::setErrorStatus(const std::string& status)
 {
-    errorStatus_->setText(iStatus);
+    errorStatus_->setText(status);
 }
 
 void HomeView::positionComponents()

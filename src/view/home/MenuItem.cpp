@@ -10,31 +10,31 @@ MenuItem::MenuItem() :
     MenuItem(0, "", "")
 {}
 
-MenuItem::MenuItem(int iId, const std::string& iName, const std::string& iDescription) :
-    id_(iId),
-    name_(iName),
-    description_(iDescription)
+MenuItem::MenuItem(int id, const std::string& name, const std::string& description) :
+    id_(id),
+    name_(name),
+    description_(description)
 {}
 
-MenuItem::MenuItem(const MenuItem& iOther) :
-    id_(iOther.id_),
-    name_(iOther.name_),
-    description_(iOther.description_)
+MenuItem::MenuItem(const MenuItem& other) :
+    id_(other.id_),
+    name_(other.name_),
+    description_(other.description_)
 {}
 
-MenuItem::MenuItem(const MenuItem&& iOther) noexcept :
-    id_(iOther.id_),
-    name_(std::move(iOther.name_)),
-    description_(std::move(iOther.description_))
+MenuItem::MenuItem(const MenuItem&& other) noexcept :
+    id_(other.id_),
+    name_(std::move(other.name_)),
+    description_(std::move(other.description_))
 {}
 
-MenuItem& MenuItem::operator=(const MenuItem& iOther)
+MenuItem& MenuItem::operator=(const MenuItem& other)
 {
-    if (this != &iOther)
+    if (this != &other)
     {
-        id_ = iOther.id_;
-        name_ = iOther.name_;
-        description_ = iOther.description_;
+        id_ = other.id_;
+        name_ = other.name_;
+        description_ = other.description_;
     }
     return *this;
 }
@@ -44,9 +44,9 @@ int MenuItem::getId() const
     return id_;
 }
 
-void MenuItem::setId(int iId)
+void MenuItem::setId(int id)
 {
-    id_ = iId;
+    id_ = id;
 }
 
 const std::string& MenuItem::getName() const
@@ -54,9 +54,9 @@ const std::string& MenuItem::getName() const
     return name_;
 }
 
-void MenuItem::setName(const std::string& iName)
+void MenuItem::setName(const std::string& name)
 {
-    name_ = iName;
+    name_ = name;
 }
 
 const std::string& MenuItem::getDescription() const
@@ -64,9 +64,9 @@ const std::string& MenuItem::getDescription() const
     return description_;
 }
 
-void MenuItem::setDescription(const std::string iDescription)
+void MenuItem::setDescription(const std::string description)
 {
-    description_ = iDescription;
+    description_ = description;
 }
 
 } // namespace ui

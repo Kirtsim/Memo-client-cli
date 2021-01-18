@@ -15,14 +15,14 @@ class BaseController : public IController
     using ResourcesPtr_t = std::shared_ptr<Resources>;
 
 public:
-    BaseController(const ResourcesPtr_t& iResources);
+    BaseController(const ResourcesPtr_t& resources);
     virtual ~BaseController() = default;
 
     std::shared_ptr<ui::IView> getView() override;
     virtual void saveState() override;
 
 protected:
-    void setView(const ViewPtr_t& iView);
+    void setView(const ViewPtr_t& view);
     const ViewPtr_t& view();
     const ResourcesPtr_t& getResources();
 
@@ -32,14 +32,14 @@ private:
 };
 
 template <class ViewType>
-BaseController<ViewType>::BaseController(const ResourcesPtr_t& iResources) :
-    resources_(iResources)
+BaseController<ViewType>::BaseController(const ResourcesPtr_t& resources) :
+    resources_(resources)
 {}
 
 template <class ViewType>
-void BaseController<ViewType>::setView(const ViewPtr_t& iView)
+void BaseController<ViewType>::setView(const ViewPtr_t& view)
 {
-    view_ = iView;
+    view_ = view;
 }
 
 template <class ViewType>

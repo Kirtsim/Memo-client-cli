@@ -30,8 +30,8 @@ const bool kSTOP     = false;
 
 } // namespace
 
-ListMemoView::ListMemoView(Client& iClient, const std::shared_ptr<manager::ViewManager>& iViewManager) :
-    BaseView(iClient, iViewManager),
+ListMemoView::ListMemoView(Client& client, const std::shared_ptr<manager::ViewManager>& viewManager) :
+    BaseView(client, viewManager),
     responseStatusOk_(false),
     pageSize_(kDEF_PAGE_SIZE),
     currentPage_(0),
@@ -58,12 +58,12 @@ void ListMemoView::display()
     }
 }
 
-bool ListMemoView::processInput(const std::string& iInput, const model::MemoSearchRs& iResponse)
+bool ListMemoView::processInput(const std::string& input, const model::MemoSearchRs& response)
 {
-    if (!validateInput(iInput, iResponse))
+    if (!validateInput(input, response))
         return kCONTINUE;
 
-    const char choice = iInput[0];
+    const char choice = input[0];
     switch (choice)
     {
         case '1':
@@ -96,19 +96,19 @@ bool ListMemoView::processInput(const std::string& iInput, const model::MemoSear
     return kCONTINUE;
 }
 
-bool ListMemoView::validateInput(const std::string& iInput, const model::MemoSearchRs& iResponse) const
+bool ListMemoView::validateInput(const std::string& input, const model::MemoSearchRs& response) const
 {
-    if (iInput.size() > 1 || iInput.empty())
+    if (input.size() > 1 || input.empty())
     {
         afterFooterContent_ = kINVALID_OPTION;
         return false;
     }
 
-    const char choice = iInput[0];
+    const char choice = input[0];
     if (std::isdigit(choice))
     {
         const int numInput  = choice - '0';
-        const int memoCount = getMemoCountOnPage(currentPage_, iResponse.memos().size());
+        const int memoCount = getMemoCountOnPage(currentPage_, response.memos().size());
         if (numInput <= memoCount)
             return true;
     }
@@ -122,11 +122,11 @@ bool ListMemoView::validateInput(const std::string& iInput, const model::MemoSea
     return false;
 }
 
-void ListMemoView::display(const model::MemoSearchRs& iResponse)
+void ListMemoView::display(const model::MemoSearchRs& response)
 {
     println(kHEADER);
     printContent();
-    setButtons(iResponse);
+    setButtons(response);
     printFooter();
     printAfterFooterConent();
     print(kPROMPT);
@@ -162,22 +162,22 @@ void ListMemoView::printAfterFooterConent() const
     }
 }
 
-void ListMemoView::printResponse(const model::MemoSearchRs& iResponse) const
+void ListMemoView::printResponse(const model::MemoSearchRs& response) const
 {
-    if (iResponse.memos().empty())
+    if (response.memos().empty())
     {
         println("No memos found :(");
         return;
     }
-    printMemosOnPage(iResponse, 0);
+    printMemosOnPage(response, 0);
 }
 
-void ListMemoView::printMemosOnPage(const model::MemoSearchRs& iResponse, int iPage) const
+void ListMemoView::printMemosOnPage(const model::MemoSearchRs& response, int page) const
 {
-    const auto& memos = iResponse.memos();
+    const auto& memos = response.memos();
     const int memoCount = memos.size();
 
-    const int startIndex = getIndexOfFirstOnPage(iPage, memoCount);
+    const int startIndex = getIndexOfFirstOnPage(page, memoCount);
     const int endIndex = std::min(memoCount, startIndex + pageSize_);
     std::stringstream sstream;
     for (int i = startIndex; i < endIndex; ++i)
@@ -190,24 +190,24 @@ void ListMemoView::printMemosOnPage(const model::MemoSearchRs& iResponse, int iP
     println(sstream.str());
 }
 
-void ListMemoView::setButtons(const model::MemoSearchRs& iResponse)
+void ListMemoView::setButtons(const model::MemoSearchRs& response)
 {
-    const auto memos = iResponse.memos();
+    const auto memos = response.memos();
     const int indexOfFirst = getIndexOfFirstOnPage(currentPage_, memos.size());
     const int endIndex = std::min(memos.size(), indexOfFirst + pageSize_);
     prevButtonDisplayed_ = indexOfFirst > 0;
     nextButtonDisplayed_ = endIndex < memos.size();
 }
 
-int ListMemoView::getIndexOfFirstOnPage(const int iPage, const int iTotalCount) const
+int ListMemoView::getIndexOfFirstOnPage(const int page, const int totalCount) const
 {
-    return (pageSize_ * iPage) % iTotalCount;
+    return (pageSize_ * page) % totalCount;
 }
 
-int ListMemoView::getMemoCountOnPage(const int iPage, const int iTotalCount) const
+int ListMemoView::getMemoCountOnPage(const int page, const int totalCount) const
 {
-    const int indexOfFirst = getIndexOfFirstOnPage(iPage, iTotalCount);
-    const int endIndex = std::min(iTotalCount, indexOfFirst + pageSize_);
+    const int indexOfFirst = getIndexOfFirstOnPage(page, totalCount);
+    const int endIndex = std::min(totalCount, indexOfFirst + pageSize_);
     return endIndex - indexOfFirst;
 }
 

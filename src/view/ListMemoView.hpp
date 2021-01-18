@@ -16,27 +16,27 @@ class ListMemoView : public BaseView
 public:
     static const int kDEF_PAGE_SIZE;
 
-    ListMemoView(Client& iClient, const std::shared_ptr<manager::ViewManager>& iViewManager);
+    ListMemoView(Client& client, const std::shared_ptr<manager::ViewManager>& viewManager);
     ListMemoView(const ListMemoView&) = delete;
 
     ~ListMemoView();
     void display() override;
 
 private:
-    void display(const model::MemoSearchRs& iResponse);
-    bool processInput(const std::string& iInput, const model::MemoSearchRs& iResponse);
+    void display(const model::MemoSearchRs& response);
+    bool processInput(const std::string& input, const model::MemoSearchRs& response);
 
-    bool validateInput(const std::string& iInput, const model::MemoSearchRs& iResponse) const;
+    bool validateInput(const std::string& input, const model::MemoSearchRs& response) const;
 
     void printFooter() const;
     void printContent() const;
     void printAfterFooterConent() const;
-    void printResponse(const model::MemoSearchRs& iResponse) const;
-    void printMemosOnPage(const model::MemoSearchRs& iResponse, int iPage) const;
+    void printResponse(const model::MemoSearchRs& response) const;
+    void printMemosOnPage(const model::MemoSearchRs& response, int page) const;
 
-    void setButtons(const model::MemoSearchRs& iResponse);
-    int getIndexOfFirstOnPage(int iPage, int iTotalCount) const;
-    int getMemoCountOnPage(int iPage, int iTotalCount) const;
+    void setButtons(const model::MemoSearchRs& response);
+    int getIndexOfFirstOnPage(int page, int totalCount) const;
+    int getMemoCountOnPage(int page, int totalCount) const;
     int getPageCount(int memoCount) const;
 
 

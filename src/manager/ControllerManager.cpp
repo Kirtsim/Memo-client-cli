@@ -4,15 +4,15 @@
 namespace memo {
 namespace manager {
 
-void ControllerManager::replaceLast(const ControllerPtr_t& iController)
+void ControllerManager::replaceLast(const ControllerPtr_t& controller)
 {
     pop();
-    add(iController);
+    add(controller);
 }
 
-void ControllerManager::add(const ControllerPtr_t& iController)
+void ControllerManager::add(const ControllerPtr_t& controller)
 {
-    controllers_.push_back(iController);
+    controllers_.push_back(controller);
 }
 
 ControllerManager::ControllerPtr_t ControllerManager::pop()

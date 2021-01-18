@@ -15,16 +15,16 @@ const std::vector<std::string> MenuView::kMenuItemNames {
     "Create Memo", "Create Tag",
 };
 
-MenuView::MenuView(IView* iParent) :
-    MenuView(Size(), Position(), iParent)
+MenuView::MenuView(IView* parent) :
+    MenuView(Size(), Position(), parent)
 {}
 
-MenuView::MenuView(const Size& iSize, IView* iParent) :
-    MenuView(iSize, Position(), iParent)
+MenuView::MenuView(const Size& size, IView* parent) :
+    MenuView(size, Position(), parent)
 {}
 
-MenuView::MenuView(const Size& iSize, const Position& iPosition, IView* iParent) :
-    BaseView(iSize, iPosition, iParent),
+MenuView::MenuView(const Size& size, const Position& position, IView* parent) :
+    BaseView(size, position, parent),
     menuWindow_(std::make_unique<curses::SubWindow>(getWindow(), Position( PosX(1), PosY(1) ))),
     menu_(new_menu(nullptr)),
     menuWindowSize_(Size()),
@@ -46,10 +46,10 @@ MenuView::~MenuView()
     freeTagItems(tagItems_);
 }
 
-void MenuView::setMenuItems(const std::vector<MenuItem>& iItems)
+void MenuView::setMenuItems(const std::vector<MenuItem>& items)
 {
     auto oldTagItems = tagItems_;
-    menuItems_ = iItems;
+    menuItems_ = items;
     tagItems_.clear();
 
     for (const auto& menuItem : menuItems_)
@@ -66,24 +66,24 @@ void MenuView::setMenuItems(const std::vector<MenuItem>& iItems)
     menuItemsChanged_ = true;
 }
 
-void MenuView::freeTagItems(std::vector<tagITEM*>& ioTagItems)
+void MenuView::freeTagItems(std::vector<tagITEM*>& tagItems)
 {
-    if (ioTagItems.empty()) return;
+    if (tagItems.empty()) return;
 
-    const size_t itemCount = ioTagItems.size() - 1;
+    const size_t itemCount = tagItems.size() - 1;
     for (size_t i = 0; i < itemCount; ++i)
-        free_item(ioTagItems[i]);
+        free_item(tagItems[i]);
 }
 
-void MenuView::setLayout(Rows iRows, Cols iCols)
+void MenuView::setLayout(Rows rows, Cols cols)
 {
-    menuWindowLayout_.rows = iRows.value;
-    menuWindowLayout_.cols = iCols.value;
+    menuWindowLayout_.rows = rows.value;
+    menuWindowLayout_.cols = cols.value;
 }
 
-void MenuView::setSelectionMark(const std::string& iMark)
+void MenuView::setSelectionMark(const std::string& mark)
 {
-    selectionMark_ = iMark;
+    selectionMark_ = mark;
 }
 
 int MenuView::navigateMenuUp()
@@ -194,8 +194,8 @@ void MenuView::applyMenuChanges()
     post_menu(menu_.get());
 }
 
-MenuView::Layout::Layout(Rows iRows, Cols iCols) :
-    rows(iRows.value), cols(iCols.value)
+MenuView::Layout::Layout(Rows rows, Cols cols) :
+    rows(rows.value), cols(cols.value)
 {
 }
 

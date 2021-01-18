@@ -12,8 +12,8 @@ class ControllerManager
 {
     using ControllerPtr_t = std::shared_ptr<ctrl::IController>;
 public:
-    void replaceLast(const ControllerPtr_t& iController);
-    void add(const ControllerPtr_t& iController);
+    void replaceLast(const ControllerPtr_t& controller);
+    void add(const ControllerPtr_t& controller);
     ControllerPtr_t pop();
 
     ControllerPtr_t getCurrent();

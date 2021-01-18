@@ -26,15 +26,15 @@ public:
     Tools& operator=(const Tools&&) = delete;
 
     /// Center the given ui component within a parent component
-    static void centerComponent(ui::IComponent& ioComponent, int centerType,
-                                const ui::IComponent& iParent);
+    static void centerComponent(ui::IComponent& component, int centerType,
+                                const ui::IComponent& parent);
 
     /// Center the given ui component within the specified bounds
-    static void centerComponent(ui::IComponent& ioComponent, int centerType,
+    static void centerComponent(ui::IComponent& component, int centerType,
                                 const Bounds& bounds);
 
     /// Retrieves the ui component's bounds
-    static Bounds componentBoundaries(const ui::IComponent& iComponent);
+    static Bounds componentBoundaries(const ui::IComponent& component);
 };
 
 } // namespace tools

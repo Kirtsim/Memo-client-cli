@@ -16,7 +16,7 @@ class Resources;
 class Client
 {
 public:
-    explicit Client(const std::string& iAddress);
+    explicit Client(const std::string& address);
 
     /// Retrieves the top View from the ViewManager and displays it.
     /// If theres is no view to be dipslayed the client terminates.

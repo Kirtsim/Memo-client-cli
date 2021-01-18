@@ -12,8 +12,8 @@ class ViewManager
 {
     using ViewPtr_t = std::shared_ptr<view::IView>;
 public:
-    void addView(const ViewPtr_t& iView);
-    void addView(const ViewPtr_t& iView, bool iCacheCurrent);
+    void addView(const ViewPtr_t& view);
+    void addView(const ViewPtr_t& view, bool cacheCurrent);
 
     ViewPtr_t getCurrentView();
     int getViewCount() const;

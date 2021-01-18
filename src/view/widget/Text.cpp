@@ -5,27 +5,27 @@ namespace ui {
 namespace widget {
 
 namespace {
-    Size TextSize(const std::string& iText);
+    Size TextSize(const std::string& text);
 } // namespace
 
 Text::Text() :
     Text("", Position())
 {}
 
-Text::Text(const std::string& iText) :
-    Text(iText, Position())
+Text::Text(const std::string& text) :
+    Text(text, Position())
 {}
 
-Text::Text(const std::string& iText, const Position& iPosition) :
-    ui::BaseComponent(TextSize(iText), iPosition),
-    text_(iText)
+Text::Text(const std::string& text, const Position& position) :
+    ui::BaseComponent(TextSize(text), position),
+    text_(text)
 {}
 
 Text::~Text() = default;
 
-void Text::setText(const std::string& iText)
+void Text::setText(const std::string& text)
 {
-    text_ = iText;
+    text_ = text;
     setSize(TextSize(text_));
 }
 
@@ -46,19 +46,19 @@ bool Text::empty()
 
 namespace {
 
-Size TextSize(const std::string& iText)
+Size TextSize(const std::string& text)
 {
     int lineCount = 0; int maxLineLen = 0;
     int lastPos = 0;
-    int pos = iText.find('\n');
+    int pos = text.find('\n');
     while(pos != std::string::npos)
     {
         maxLineLen = std::max(maxLineLen, pos - lastPos);
         lastPos = pos;
         lineCount++;
-        pos = iText.find('\n', lastPos + 1);
+        pos = text.find('\n', lastPos + 1);
     }
-    maxLineLen = std::max(maxLineLen, static_cast<int>(iText.size()) - lastPos);
+    maxLineLen = std::max(maxLineLen, static_cast<int>(text.size()) - lastPos);
 
     Size size;
     size.width = maxLineLen;

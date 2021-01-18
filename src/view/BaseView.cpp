@@ -5,9 +5,9 @@
 namespace memo {
 namespace view {
 
-BaseView::BaseView(Client& iClient, const std::shared_ptr<manager::ViewManager>& iViewManager) :
-    client_(iClient),
-    viewManager_(iViewManager)
+BaseView::BaseView(Client& client, const std::shared_ptr<manager::ViewManager>& viewManager) :
+    client_(client),
+    viewManager_(viewManager)
 {}
 
 BaseView::~BaseView() = default;
@@ -29,14 +29,14 @@ std::string BaseView::readInput()
     return input;
 }
 
-void BaseView::print(const std::string& iContent) const
+void BaseView::print(const std::string& content) const
 {
-    std::cout << iContent;
+    std::cout << content;
 }
 
-void BaseView::println(const std::string& iContent) const
+void BaseView::println(const std::string& content) const
 {
-    std::cout << iContent << "\n";
+    std::cout << content << "\n";
 }
 } // namespace view
 } // namespace memo
@@ -48,14 +48,14 @@ void BaseView::println(const std::string& iContent) const
 namespace memo {
 namespace ui {
 
-BaseView::BaseView(IView* iParent) :
+BaseView::BaseView(IView* parent) :
     BaseView( curses::ScreenSize(),
               Position(),
-              iParent )
+              parent )
 {}
 
-BaseView::BaseView(const Size& iSize, IView* iParent) :
-    BaseView(iSize, Position(), iParent)
+BaseView::BaseView(const Size& size, IView* parent) :
+    BaseView(size, Position(), parent)
 {}
 
 BaseView::BaseView(const Size& size, const Position& position, IView* parent) :
@@ -117,9 +117,9 @@ void BaseView::hideWindow()
     window_->erase();
 }
 
-void BaseView::setVisible(bool iVisible)
+void BaseView::setVisible(bool visible)
 {
-    visible_ = iVisible;
+    visible_ = visible;
 }
 
 bool BaseView::isVisible() const
@@ -187,9 +187,9 @@ Position BaseView::getPosition() const
     return window_->position();
 }
 
-void BaseView::setParentView(IView* iParent)
+void BaseView::setParentView(IView* parent)
 {
-    parentView_ = iParent;
+    parentView_ = parent;
 }
 
 IView* BaseView::getParentView()
@@ -207,9 +207,9 @@ Border BaseView::getBorder() const
     return window_->windowBorder();
 }
 
-void BaseView::displayText(const widget::Text& iText)
+void BaseView::displayText(const widget::Text& text)
 {
-    curses::PrintText(iText.getText(), *window_, iText.getPosition());
+    curses::PrintText(text.getText(), *window_, text.getPosition());
 }
 
 curses::IWindow& BaseView::getWindow()
@@ -217,14 +217,14 @@ curses::IWindow& BaseView::getWindow()
     return *window_;
 }
 
-void BaseView::registerSubView(IView::Ptr iSubView)
+void BaseView::registerSubView(IView::Ptr subView)
 {
-    subViews_.insert(iSubView);
+    subViews_.insert(subView);
 }
 
-void BaseView::removeSubView(IView::Ptr iSubView)
+void BaseView::removeSubView(IView::Ptr subView)
 {
-    subViews_.erase(iSubView);
+    subViews_.erase(subView);
 }
 
 

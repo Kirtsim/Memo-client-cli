@@ -4,7 +4,7 @@ namespace memo {
 
 struct Rows
 {
-    explicit Rows(int iValue);
+    explicit Rows(int value);
 
     int value;
 };
@@ -13,7 +13,7 @@ using Height = Rows;
 
 struct Cols
 {
-    explicit Cols(int iValue);
+    explicit Cols(int value);
 
     int value;
 };
@@ -22,14 +22,14 @@ using Width = Cols;
 
 struct PosX
 {
-    explicit PosX(int iValue);
+    explicit PosX(int value);
 
     int value;
 };
 
 struct PosY
 {
-    explicit PosY(int iValue);
+    explicit PosY(int value);
 
     int value;
 };
@@ -37,10 +37,10 @@ struct PosY
 struct Size
 {
     Size();
-    Size(Height iHeight, Width iWidth);
+    Size(Height height, Width width);
 
-    bool operator==(const Size& iOther) const;
-    bool operator!=(const Size& iOther) const;
+    bool operator==(const Size& other) const;
+    bool operator!=(const Size& other) const;
 
     int height, width;
 };
@@ -48,10 +48,10 @@ struct Size
 struct Position
 {
     Position();
-    Position(PosX iX, PosY iY);
+    Position(PosX x, PosY y);
 
-    bool operator==(const Position& iOther) const;
-    bool operator!=(const Position& iOther) const;
+    bool operator==(const Position& other) const;
+    bool operator!=(const Position& other) const;
 
     int x, y;
 };

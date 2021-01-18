@@ -2,10 +2,10 @@
 
 namespace memo {
 
-Resources::Resources(const ControllerManagerPtr_t& iControllerManager,
-                     const ViewManagerPtr_t& iViewManager) :
-    controllerManager_(iControllerManager),
-    viewManager_(iViewManager)
+Resources::Resources(const ControllerManagerPtr_t& controllerManager,
+                     const ViewManagerPtr_t& viewManager) :
+    controllerManager_(controllerManager),
+    viewManager_(viewManager)
 {}
 
 

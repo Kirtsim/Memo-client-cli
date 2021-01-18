@@ -14,7 +14,7 @@ class BaseCall : public Call
 public:
     using ReaderPtr_t = std::unique_ptr<grpc::ClientAsyncResponseReader<Reply>>;
 
-    BaseCall(Stub& ioStub);
+    BaseCall(Stub& stub);
     virtual ~BaseCall();
 
     bool exec() override;
@@ -22,8 +22,8 @@ public:
     const Reply& getReply() const;
 
 protected:
-    virtual ReaderPtr_t makeCall(Stub& iStub, grpc::ClientContext& iContext,
-                                 grpc::CompletionQueue& iCompletionQueue) = 0;
+    virtual ReaderPtr_t makeCall(Stub& stub, grpc::ClientContext& context,
+                                 grpc::CompletionQueue& completionQueue) = 0;
 private:
     Stub& stub_;
     Reply reply_;
@@ -34,8 +34,8 @@ private:
 };
 
 template<class Stub, class Reply>
-BaseCall<Stub, Reply>::BaseCall(Stub& ioStub) :
-    stub_(ioStub)
+BaseCall<Stub, Reply>::BaseCall(Stub& stub) :
+    stub_(stub)
 {}
 
 template<class Stub, class Reply>
