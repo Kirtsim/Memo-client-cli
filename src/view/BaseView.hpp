@@ -66,11 +66,17 @@ public:
     Size getSize() const override;
 
     void setY(int iY) override;
+    void setAbsY(int iY) override;
     void setX(int iX) override;
+    void setAbsX(int iX) override;
     void setPosition(const Position& pos) override;
+    void setAbsPosition(const Position& pos) override;
     int getY() const override;
+    int getAbsY() const override;
     int getX() const override;
+    int getAbsX() const override;
     Position getPosition() const override;
+    Position getAbsPosition() const override;
 
     void setParentView(IView* parent) override;
     IView* getParentView() override;

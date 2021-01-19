@@ -17,11 +17,17 @@ public:
     virtual Size getSize() const = 0;
 
     virtual void setY(int y) = 0;
+    virtual void setAbsY(int y) = 0;
     virtual void setX(int x) = 0;
+    virtual void setAbsX(int x) = 0;
     virtual void setPosition(const Position& pos) = 0;
+    virtual void setAbsPosition(const Position& pos) = 0;
     virtual int getY() const = 0;
+    virtual int getAbsY() const = 0;
     virtual int getX() const = 0;
+    virtual int getAbsX() const = 0;
     virtual Position getPosition() const = 0;
+    virtual Position getAbsPosition() const = 0;
 };
 
 } // namespace ui

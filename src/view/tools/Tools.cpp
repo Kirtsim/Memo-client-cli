@@ -18,21 +18,21 @@ void Tools::centerComponent(ui::IComponent& component, const int centerType,
     if (centerType & Center::HORIZONTAL)
     {
         int newX = (bounds.startX + bounds.endX - component.getWidth()) / 2;
-        component.setX(newX);
+        component.setAbsX(newX);
     }
 
     if (centerType & Center::VERTICAL)
     {
         int newY = (bounds.startY + bounds.endY - component.getHeight()) / 2;
-        component.setY(newY);
+        component.setAbsY(newY);
     }
 }
 
 Bounds Tools::componentBoundaries(const ui::IComponent& component)
 {
     Bounds bounds;
-    bounds.startX = component.getX();
-    bounds.startY = component.getY();
+    bounds.startX = component.getAbsX();
+    bounds.startY = component.getAbsY();
     bounds.endX = bounds.startX + component.getWidth();
     bounds.endY = bounds.startY + component.getHeight();
     return bounds;

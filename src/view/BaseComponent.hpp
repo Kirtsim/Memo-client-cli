@@ -20,11 +20,17 @@ public:
     virtual Size getSize() const override;
 
     virtual void setY(int iY) override;
+    virtual void setAbsY(int iY) override;
     virtual void setX(int iX) override;
+    virtual void setAbsX(int iX) override;
     virtual void setPosition(const Position& pos) override;
+    virtual void setAbsPosition(const Position& pos) override;
     virtual int getY() const override;
+    virtual int getAbsY() const override;
     virtual int getX() const override;
+    virtual int getAbsX() const override;
     virtual Position getPosition() const override;
+    virtual Position getAbsPosition() const override;
 
 private:
     Size size_;

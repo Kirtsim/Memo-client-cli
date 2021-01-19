@@ -162,9 +162,19 @@ void BaseView::setY(int y)
     newPosition_.y = y;
 }
 
+void BaseView::setAbsY(int y)
+{
+    newPosition_.y = y - getParentPosition().y;
+}
+
 void BaseView::setX(int x)
 {
     newPosition_.x = x;
+}
+
+void BaseView::setAbsX(int x)
+{
+    newPosition_.x = x - getParentPosition().x;
 }
 
 void BaseView::setPosition(const Position& pos)
@@ -172,7 +182,19 @@ void BaseView::setPosition(const Position& pos)
     newPosition_ = pos;
 }
 
+void BaseView::setAbsPosition(const Position& pos)
+{
+    const auto parentPos = getParentPosition();
+    newPosition_.x = pos.x - parentPos.x;
+    newPosition_.y = pos.y - parentPos.y; 
+}
+
 int BaseView::getY() const
+{
+    return window_->posY();
+}
+
+int BaseView::getAbsY() const
 {
     return window_->posY();
 }
@@ -182,7 +204,17 @@ int BaseView::getX() const
     return window_->posX();
 }
 
+int BaseView::getAbsX() const
+{
+    return window_->posX();
+}
+
 Position BaseView::getPosition() const
+{
+    return window_->position();
+}
+
+Position BaseView::getAbsPosition() const
 {
     return window_->position();
 }

@@ -48,14 +48,24 @@ Size BaseComponent::getSize() const
     return size_;
 }
 
-void BaseComponent::setY(int iY)
+void BaseComponent::setY(int y)
 {
-    position_.y = iY;
+    position_.y = y;
 }
 
-void BaseComponent::setX(int iX)
+void BaseComponent::setAbsY(int y)
 {
-    position_.x = iX;
+    setY(y);
+}
+
+void BaseComponent::setX(int x)
+{
+    position_.x = x;
+}
+
+void BaseComponent::setAbsX(int x)
+{
+    setX(x);
 }
 
 void BaseComponent::setPosition(const Position& pos)
@@ -63,9 +73,19 @@ void BaseComponent::setPosition(const Position& pos)
     position_ = pos;
 }
 
+void BaseComponent::setAbsPosition(const Position& pos)
+{
+    setPosition(pos);
+}
+
 int BaseComponent::getY() const
 {
     return position_.y;
+}
+
+int BaseComponent::getAbsY() const
+{
+    return getY();
 }
 
 int BaseComponent::getX() const
@@ -73,11 +93,20 @@ int BaseComponent::getX() const
     return position_.x;
 }
 
+int BaseComponent::getAbsX() const
+{
+    return getX();
+}
+
 Position BaseComponent::getPosition() const
 {
     return position_;
 }
 
+Position BaseComponent::getAbsPosition() const
+{
+    return getPosition();
+}
 
 } // namespace ui
 } // namespace memo
