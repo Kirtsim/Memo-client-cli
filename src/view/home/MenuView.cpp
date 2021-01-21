@@ -15,15 +15,15 @@ const std::vector<std::string> MenuView::kMenuItemNames {
     "Create Memo", "Create Tag",
 };
 
-MenuView::MenuView(IView* parent) :
+MenuView::MenuView(IComponent* parent) :
     MenuView(Size(), Position(), parent)
 {}
 
-MenuView::MenuView(const Size& size, IView* parent) :
+MenuView::MenuView(const Size& size, IComponent* parent) :
     MenuView(size, Position(), parent)
 {}
 
-MenuView::MenuView(const Size& size, const Position& position, IView* parent) :
+MenuView::MenuView(const Size& size, const Position& position, IComponent* parent) :
     BaseView(size, position, parent),
     menuWindow_(std::make_unique<curses::SubWindow>(getWindow(), Position( PosX(1), PosY(1) ))),
     menu_(new_menu(nullptr)),

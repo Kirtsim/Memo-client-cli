@@ -7,10 +7,13 @@ namespace ui {
 class BaseComponent : public IComponent
 {
 public:
-    BaseComponent();
-    explicit BaseComponent(const Size& size);
-    BaseComponent(const Size& size, const Position& position);
+    explicit BaseComponent(IComponent* parent=nullptr);
+    explicit BaseComponent(const Size& size, IComponent* parent=nullptr);
+    BaseComponent(const Size& size, const Position& position, IComponent* parent=nullptr);
     virtual ~BaseComponent();
+
+    virtual void setParent(IComponent* parent) override;
+    virtual const IComponent* getParent() const override;
 
     virtual void setHeight(int height) override;
     virtual void setWidth(int width) override;
@@ -32,9 +35,15 @@ public:
     virtual Position getPosition() const override;
     virtual Position getAbsPosition() const override;
 
+protected:
+    Size getParentSize() const;
+    Position getParentPosition() const;
+
 private:
     Size size_;
     Position position_;
+
+    IComponent* parent_;
 };
 
 } // namespace ui

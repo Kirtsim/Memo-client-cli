@@ -43,9 +43,9 @@ enum E_MenuItem
 class HomeView : public BaseView
 {
 public:
-    explicit HomeView(IView* parent=nullptr);
-    explicit HomeView(const Size& size, IView* parent=nullptr);
-    HomeView(const Size& size, const Position& position, IView* parent=nullptr);
+    explicit HomeView(IComponent* parent=nullptr);
+    explicit HomeView(const Size& size, IComponent* parent=nullptr);
+    HomeView(const Size& size, const Position& position, IComponent* parent=nullptr);
     ~HomeView();
 
     HomeView(const HomeView&) = delete;

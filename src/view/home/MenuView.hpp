@@ -33,9 +33,9 @@ class MenuView : public BaseView
     };
 
 public:
-    explicit MenuView(IView* parent=nullptr);
-    explicit MenuView(const Size& size, IView* parent=nullptr);
-    MenuView(const Size& size, const Position& position, IView* parent=nullptr);
+    explicit MenuView(IComponent* parent=nullptr);
+    explicit MenuView(const Size& size, IComponent* parent=nullptr);
+    MenuView(const Size& size, const Position& position, IComponent* parent=nullptr);
     ~MenuView();
 
     void setMenuItems(const std::vector<MenuItem>& items);

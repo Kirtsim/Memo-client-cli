@@ -14,7 +14,7 @@ public:
 } // namespace view
 } // namespace memo
 
-#include "view/IComponent.hpp"
+#include "view/BaseComponent.hpp"
 
 namespace memo {
 namespace curses {
@@ -22,10 +22,13 @@ namespace curses {
 } // namespace curses
 namespace ui {
 
-class IView : public IComponent
+class IView : public BaseComponent
 {
 public:
     using Ptr = std::shared_ptr<IView>;
+    explicit IView(IComponent* parent=nullptr);
+    explicit IView(const Size& size, IComponent* parent=nullptr);
+    IView(const Size& size, const Position& position, IComponent* parent=nullptr);
 
     virtual ~IView() = default;
 
@@ -36,9 +39,6 @@ public:
 
     virtual void setVisible(bool visible) = 0;
     virtual bool isVisible() const = 0;
-
-    virtual void setParentView(IView* parent) = 0;
-    virtual IView* getParentView() = 0;
 
     virtual void setBorder(const Border& border) = 0;
     virtual Border getBorder() const = 0;

@@ -1,22 +1,32 @@
 #include "view/BaseComponent.hpp"
+#include "ncurses/functions.hpp"
 
 namespace memo {
 namespace ui {
 
-BaseComponent::BaseComponent() :
-    BaseComponent(Size(), Position())
+BaseComponent::BaseComponent(IComponent* parent) :
+    BaseComponent(Size(), Position(), parent)
 {}
 
-BaseComponent::BaseComponent(const Size& size) :
-    BaseComponent(size, Position())
+BaseComponent::BaseComponent(const Size& size, IComponent* parent) :
+    BaseComponent(size, Position(), parent)
 {}
 
-BaseComponent::BaseComponent(const Size& size, const Position& position) :
-    size_(size), position_(position)
+BaseComponent::BaseComponent(const Size& size, const Position& position, IComponent* parent) :
+    size_(size), position_(position), parent_(parent)
 {}
 
 BaseComponent::~BaseComponent() = default;
 
+void BaseComponent::setParent(IComponent* parent)
+{
+    parent_ = parent;
+}
+
+const IComponent* BaseComponent::getParent() const
+{
+    return parent_;
+}
 
 void BaseComponent::setHeight(int height)
 {
@@ -50,62 +60,82 @@ Size BaseComponent::getSize() const
 
 void BaseComponent::setY(int y)
 {
-    position_.y = y;
+    setAbsY(getParentPosition().y + y);
 }
 
 void BaseComponent::setAbsY(int y)
 {
-    setY(y);
+    position_.y = y;
 }
 
 void BaseComponent::setX(int x)
 {
-    position_.x = x;
+    setAbsX(getParentPosition().x + x);
 }
 
 void BaseComponent::setAbsX(int x)
 {
-    setX(x);
+    position_.x = x;
 }
 
 void BaseComponent::setPosition(const Position& pos)
 {
-    position_ = pos;
+    setX(pos.x);
+    setY(pos.y);
 }
 
 void BaseComponent::setAbsPosition(const Position& pos)
 {
-    setPosition(pos);
+    setAbsX(pos.x);
+    setAbsY(pos.y);
 }
 
 int BaseComponent::getY() const
 {
-    return position_.y;
+    return position_.y - getParentPosition().y;
 }
 
 int BaseComponent::getAbsY() const
 {
-    return getY();
+    return position_.y;
 }
 
 int BaseComponent::getX() const
 {
-    return position_.x;
+    return position_.x - getParentPosition().x;
 }
 
 int BaseComponent::getAbsX() const
 {
-    return getX();
+    return position_.x;
 }
 
 Position BaseComponent::getPosition() const
 {
-    return position_;
+    const auto parentPos = getParentPosition();
+    Position pos = position_;
+    pos.x -= parentPos.x;
+    pos.y -= parentPos.y;
+    return pos;
 }
 
 Position BaseComponent::getAbsPosition() const
 {
-    return getPosition();
+    return position_;
+}
+
+Size BaseComponent::getParentSize() const
+{
+    if (parent_)
+        return parent_->getSize();
+    return curses::ScreenSize();
+}
+
+Position BaseComponent::getParentPosition() const
+{
+    if (parent_)
+        return parent_->getPosition();
+    return Position(); // return 0, 0 coordinates
 }
 
 } // namespace ui

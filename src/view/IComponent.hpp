@@ -9,6 +9,9 @@ class IComponent
 public:
     virtual ~IComponent() = default;
 
+    virtual void setParent(IComponent* parent) = 0;
+    virtual const IComponent* getParent() const = 0;
+
     virtual void setHeight(int height) = 0;
     virtual void setWidth(int width) = 0;
     virtual void setSize(const Size& size) = 0;
