@@ -22,15 +22,15 @@ namespace curses {
 } // namespace curses
 namespace ui {
 
-class IView : public BaseComponent
+class View : public BaseComponent
 {
 public:
-    using Ptr = std::shared_ptr<IView>;
-    explicit IView(IComponent* parent=nullptr);
-    explicit IView(const Size& size, IComponent* parent=nullptr);
-    IView(const Size& size, const Position& position, IComponent* parent=nullptr);
+    using Ptr = std::shared_ptr<View>;
+    explicit View(IComponent* parent=nullptr);
+    explicit View(const Size& size, IComponent* parent=nullptr);
+    View(const Size& size, const Position& position, IComponent* parent=nullptr);
 
-    virtual ~IView() = default;
+    virtual ~View() = default;
 
     virtual void refresh() = 0;
     virtual void saveState() = 0;

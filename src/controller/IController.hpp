@@ -5,7 +5,7 @@
 
 namespace memo {
 namespace ui {
-    class IView;
+    class View;
 } // namespace view
 namespace ctrl {
 
@@ -14,7 +14,7 @@ class IController
 public:
     virtual ~IController() = default;
 
-    virtual std::shared_ptr<ui::IView> getView() = 0;
+    virtual std::shared_ptr<ui::View> getView() = 0;
     virtual void processInput() = 0;
     virtual void saveState() = 0;
 };

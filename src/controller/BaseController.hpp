@@ -4,7 +4,7 @@
 
 namespace memo {
 namespace ui {
-    class IView;
+    class View;
 } // namespace view
 namespace ctrl {
 
@@ -18,7 +18,7 @@ public:
     BaseController(const ResourcesPtr_t& resources);
     virtual ~BaseController() = default;
 
-    std::shared_ptr<ui::IView> getView() override;
+    std::shared_ptr<ui::View> getView() override;
     virtual void saveState() override;
 
 protected:
@@ -55,7 +55,7 @@ const std::shared_ptr<Resources>& BaseController<ViewType>::getResources()
 }
 
 template <class ViewType>
-std::shared_ptr<ui::IView> BaseController<ViewType>::getView()
+std::shared_ptr<ui::View> BaseController<ViewType>::getView()
 {
     return view_;
 }

@@ -59,7 +59,7 @@ BaseView::BaseView(const Size& size, IComponent* parent) :
 {}
 
 BaseView::BaseView(const Size& size, const Position& position, IComponent* parent) :
-    IView(size, position, parent),
+    View(size, position, parent),
     newBorder_(curses::DefaultBorder()),
     visible_(true),
     window_(std::make_shared<curses::Window>(position, size))
@@ -121,12 +121,12 @@ curses::IWindow& BaseView::getWindow()
     return *window_;
 }
 
-void BaseView::registerSubView(IView::Ptr subView)
+void BaseView::registerSubView(View::Ptr subView)
 {
     subViews_.insert(subView);
 }
 
-void BaseView::removeSubView(IView::Ptr subView)
+void BaseView::removeSubView(View::Ptr subView)
 {
     subViews_.erase(subView);
 }

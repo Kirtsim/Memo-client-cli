@@ -1,5 +1,5 @@
 #pragma once
-#include "view/IView.hpp"
+#include "view/View.hpp"
 #include <memory>
 
 namespace memo {
@@ -38,7 +38,7 @@ namespace widget {
     class Text;
 } // namespace widget
 
-class BaseView : public IView
+class BaseView : public View
 {
 public:
     explicit BaseView(IComponent* parent=nullptr);
@@ -69,8 +69,8 @@ protected:
     virtual void positionComponents();
     virtual void displayContent();
 
-    void registerSubView(IView::Ptr subView);
-    void removeSubView(IView::Ptr subView);
+    void registerSubView(View::Ptr subView);
+    void removeSubView(View::Ptr subView);
     void displayText(const widget::Text& text);
     Size getParentSize() const;
     Position getParentPosition() const;
@@ -83,7 +83,7 @@ private:
 
     bool visible_;
     std::shared_ptr<curses::IWindow> window_;
-    std::unordered_set<IView::Ptr> subViews_;
+    std::unordered_set<View::Ptr> subViews_;
 };
 
 } // namespace ui

@@ -1,5 +1,5 @@
 #include "manager/ViewManager.hpp"
-#include "view/IView.hpp"
+#include "view/View.hpp"
 
 namespace memo {
 namespace manager {
