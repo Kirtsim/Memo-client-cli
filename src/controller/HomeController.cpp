@@ -1,4 +1,5 @@
 #include "controller/HomeController.hpp"
+#include "controller/SearchController.hpp"
 #include "view/home/HomeView.hpp"
 #include "view/home/MenuView.hpp"
 #include "manager/ControllerManager.hpp"
@@ -80,8 +81,10 @@ void HomeController::onMenuOptionSelected(std::pair<bool, ui::MenuItem> selected
             home_view->setErrorStatus(menuItem.getName());
             break;
         case ui::E_MenuItem::LIST_MEMOS:
-            home_view->setErrorStatus(menuItem.getName());
-            break;
+        {
+            auto manager = getResources()->getControllerManager();
+            manager->add(std::make_shared<SearchController>(getResources()));
+        } break;
         case ui::E_MenuItem::LIST_TAGS:
             home_view->setErrorStatus(menuItem.getName());
             break;
