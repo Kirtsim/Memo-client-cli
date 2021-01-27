@@ -35,7 +35,7 @@ private:
 namespace memo {
 namespace ui {
 
-class Text;
+class TextView;
 
 class BaseView : public View
 {
@@ -70,7 +70,7 @@ protected:
 
     void registerSubView(View::Ptr subView);
     void removeSubView(View::Ptr subView);
-    void displayText(const Text& text);
+    void displayText(const std::string& text, const Position& position);
     Size getParentSize() const;
     Position getParentPosition() const;
 

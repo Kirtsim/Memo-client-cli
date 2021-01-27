@@ -1,5 +1,4 @@
 #include "view/widget/ListView.hpp"
-#include "view/widget/Text.hpp"
 #include "view/tools/Tools.hpp"
 #include "ncurses/functions.hpp"
 
@@ -119,7 +118,7 @@ void ListView::displayContent()
         std::string text = (selected_ == i) ? "* " : "  ";
         text += item->text().substr(0, maxChars);
 
-        curses::PrintText(text, getWindow(), { PosX(xStart), PosY(yPos) });
+        displayText(text, { PosX(xStart), PosY(yPos) });
         ++yPos;
     }
 }

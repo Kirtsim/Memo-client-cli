@@ -1,22 +1,22 @@
 #pragma once
-#include "view/BaseComponent.hpp"
+#include "view/BaseView.hpp"
 
 #include <string>
 
 namespace memo {
 namespace ui {
 
-class Text : public ui::BaseComponent
+class TextView : public ui::BaseView
 {
 public:
-    Text();
-    explicit Text(const std::string& text);
-    Text(const std::string& text, const Position& position);
+    TextView();
+    explicit TextView(const std::string& text);
+    TextView(const std::string& text, const Position& position);
 
-    ~Text();
+    ~TextView();
 
     void setText(const std::string& text);
-    const std::string& getText() const;
+    const std::string& text() const;
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"

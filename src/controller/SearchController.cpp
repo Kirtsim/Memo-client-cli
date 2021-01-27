@@ -1,7 +1,6 @@
 #include "controller/SearchController.hpp"
 #include "ncurses/functions.hpp"
 #include "ncurses/keys.hpp"
-#include "view/widget/Text.hpp"
 
 namespace memo {
 namespace ctrl {

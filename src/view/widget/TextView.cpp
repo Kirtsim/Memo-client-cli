@@ -1,4 +1,4 @@
-#include "view/widget/Text.hpp"
+#include "view/widget/TextView.hpp"
 
 namespace memo {
 namespace ui {
@@ -7,38 +7,38 @@ namespace {
     Size TextSize(const std::string& text);
 } // namespace
 
-Text::Text() :
-    Text("", Position())
+TextView::TextView() :
+    TextView("", Position())
 {}
 
-Text::Text(const std::string& text) :
-    Text(text, Position())
+TextView::TextView(const std::string& text) :
+    TextView(text, Position())
 {}
 
-Text::Text(const std::string& text, const Position& position) :
-    ui::BaseComponent(TextSize(text), position),
+TextView::TextView(const std::string& text, const Position& position) :
+    BaseView(TextSize(text), position),
     text_(text)
 {}
 
-Text::~Text() = default;
+TextView::~TextView() = default;
 
-void Text::setText(const std::string& text)
+void TextView::setText(const std::string& text)
 {
     text_ = text;
     setSize(TextSize(text_));
 }
 
-const std::string& Text::getText() const
+const std::string& TextView::text() const
 {
     return text_;
 }
 
-int Text::length()
+int TextView::length()
 {
     return text_.size();
 }
 
-bool Text::empty()
+bool TextView::empty()
 {
     return text_.empty();
 }

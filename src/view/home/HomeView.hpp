@@ -29,11 +29,8 @@ private:
 
 namespace memo {
 namespace ui {
-namespace widget {
-    class Text;
-}
-
-class MenuView;
+    class TextView;
+    class MenuView;
 
 enum E_MenuItem
 {
@@ -65,8 +62,8 @@ protected:
 private:
     static const std::vector<MenuItem> kMenuItems;
 
-    std::unique_ptr<Text> errorStatus_;
-    std::unique_ptr<Text> windowTitle_;
+    std::unique_ptr<TextView> errorStatus_;
+    std::unique_ptr<TextView> windowTitle_;
     std::shared_ptr<MenuView> menuView_;
 };
 

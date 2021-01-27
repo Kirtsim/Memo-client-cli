@@ -43,7 +43,7 @@ void BaseView::println(const std::string& content) const
 
 #include "ncurses/Window.hpp"
 #include "ncurses/functions.hpp"
-#include "view/widget/Text.hpp"
+#include "view/widget/TextView.hpp"
 
 namespace memo {
 namespace ui {
@@ -111,9 +111,9 @@ Border BaseView::getBorder() const
     return window_->windowBorder();
 }
 
-void BaseView::displayText(const Text& text)
+void BaseView::displayText(const std::string& text, const Position& position)
 {
-    curses::PrintText(text.getText(), *window_, text.getPosition());
+    curses::PrintText(text, *window_, position);
 }
 
 curses::IWindow& BaseView::getWindow()
