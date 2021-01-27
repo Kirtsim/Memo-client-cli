@@ -22,7 +22,7 @@ public:
     explicit ListView(const Size& size, IComponent* parent=nullptr);
     ListView(const Size& size, const Position& position, IComponent* parent=nullptr);
 
-    void setItems(std::vector<ListItemPtr> items);
+    void setItems(const std::vector<ListItemPtr>& items);
 
     const std::vector<ListItemPtr>& items() const;
 

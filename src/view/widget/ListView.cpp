@@ -37,13 +37,12 @@ ListView::ListView(const Size& size, const Position& position, IComponent* paren
 {
 }
 
-void ListView::setItems(std::vector<ListItemPtr> items)
+void ListView::setItems(const std::vector<ListItemPtr>& items)
 {
     items_ = items;
     selected_ = firstVisItem_ = 0;
 
-    size_t maxVisibleItems = getHeight() - 2;
-    lastVisItem_ = std::min(items.size()-1, maxVisibleItems -1);
+    lastVisItem_ = std::min(items.size()-1, maxVisibleItems() -1);
 }
 
 const std::vector<ListItemPtr>& ListView::items() const
@@ -127,6 +126,9 @@ void ListView::displayContent()
 
 size_t ListView::maxVisibleItems() const
 {
+    const int height = getHeight();
+    if (height < 3)
+        return 0;
     return getHeight() - 2;
 }
 
