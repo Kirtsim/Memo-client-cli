@@ -142,8 +142,8 @@ HomeView::HomeView(const Size& size, IComponent* parent) :
 
 HomeView::HomeView(const Size& size, const Position& position, IComponent* parent) :
     BaseView(size, position, parent),
-    errorStatus_(std::make_unique<widget::Text>("SOME TEXT")),
-    windowTitle_(std::make_unique<widget::Text>("Welcome to the Memo-client-cli")),
+    errorStatus_(std::make_unique<Text>("SOME TEXT")),
+    windowTitle_(std::make_unique<Text>("Welcome to the Memo-client-cli")),
     menuView_(std::make_shared<MenuView>())
 {
     registerSubView(menuView_);

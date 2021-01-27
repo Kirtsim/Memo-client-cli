@@ -65,8 +65,8 @@ protected:
 private:
     static const std::vector<MenuItem> kMenuItems;
 
-    std::unique_ptr<widget::Text> errorStatus_;
-    std::unique_ptr<widget::Text> windowTitle_;
+    std::unique_ptr<Text> errorStatus_;
+    std::unique_ptr<Text> windowTitle_;
     std::shared_ptr<MenuView> menuView_;
 };
 

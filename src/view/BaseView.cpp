@@ -111,7 +111,7 @@ Border BaseView::getBorder() const
     return window_->windowBorder();
 }
 
-void BaseView::displayText(const widget::Text& text)
+void BaseView::displayText(const Text& text)
 {
     curses::PrintText(text.getText(), *window_, text.getPosition());
 }
@@ -131,7 +131,23 @@ void BaseView::removeSubView(View::Ptr subView)
     subViews_.erase(subView);
 }
 
+Size BaseView::getParentSize() const
+{
+    auto parent = getParent();
+    if (parent)
+        return parent->getSize();
 
+    return curses::ScreenSize();
+}
+
+Position BaseView::getParentPosition() const
+{
+    auto parent = getParent();
+    if (parent)
+        return parent->getAbsPosition();
+
+    return {}; // x=0, y=0
+}
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"

@@ -34,9 +34,8 @@ private:
 
 namespace memo {
 namespace ui {
-namespace widget {
-    class Text;
-} // namespace widget
+
+class Text;
 
 class BaseView : public View
 {
@@ -71,7 +70,7 @@ protected:
 
     void registerSubView(View::Ptr subView);
     void removeSubView(View::Ptr subView);
-    void displayText(const widget::Text& text);
+    void displayText(const Text& text);
     Size getParentSize() const;
     Position getParentPosition() const;
 
