@@ -5,7 +5,6 @@
 
 namespace memo {
 namespace ui {
-namespace widget {
 
 class Text : public ui::BaseComponent
 {
@@ -33,6 +32,5 @@ private:
     std::string text_;
 };
 
-} // namespace widget
 } // namespace ui
 } // namespace memo

@@ -2,7 +2,6 @@
 
 namespace memo {
 namespace ui {
-namespace widget {
 
 namespace {
     Size TextSize(const std::string& text);
@@ -68,6 +67,5 @@ Size TextSize(const std::string& text)
 
 } // namespace
 
-} // namespace widget
 } // namespace ui
 } // namespace memo
