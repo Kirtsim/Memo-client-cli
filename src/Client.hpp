@@ -11,7 +11,7 @@ namespace manager {
     class ControllerManager;
 } // namespace manager
 
-class Resources;
+class IResources;
 
 class Client
 {
@@ -32,7 +32,7 @@ private:
     std::unique_ptr<model::TagSvc::Stub>  tagStub_;
     std::shared_ptr<manager::ViewManager> viewManager_;
     std::shared_ptr<manager::ControllerManager> controllerManager_;
-    std::shared_ptr<Resources> resources_;
+    std::shared_ptr<IResources> resources_;
 };
 
 } // namespace memo

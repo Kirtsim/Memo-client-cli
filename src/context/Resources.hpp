@@ -5,22 +5,43 @@ namespace memo {
 namespace manager {
     class ControllerManager;
     class ViewManager;
-}
+} // namespace manager
 
-class Resources
+namespace remote {
+    class MemoDao;
+} // namespace remote
+
+using ControllerManagerPtr = std::shared_ptr<manager::ControllerManager>;
+using ViewManagerPtr       = std::shared_ptr<manager::ViewManager>;
+using MemoDaoPtr           = std::shared_ptr<remote::MemoDao>;
+
+class IResources
 {
-    using ControllerManagerPtr_t = std::shared_ptr<manager::ControllerManager>;
-    using ViewManagerPtr_t       = std::shared_ptr<manager::ViewManager>;
-
 public:
-    Resources(const ControllerManagerPtr_t&, const ViewManagerPtr_t&);
+    virtual ~IResources() = default;
+    virtual const ControllerManagerPtr& controllerManager() = 0;
+    virtual const ViewManagerPtr& viewManager() = 0;
+    virtual const MemoDaoPtr& memoDao() = 0;
+};
 
-    const ControllerManagerPtr_t& getControllerManager();
-    const ViewManagerPtr_t& getViewManager();
+class ResourcesImpl : public IResources
+{
+public:
+    ResourcesImpl(
+        const ControllerManagerPtr&,
+        const ViewManagerPtr&,
+        const MemoDaoPtr&);
+
+    const ControllerManagerPtr& controllerManager() override;
+    
+    const ViewManagerPtr& viewManager() override;
+
+    const MemoDaoPtr& memoDao() override;
 
 private:
-    ControllerManagerPtr_t controllerManager_;
-    ViewManagerPtr_t viewManager_;
+    ControllerManagerPtr controllerManager_;
+    ViewManagerPtr viewManager_;
+    MemoDaoPtr memoDao_;
 };
 
 } // namespace memo

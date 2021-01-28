@@ -19,9 +19,9 @@ Client::Client(const std::string& address) :
     tagStub_(model::TagSvc::NewStub(grpc::CreateChannel(
                     address,
                     grpc::InsecureChannelCredentials()))),
-    viewManager_(new manager::ViewManager),
-    controllerManager_(new manager::ControllerManager),
-    resources_(new Resources(controllerManager_, viewManager_))
+    viewManager_(std::make_shared<manager::ViewManager>()),
+    controllerManager_(std::make_shared<manager::ControllerManager>()),
+    resources_(std::make_shared<ResourcesImpl>(controllerManager_, viewManager_))
 {
     viewManager_->addView(std::make_shared<view::HomeView>(*this, viewManager_));
 }

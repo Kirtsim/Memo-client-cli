@@ -2,19 +2,22 @@
 
 namespace memo {
 
-Resources::Resources(const ControllerManagerPtr_t& controllerManager,
-                     const ViewManagerPtr_t& viewManager) :
-    controllerManager_(controllerManager),
-    viewManager_(viewManager)
-{}
+ResourcesImpl::ResourcesImpl(
+    const ControllerManagerPtr& controllerManager,
+    const ViewManagerPtr& viewManager,
+    const MemoDaoPtr& memoDao)
+    : controllerManager_(controllerManager)
+    , viewManager_(viewManager)
+    , memoDao_(memoDao)
+{
+}
 
-
-const Resources::ControllerManagerPtr_t& Resources::getControllerManager()
+const ControllerManagerPtr& ResourcesImpl::controllerManager()
 {
     return controllerManager_;
 }
 
-const Resources::ViewManagerPtr_t& Resources::getViewManager()
+const ViewManagerPtr& ResourcesImpl::viewManager()
 {
     return viewManager_;
 }

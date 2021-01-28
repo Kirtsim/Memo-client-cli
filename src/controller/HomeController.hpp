@@ -10,7 +10,7 @@ namespace ctrl {
 
 class HomeController : public BaseController<ui::HomeView>
 {
-    using ResourcesPtr_t = std::shared_ptr<Resources>;
+    using ResourcesPtr_t = std::shared_ptr<IResources>;
 
 public:
     HomeController(const ResourcesPtr_t& resources);

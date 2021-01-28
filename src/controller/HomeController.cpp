@@ -46,7 +46,7 @@ void HomeController::processInput()
     }
     else if (input == 'q')
     {
-        getResources()->getControllerManager()->pop();
+        getResources()->controllerManager()->pop();
     }
     else
     {
@@ -82,14 +82,14 @@ void HomeController::onMenuOptionSelected(std::pair<bool, ui::MenuItem> selected
             break;
         case ui::E_MenuItem::LIST_MEMOS:
         {
-            auto manager = getResources()->getControllerManager();
+            auto manager = getResources()->controllerManager();
             manager->add(std::make_shared<SearchController>(getResources()));
         } break;
         case ui::E_MenuItem::LIST_TAGS:
             home_view->setErrorStatus(menuItem.getName());
             break;
         case ui::E_MenuItem::EXIT:
-            getResources()->getControllerManager()->pop();
+            getResources()->controllerManager()->pop();
             break;
         default:
             home_view->setErrorStatus("Unknown option");

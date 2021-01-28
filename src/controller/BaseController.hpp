@@ -12,7 +12,7 @@ template <class ViewType>
 class BaseController : public IController
 {
     using ViewPtr_t = std::shared_ptr<ViewType>;
-    using ResourcesPtr_t = std::shared_ptr<Resources>;
+    using ResourcesPtr_t = std::shared_ptr<IResources>;
 
 public:
     BaseController(const ResourcesPtr_t& resources);
@@ -49,7 +49,7 @@ const std::shared_ptr<ViewType>& BaseController<ViewType>::view()
 }
 
 template <class ViewType>
-const std::shared_ptr<Resources>& BaseController<ViewType>::getResources()
+const std::shared_ptr<IResources>& BaseController<ViewType>::getResources()
 {
     return resources_;
 }

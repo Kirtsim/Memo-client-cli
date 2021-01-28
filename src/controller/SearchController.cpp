@@ -22,6 +22,10 @@ private:
     std::string text_;
 };
 
+namespace {
+    std::vector<model::Memo> fetchMemos();
+} // naemspace
+
 SearchController::SearchController(const ResourcesPtr_t& resources)
     : BaseController(resources)
 {
@@ -75,6 +79,7 @@ SearchController::SearchController(const ResourcesPtr_t& resources)
     };
     view->setItems(items);
     setView(view);
+    // TODO: fetch memos
 }
 
 void SearchController::processInput()
@@ -96,7 +101,7 @@ void SearchController::processInput()
     }
     else if (input == 'q')
     {
-        getResources()->getControllerManager()->pop();
+        getResources()->controllerManager()->pop();
     }
     curses::KeyPad(window, DISABLE);
 }
