@@ -8,12 +8,12 @@ namespace manager {
 } // namespace manager
 
 namespace remote {
-    class MemoDao;
+    class IMemoDao;
 } // namespace remote
 
 using ControllerManagerPtr = std::shared_ptr<manager::ControllerManager>;
 using ViewManagerPtr       = std::shared_ptr<manager::ViewManager>;
-using MemoDaoPtr           = std::shared_ptr<remote::MemoDao>;
+using MemoDaoPtr           = std::shared_ptr<remote::IMemoDao>;
 
 class IResources
 {
@@ -27,6 +27,11 @@ public:
 class ResourcesImpl : public IResources
 {
 public:
+    static std::shared_ptr<ResourcesImpl> Create(
+        const ControllerManagerPtr&,
+        const ViewManagerPtr&,
+        const MemoDaoPtr&);
+
     ResourcesImpl(
         const ControllerManagerPtr&,
         const ViewManagerPtr&,

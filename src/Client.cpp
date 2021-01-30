@@ -5,6 +5,8 @@
 #include "manager/ControllerManager.hpp"
 #include "controller/HomeController.hpp"
 #include "ncurses/functions.hpp"
+#include "remote/MemoDao.hpp"
+#include "remote/ListMemoCall.hpp"
 
 #include <iostream>
 
@@ -21,7 +23,11 @@ Client::Client(const std::string& address) :
                     grpc::InsecureChannelCredentials()))),
     viewManager_(std::make_shared<manager::ViewManager>()),
     controllerManager_(std::make_shared<manager::ControllerManager>()),
-    resources_(std::make_shared<ResourcesImpl>(controllerManager_, viewManager_))
+    resources_(ResourcesImpl::Create(
+        controllerManager_,
+        viewManager_,
+        remote::MemoDaoImpl::Create(std::make_unique<remote::ListMemoCall>(*memoStub_))
+    ))
 {
     viewManager_->addView(std::make_shared<view::HomeView>(*this, viewManager_));
 }

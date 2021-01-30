@@ -18,7 +18,9 @@ public:
 class MemoDaoImpl : public IMemoDao
 {
 public:
-    MemoDaoImpl(std::unique_ptr<ListMemoCall>& listMemoCall);
+    static std::shared_ptr<MemoDaoImpl> Create(std::unique_ptr<ListMemoCall> listMemoCall);
+
+    MemoDaoImpl(std::unique_ptr<ListMemoCall> listMemoCall);
     std::vector<model::Memo> fetchAll() override;
 
     bool success();

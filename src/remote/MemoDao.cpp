@@ -6,7 +6,13 @@
 namespace memo {
 namespace remote {
 
-MemoDaoImpl::MemoDaoImpl(std::unique_ptr<ListMemoCall>& listMemoCall)
+std::shared_ptr<MemoDaoImpl> MemoDaoImpl::Create(
+    std::unique_ptr<ListMemoCall> listMemoCall)
+{
+    return std::make_shared<MemoDaoImpl>(std::move(listMemoCall));
+}
+
+MemoDaoImpl::MemoDaoImpl(std::unique_ptr<ListMemoCall> listMemoCall)
     : listMemoCall_(std::move(listMemoCall))
 {
 }
