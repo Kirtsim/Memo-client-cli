@@ -27,7 +27,7 @@ protected:
 private:
     Stub& stub_;
     Reply reply_;
-    grpc::ClientContext context_;
+    grpc::ClientContext* context_ = nullptr;
     grpc::CompletionQueue completionQueue_;
     grpc::Status status_;
     ReaderPtr_t reader_;
@@ -51,7 +51,9 @@ BaseCall<Stub, Reply>::~BaseCall()
 template<class Stub, class Reply>
 bool BaseCall<Stub, Reply>::exec()
 {
-    reader_ = makeCall(stub_, context_, completionQueue_);
+    delete context_;
+    context_ = new grpc::ClientContext();
+    reader_ = makeCall(stub_, *context_, completionQueue_);
     if (!reader_)
     {
         std::cerr << "Reader is null. Terminating program." << std::endl;

@@ -23,7 +23,6 @@ public:
     SearchController(const ResourcesPtr_t& resources);
     void processInput() override;
 private:
-    bool serverContacted_ = false;    
     std::vector<model::Memo> memos_;
 };
 

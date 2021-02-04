@@ -15,5 +15,16 @@ ListMemoCall::ReaderPtr_t ListMemoCall::makeCall(model::MemoSvc::Stub& stub,
     return reader;
 }
 
+void ListMemoCall::setRequest(const model::MemoSearchRq& request)
+{
+    request_ = request;
+}
+
+const model::MemoSearchRq& ListMemoCall::request() const
+{
+    return request_;
+}
+
+
 } // namespace remote
 } // namespace memo

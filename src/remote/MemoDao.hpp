@@ -6,7 +6,7 @@
 namespace memo {
 namespace remote {
 
-class ListMemoCall;
+class MemoCallFactory;
 
 class IMemoDao
 {
@@ -18,16 +18,16 @@ public:
 class MemoDaoImpl : public IMemoDao
 {
 public:
-    static std::shared_ptr<MemoDaoImpl> Create(std::unique_ptr<ListMemoCall> listMemoCall);
+    static std::shared_ptr<MemoDaoImpl> Create(std::unique_ptr<MemoCallFactory> callFactory);
 
-    MemoDaoImpl(std::unique_ptr<ListMemoCall> listMemoCall);
+    MemoDaoImpl(std::unique_ptr<MemoCallFactory> callFactory);
     std::vector<model::Memo> fetchAll() override;
 
     bool success();
 
 private:
     bool success_ = false;
-    std::unique_ptr<ListMemoCall> listMemoCall_;
+    std::unique_ptr<MemoCallFactory> factory_;
 };
 
 } // namespace remote

@@ -12,6 +12,10 @@ public:
 
     ListMemoCall(model::MemoSvc::Stub& stub);
 
+    void setRequest(const model::MemoSearchRq& request);
+
+    const model::MemoSearchRq& request() const;
+
     ListMemoCall(const ListMemoCall&) = delete;
     ListMemoCall& operator=(const ListMemoCall&) = delete;
 

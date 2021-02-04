@@ -7,6 +7,7 @@
 #include "ncurses/functions.hpp"
 #include "remote/MemoDao.hpp"
 #include "remote/ListMemoCall.hpp"
+#include "remote/factory/MemoCallFactory.hpp"
 
 #include <iostream>
 
@@ -26,7 +27,7 @@ Client::Client(const std::string& address) :
     resources_(ResourcesImpl::Create(
         controllerManager_,
         viewManager_,
-        remote::MemoDaoImpl::Create(std::make_unique<remote::ListMemoCall>(*memoStub_))
+        remote::MemoDaoImpl::Create(std::make_unique<remote::MemoCallFactory>(memoStub_))
     ))
 {
     viewManager_->addView(std::make_shared<view::HomeView>(*this, viewManager_));

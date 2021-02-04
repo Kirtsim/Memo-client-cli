@@ -1,33 +1,34 @@
 #include "remote/MemoDao.hpp"
 #include "remote/ListMemoCall.hpp"
-#include "model/MemoSvc.pb.h"
+#include "remote/factory/MemoCallFactory.hpp"
 
 
 namespace memo {
 namespace remote {
 
 std::shared_ptr<MemoDaoImpl> MemoDaoImpl::Create(
-    std::unique_ptr<ListMemoCall> listMemoCall)
+    std::unique_ptr<MemoCallFactory> callFactory)
 {
-    return std::make_shared<MemoDaoImpl>(std::move(listMemoCall));
+    return std::make_shared<MemoDaoImpl>(std::move(callFactory));
 }
 
-MemoDaoImpl::MemoDaoImpl(std::unique_ptr<ListMemoCall> listMemoCall)
-    : listMemoCall_(std::move(listMemoCall))
+MemoDaoImpl::MemoDaoImpl(std::unique_ptr<MemoCallFactory> callFactory)
+    : factory_(std::move(callFactory))
 {
 }
 
 std::vector<model::Memo> MemoDaoImpl::fetchAll()
 {
+    auto memoCall = factory_->createMemoSearchCall();
     success_ = false;
-    if (!listMemoCall_)
+    if (!memoCall)
         return {};
 
-    success_ = listMemoCall_->exec();
+    success_ = memoCall->exec();
     std::vector<model::Memo> result;
     if (success_)
     {
-        const auto& memos = listMemoCall_->getReply().memos();
+        const auto& memos = memoCall->getReply().memos();
         result.assign(memos.begin(), memos.end());
     }
     return result;

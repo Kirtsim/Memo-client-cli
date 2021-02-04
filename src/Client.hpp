@@ -28,8 +28,8 @@ public:
     model::TagSvc::Stub& getTagStub();
 
 private:
-    std::unique_ptr<model::MemoSvc::Stub> memoStub_;
-    std::unique_ptr<model::TagSvc::Stub>  tagStub_;
+    std::shared_ptr<model::MemoSvc::Stub> memoStub_;
+    std::shared_ptr<model::TagSvc::Stub>  tagStub_;
     std::shared_ptr<manager::ViewManager> viewManager_;
     std::shared_ptr<manager::ControllerManager> controllerManager_;
     std::shared_ptr<IResources> resources_;
