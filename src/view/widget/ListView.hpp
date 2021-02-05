@@ -1,3 +1,4 @@
+#pragma once
 #include "view/BaseView.hpp"
 
 #include <vector>
