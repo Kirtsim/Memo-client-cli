@@ -2,6 +2,7 @@
 #include "ncurses/functions.hpp"
 #include "ncurses/keys.hpp"
 #include "remote/MemoDao.hpp"
+#include "view/widget/ListView.hpp"
 
 namespace memo {
 namespace ctrl {
@@ -30,7 +31,7 @@ namespace {
 SearchController::SearchController(const ResourcesPtr_t& resources)
     : BaseController(resources)
 {
-    auto view = std::make_shared<ui::ListView>();
+    auto view = std::make_shared<ui::MemoSearchView>(curses::ScreenSize());
     setView(view);
     auto memoDao = getResources()->memoDao();
     auto memos = memoDao->fetchAll();
@@ -40,25 +41,25 @@ SearchController::SearchController(const ResourcesPtr_t& resources)
         {
             return std::make_shared<TestListItem>(memo.title());
         });
-    view->setItems(memoTitles);
+    view->memoListView()->setItems(memoTitles);
 }
 
 void SearchController::processInput()
 {
     if (!view())
         return;
-    auto& window = view()->getWindow();
+    auto& window = view()->memoListView()->getWindow();
 
     curses::KeyPad(window, ENABLE);
     const int input = curses::ReadChar(window);
 
     if (input == curses::Key::kDown)
     {
-        view()->selectNext();
+        view()->memoListView()->selectNext();
     } 
     else if (input == curses::Key::kUp)
     {
-        view()->selectPrev();
+        view()->memoListView()->selectPrev();
     }
     else if (input == 'q')
     {

@@ -11,19 +11,6 @@ namespace ui {
 ListView::ListView(IComponent* parent)
     : ListView(Size(), Position(), parent)
 {
-    auto size = curses::ScreenSize();
-    size.height /= 2;
-    size.width /= 2;
-    setSize(size);
-
-    auto pos = getParentPosition();
-    auto siz = getParentSize();
-    tools::Bounds bounds;
-    bounds.startX = pos.x;
-    bounds.startY = pos.y;
-    bounds.endX = pos.x + siz.width;
-    bounds.endY = pos.y + siz.height;
-    tools::Tools::centerComponent(*this, tools::Center::HORIZONTAL | tools::Center::VERTICAL, bounds);
 }
 
 ListView::ListView(const Size& size, IComponent* parent)
@@ -102,7 +89,7 @@ size_t ListView::selectedPos() const
 
 void ListView::displayContent()
 {
-    if (getWidth() - 4 <= 0)
+    if (getWidth() - 4 <= 0 || items_.empty())
         return;
     const size_t maxChars = getWidth() - 4;
     const size_t xStart = 1;
@@ -129,6 +116,11 @@ size_t ListView::maxVisibleItems() const
     if (height < 3)
         return 0;
     return getHeight() - 2;
+}
+
+void ListView::refresh()
+{
+    BaseView::refresh();
 }
 
 } // namespace ui

@@ -38,6 +38,8 @@ public:
     ListItemPtr selected() const;
 
     size_t selectedPos() const;
+
+    void refresh() override;
 protected:
     void displayContent() override;
 
