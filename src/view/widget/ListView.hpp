@@ -9,7 +9,7 @@ namespace ui {
 class ListItem
 {
 public:
-    ~ListItem() = default;
+    virtual ~ListItem() = default;
 
     virtual std::string text() const = 0;
 };

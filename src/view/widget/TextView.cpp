@@ -47,9 +47,9 @@ namespace {
 
 Size TextSize(const std::string& text)
 {
-    int lineCount = 0; int maxLineLen = 0;
-    int lastPos = 0;
-    int pos = text.find('\n');
+    size_t lineCount = 0, maxLineLen = 0;
+    size_t lastPos = 0;
+    size_t pos = text.find('\n');
     while(pos != std::string::npos)
     {
         maxLineLen = std::max(maxLineLen, pos - lastPos);
@@ -57,7 +57,7 @@ Size TextSize(const std::string& text)
         lineCount++;
         pos = text.find('\n', lastPos + 1);
     }
-    maxLineLen = std::max(maxLineLen, static_cast<int>(text.size()) - lastPos);
+    maxLineLen = std::max(maxLineLen, text.size() - lastPos);
 
     Size size;
     size.width = maxLineLen;

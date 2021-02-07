@@ -24,10 +24,6 @@ private:
     std::string text_;
 };
 
-namespace {
-    std::vector<model::Memo> fetchMemos();
-} // naemspace
-
 SearchController::SearchController(const ResourcesPtr_t& resources)
     : BaseController(resources)
 {

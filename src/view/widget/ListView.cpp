@@ -91,9 +91,8 @@ void ListView::displayContent()
 {
     if (getWidth() - 4 <= 0 || items_.empty())
         return;
-    const size_t maxChars = getWidth() - 4;
+    const size_t maxChars = static_cast<size_t>(getWidth()) - 4;
     const size_t xStart = 1;
-    const size_t xEnd = getWidth(); 
     size_t yPos = 1;
     
     for (size_t i = firstVisItem_; i <= lastVisItem_; ++i)
@@ -112,10 +111,10 @@ void ListView::displayContent()
 
 size_t ListView::maxVisibleItems() const
 {
-    const int height = getHeight();
+    const size_t height = static_cast<size_t>(getHeight());
     if (height < 3)
         return 0;
-    return getHeight() - 2;
+    return height - 2;
 }
 
 void ListView::refresh()
