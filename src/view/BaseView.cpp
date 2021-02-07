@@ -149,13 +149,10 @@ Position BaseView::getParentPosition() const
     return {}; // x=0, y=0
 }
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
 void BaseView::focus() {}
 void BaseView::beforeViewResized() {}
 void BaseView::displayContent() {}
 void BaseView::positionComponents() {}
-#pragma GCC diagnostic pop
 
 } // namespace ui
 } // namespace memo
