@@ -1,46 +1,4 @@
 #include "view/BaseView.hpp"
-#include "Client.hpp"
-#include "manager/ViewManager.hpp"
-
-namespace memo {
-namespace view {
-
-BaseView::BaseView(Client& client, const std::shared_ptr<manager::ViewManager>& viewManager) :
-    client_(client),
-    viewManager_(viewManager)
-{}
-
-BaseView::~BaseView() = default;
-
-const std::shared_ptr<manager::ViewManager>& BaseView::getViewManager()
-{
-    return viewManager_;
-}
-
-Client& BaseView::getClient()
-{
-    return client_;
-}
-
-std::string BaseView::readInput()
-{
-    std::string input;
-    std::cin >> input;
-    return input;
-}
-
-void BaseView::print(const std::string& content) const
-{
-    std::cout << content;
-}
-
-void BaseView::println(const std::string& content) const
-{
-    std::cout << content << "\n";
-}
-} // namespace view
-} // namespace memo
-
 #include "ncurses/Window.hpp"
 #include "ncurses/functions.hpp"
 #include "view/widget/TextView.hpp"

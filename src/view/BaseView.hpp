@@ -1,35 +1,6 @@
 #pragma once
 #include "view/View.hpp"
 #include <memory>
-
-namespace memo {
-    class Client;
-namespace manager {
-    class ViewManager;
-}
-namespace view {
-
-class BaseView : public IView
-{
-public:
-    BaseView(Client& client, const std::shared_ptr<manager::ViewManager>& viewManager);
-    virtual ~BaseView();
-
-protected:
-    const std::shared_ptr<manager::ViewManager>& getViewManager();
-    Client& getClient();
-    std::string readInput();
-    void print(const std::string& content) const;
-    void println(const std::string& content) const;
-
-private:
-    Client& client_;
-    std::shared_ptr<manager::ViewManager> viewManager_;
-};
-
-} // namespace view
-} // namespace memo
-
 #include <unordered_set>
 
 namespace memo {

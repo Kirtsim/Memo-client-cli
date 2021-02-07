@@ -7,7 +7,6 @@
 
 namespace memo {
 namespace manager {
-    class ViewManager;
     class ControllerManager;
 } // namespace manager
 
@@ -28,7 +27,6 @@ public:
 private:
     std::shared_ptr<model::MemoSvc::Stub> memoStub_;
     std::shared_ptr<model::TagSvc::Stub>  tagStub_;
-    std::shared_ptr<manager::ViewManager> viewManager_;
     std::shared_ptr<manager::ControllerManager> controllerManager_;
     std::shared_ptr<IResources> resources_;
 };

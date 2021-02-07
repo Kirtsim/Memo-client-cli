@@ -1,29 +1,5 @@
 #pragma once
 #include "view/BaseView.hpp"
-
-namespace memo {
-    class Client;
-namespace manager {
-    class ViewManager;
-} // namespace manager
-namespace view {
-
-class HomeView : public BaseView
-{
-public:
-    HomeView(Client& iClient, const std::shared_ptr<manager::ViewManager>& iViewManager);
-    HomeView(const HomeView& iOther) = delete;
-
-    ~HomeView();
-    void display() override;
-private:
-    bool processInput(const std::string& iInput);
-    void printMenu() const;
-    void handleInvalidOption();
-};
-} // namespace view
-} // namespace memo
-
 #include "view/home/MenuItem.hpp"
 #include <vector>
 

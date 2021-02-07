@@ -1,7 +1,6 @@
 #include "Client.hpp"
 #include "context/Resources.hpp"
 #include "view/home/HomeView.hpp"
-#include "manager/ViewManager.hpp"
 #include "manager/ControllerManager.hpp"
 #include "controller/HomeController.hpp"
 #include "ncurses/functions.hpp"
@@ -22,15 +21,12 @@ Client::Client(const std::string& address) :
     tagStub_(model::TagSvc::NewStub(grpc::CreateChannel(
                     address,
                     grpc::InsecureChannelCredentials()))),
-    viewManager_(std::make_shared<manager::ViewManager>()),
     controllerManager_(std::make_shared<manager::ControllerManager>()),
     resources_(ResourcesImpl::Create(
         controllerManager_,
-        viewManager_,
         remote::MemoDaoImpl::Create(std::make_unique<remote::MemoCallFactory>(memoStub_))
     ))
 {
-    viewManager_->addView(std::make_shared<view::HomeView>(*this, viewManager_));
 }
 
 void Client::run()

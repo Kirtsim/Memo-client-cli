@@ -1,20 +1,6 @@
 #pragma once
-#include <memory>
-
-namespace memo {
-namespace view {
-
-class IView
-{
-public:
-    virtual ~IView() = default;
-
-    virtual void display() = 0;
-};
-} // namespace view
-} // namespace memo
-
 #include "view/BaseComponent.hpp"
+#include <memory>
 
 namespace memo {
 namespace curses {
