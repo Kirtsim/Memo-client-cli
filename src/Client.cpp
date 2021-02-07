@@ -35,17 +35,6 @@ Client::Client(const std::string& address) :
 
 void Client::run()
 {
-    while (viewManager_->getViewCount() > 0)
-    {
-        viewManager_->clearUnusedViews();
-        auto view = viewManager_->getCurrentView();
-        view->display();
-    }
-    std::cout << "Closing client.\n";
-}
-
-void Client::runcurses()
-{
     curses::InitCurses();
     curses::LineBuffering(DISABLE);
     curses::KeyPad(ENABLE);

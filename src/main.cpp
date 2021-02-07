@@ -20,7 +20,6 @@ int main(int argc, char** argv)
     const std::string port = argv[2];
     Client client(ipAddress+":"+port);
     client.run();
-    //client.runcurses();
 
     return 0;
 }
