@@ -81,12 +81,19 @@ curses::IWindow& BaseView::getWindow()
 
 void BaseView::registerSubView(View::Ptr subView)
 {
+    if (!subView || this == subView.get())
+        return;
     subViews_.insert(subView);
+    subView->setParent(this);
 }
 
 void BaseView::removeSubView(View::Ptr subView)
 {
+    if (!subView)
+        return;
     subViews_.erase(subView);
+    if (subView->getParent() == this)
+        subView->setParent(nullptr);
 }
 
 Size BaseView::getParentSize() const
