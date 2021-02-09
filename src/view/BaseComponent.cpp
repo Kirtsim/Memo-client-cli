@@ -134,7 +134,7 @@ Size BaseComponent::getParentSize() const
 Position BaseComponent::getParentPosition() const
 {
     if (parent_)
-        return parent_->getPosition();
+        return parent_->getAbsPosition();
     return Position(); // return 0, 0 coordinates
 }
 

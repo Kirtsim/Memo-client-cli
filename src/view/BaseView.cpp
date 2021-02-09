@@ -35,7 +35,7 @@ void BaseView::refresh()
     if (!visible_) return;
 
     window_->setSize(getSize());
-    window_->setPosition(getPosition());
+    window_->setPosition(getAbsPosition());
 
     positionComponents();
     displayContent();
