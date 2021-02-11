@@ -84,6 +84,7 @@ void HomeController::onMenuOptionSelected(std::pair<bool, ui::MenuItem> selected
         {
             auto manager = getResources()->controllerManager();
             manager->add(std::make_shared<SearchController>(getResources()));
+            home_view->refreshOnRequest();
         } break;
         case ui::E_MenuItem::LIST_TAGS:
             home_view->setErrorStatus(menuItem.getName());

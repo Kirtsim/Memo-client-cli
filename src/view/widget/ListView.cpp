@@ -29,6 +29,7 @@ void ListView::setItems(const std::vector<ListItemPtr>& items)
     selected_ = firstVisItem_ = 0;
 
     lastVisItem_ = std::min(items.size()-1, maxVisibleItems() -1);
+    refreshOnRequest();
 }
 
 const std::vector<ListItemPtr>& ListView::items() const
@@ -46,6 +47,7 @@ void ListView::select(size_t pos)
     if (items_.size() < pos)
         return;
     selected_ = pos;
+    refreshOnRequest();
 }
 
 bool ListView::selectNext()
@@ -59,6 +61,7 @@ bool ListView::selectNext()
         ++firstVisItem_;
         ++lastVisItem_;
     }
+    refreshOnRequest();
     return true;
 }
 
@@ -72,6 +75,7 @@ bool ListView::selectPrev()
         --firstVisItem_;
         --lastVisItem_;
     }
+    refreshOnRequest();
     return true;
 }
 
