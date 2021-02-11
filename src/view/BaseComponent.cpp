@@ -20,7 +20,8 @@ BaseComponent::~BaseComponent() = default;
 
 void BaseComponent::setParent(IComponent* parent)
 {
-    parent_ = parent;
+    if (this != parent)
+        parent_ = parent;
 }
 
 const IComponent* BaseComponent::getParent() const
@@ -28,19 +29,30 @@ const IComponent* BaseComponent::getParent() const
     return parent_;
 }
 
+IComponent* BaseComponent::getParent()
+{
+    return parent_;
+}
+
 void BaseComponent::setHeight(int height)
 {
+    auto oldSize = size_;
     size_.height = height;
+    onSizeChanged(oldSize, size_);
 }
 
 void BaseComponent::setWidth(int width)
 {
+    auto oldSize = size_;
     size_.width = width;
+    onSizeChanged(oldSize, size_);
 }
 
 void BaseComponent::setSize(const Size& size)
 {
+    auto oldSize = size_;
     size_= size;
+    onSizeChanged(oldSize, size_);
 }
 
 int BaseComponent::getHeight() const
@@ -65,7 +77,9 @@ void BaseComponent::setY(int y)
 
 void BaseComponent::setAbsY(int y)
 {
+    auto oldPos = position_;
     position_.y = y;
+    onPositionChanged(oldPos, position_);
 }
 
 void BaseComponent::setX(int x)
@@ -75,7 +89,9 @@ void BaseComponent::setX(int x)
 
 void BaseComponent::setAbsX(int x)
 {
+    auto oldPos = position_;
     position_.x = x;
+    onPositionChanged(oldPos, position_);
 }
 
 void BaseComponent::setPosition(const Position& pos)
@@ -86,8 +102,9 @@ void BaseComponent::setPosition(const Position& pos)
 
 void BaseComponent::setAbsPosition(const Position& pos)
 {
-    setAbsX(pos.x);
-    setAbsY(pos.y);
+    auto oldPos = position_;
+    position_ = pos;
+    onPositionChanged(oldPos, position_);
 }
 
 int BaseComponent::getY() const
@@ -136,6 +153,14 @@ Position BaseComponent::getParentPosition() const
     if (parent_)
         return parent_->getAbsPosition();
     return Position(); // return 0, 0 coordinates
+}
+
+void BaseComponent::onSizeChanged(const Size& oldSize, const Size& newSize)
+{
+}
+
+void BaseComponent::onPositionChanged(const Position& oldPos, const Position& newPos)
+{
 }
 
 } // namespace ui
