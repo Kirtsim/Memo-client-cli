@@ -22,6 +22,7 @@ public:
 
     void saveState() override;
     void refresh() override;
+    void refreshOnRequest() override;
 
     virtual void focus() override;
 
@@ -35,6 +36,9 @@ public:
     void hideWindow();
 
 protected:
+    virtual void onSizeChanged(const Size& oldSize, const Size& newSize) override;
+    virtual void onPositionChanged(const Position& oldPos, const Position& newPos) override;
+
     virtual void beforeViewResized();
     virtual void positionComponents();
     virtual void displayContent();
@@ -45,13 +49,16 @@ protected:
     Size getParentSize() const;
     Position getParentPosition() const;
 
+    void parentRequestOnRefresh();
+
 private:
     void applyBorder();
 
 private:
     Border newBorder_;
 
-    bool visible_;
+    bool visible_ = true;
+    bool needsRefresh_ = true;;
     std::shared_ptr<curses::IWindow> window_;
     std::unordered_set<View::Ptr> subViews_;
 };

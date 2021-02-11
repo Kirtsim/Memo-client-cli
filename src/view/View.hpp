@@ -20,6 +20,7 @@ public:
 
     virtual void refresh() = 0;
     virtual void saveState() = 0;
+    virtual void refreshOnRequest() = 0;
 
     virtual void focus() = 0;
 

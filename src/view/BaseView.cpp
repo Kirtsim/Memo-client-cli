@@ -28,25 +28,39 @@ BaseView::~BaseView()
 }
 
 void BaseView::saveState()
-{}
+{
+}
 
 void BaseView::refresh()
 {
     if (!visible_) return;
 
-    window_->setSize(getSize());
-    window_->setPosition(getAbsPosition());
+    if (needsRefresh_)
+    {
+        window_->setSize(getSize());
+        window_->setPosition(getAbsPosition());
 
-    positionComponents();
-    displayContent();
+        positionComponents();
+        displayContent();
 
-    window_->setWindowBorder(newBorder_);
-    window_->redraw();
+        window_->setWindowBorder(newBorder_);
+        window_->redraw();
+        for (const auto& subView : subViews_)
+        {
+            subView->refreshOnRequest();
+        }
+    }
 
     for (const auto& subView : subViews_)
     {
         subView->refresh();
     }
+    needsRefresh_ = false;
+}
+
+void BaseView::refreshOnRequest()
+{
+    needsRefresh_ = true;
 }
 
 void BaseView::setVisible(bool visible)
@@ -112,6 +126,31 @@ Position BaseView::getParentPosition() const
         return parent->getAbsPosition();
 
     return {}; // x=0, y=0
+}
+
+void BaseView::onSizeChanged(const Size& oldSize, const Size& newSize)
+{
+    if (oldSize != newSize)
+    {
+        refreshOnRequest();
+        parentRequestOnRefresh();
+    }
+}
+
+void BaseView::onPositionChanged(const Position& oldPos, const Position& newPos)
+{
+    if (oldPos != newPos)
+    {
+        refreshOnRequest();
+        parentRequestOnRefresh();
+    }
+}
+
+void BaseView::parentRequestOnRefresh()
+{
+    auto parentComponent = getParent();
+    if (auto parentView = dynamic_cast<View*>(parentComponent))
+        parentView->refreshOnRequest();
 }
 
 void BaseView::focus() {}

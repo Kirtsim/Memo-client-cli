@@ -11,6 +11,7 @@ public:
 
     virtual void setParent(IComponent* parent) = 0;
     virtual const IComponent* getParent() const = 0;
+    virtual IComponent* getParent() = 0;
 
     virtual void setHeight(int height) = 0;
     virtual void setWidth(int width) = 0;
