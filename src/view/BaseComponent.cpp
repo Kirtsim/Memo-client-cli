@@ -155,6 +155,13 @@ Position BaseComponent::getParentPosition() const
     return Position(); // return 0, 0 coordinates
 }
 
+#ifdef _MSC_VER
+    #pragma warning( push )
+    #pragma warning( disable: 4100 )
+#elif defined( __GNUC__ ) || ( __clang__ )
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
 void BaseComponent::onSizeChanged(const Size& oldSize, const Size& newSize)
 {
 }
@@ -162,6 +169,11 @@ void BaseComponent::onSizeChanged(const Size& oldSize, const Size& newSize)
 void BaseComponent::onPositionChanged(const Position& oldPos, const Position& newPos)
 {
 }
+#ifdef _MSC_VER
+    #pragma warning( pop )
+#elif defined( __GNUC__ ) || ( __clang__ )
+    #pragma GCC diagnostic pop
+#endif
 
 } // namespace ui
 } // namespace memo
