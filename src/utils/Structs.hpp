@@ -58,15 +58,21 @@ struct Position
 
 struct Border
 {
-    unsigned int top, right, bottom, left;
+    unsigned int
+        top    = ' ',
+        right  = ' ',
+        bottom = ' ',
+        left   = ' ';
 
     struct Corner
     {
-        unsigned int upperLeft;
-        unsigned int upperRight;
-        unsigned int lowerLeft;
-        unsigned int lowerRight;
+        unsigned int upperLeft  = ' ';
+        unsigned int upperRight = ' ';
+        unsigned int lowerLeft  = ' ';
+        unsigned int lowerRight = ' ';
     } corner;
+
+    static Border NoBorder() { return Border(); }
 };
 
 
