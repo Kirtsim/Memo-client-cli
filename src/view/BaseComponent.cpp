@@ -13,7 +13,7 @@ BaseComponent::BaseComponent(const Size& size, IComponent* parent) :
 {}
 
 BaseComponent::BaseComponent(const Size& size, const Position& position, IComponent* parent) :
-    size_(size), position_(position), parent_(parent)
+    size_(curses::CorrectSize(size)), position_(position), parent_(parent)
 {}
 
 BaseComponent::~BaseComponent() = default;
@@ -37,21 +37,21 @@ IComponent* BaseComponent::getParent()
 void BaseComponent::setHeight(int height)
 {
     auto oldSize = size_;
-    size_.height = height;
+    size_.height = (height > 0 ? height : curses::ScreenHeight());
     onSizeChanged(oldSize, size_);
 }
 
 void BaseComponent::setWidth(int width)
 {
     auto oldSize = size_;
-    size_.width = width;
+    size_.width = (width > 0 ? width : curses::ScreenWidth());
     onSizeChanged(oldSize, size_);
 }
 
 void BaseComponent::setSize(const Size& size)
 {
     auto oldSize = size_;
-    size_= size;
+    size_= curses::CorrectSize(size);
     onSizeChanged(oldSize, size_);
 }
 

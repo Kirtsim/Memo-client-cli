@@ -8,7 +8,7 @@ namespace curses {
 
 BaseWindow::BaseWindow(const Position& position, const Size& size) :
     position_(position),
-    size_(size),
+    size_(CorrectSize(size)),
     border_(DefaultBorder())
 {
 }
@@ -101,8 +101,10 @@ int BaseWindow::posY() const
     return position_.y;
 }
 
-bool BaseWindow::setSize(const Size& newSize)
+bool BaseWindow::setSize(const Size& size)
 {
+    const auto newSize = CorrectSize(size);
+
     if (resizeWindow(cursesWindow(), newSize) == OK)
     {
         size_ = newSize;

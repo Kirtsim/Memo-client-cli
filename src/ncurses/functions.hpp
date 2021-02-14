@@ -116,6 +116,15 @@ int ScreenWidth();
 
 int ScreenHeight();
 
+///
+/// \brief Corrects the given size, so that if the width/height is less than one,
+/// it is set to the screen width/height. This is how curses treats "invalid"
+/// dimensions when drawing window borders.
+/// \param size The size to be corrected.
+/// \return The corrected size.
+///
+Size CorrectSize(const Size& size);
+
 Border DefaultBorder();
 
 }

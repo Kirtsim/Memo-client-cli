@@ -91,6 +91,16 @@ Size ScreenSize()
     return { Height(LINES), Width(COLS) };
 }
 
+Size CorrectSize(const Size& size)
+{
+    auto result = size;
+    if (size.height <= 0)
+        result.height = ScreenHeight();
+    if (size.width <= 0)
+        result.width = ScreenWidth();
+    return result;
+}
+
 int PrintText(const std::string& text, const Position& position)
 {
     return mvprintw(position.y, position.x, text.c_str());
