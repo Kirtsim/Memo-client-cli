@@ -3,6 +3,7 @@
 #include "view/widget/TextView.hpp"
 #include "view/tools/Tools.hpp"
 #include "ncurses/functions.hpp"
+#include "utils/Enums.hpp"
 
 namespace memo {
 namespace ui {
@@ -67,15 +68,13 @@ void HomeView::positionComponents()
 {
     windowTitle_->setY(getY() + 2);
     errorStatus_->setY(getY() + getHeight() - 2);
-    tools::Tools::centerComponent(*windowTitle_, tools::Center::HORIZONTAL, *this);
-    tools::Tools::centerComponent(*errorStatus_, tools::Center::HORIZONTAL, *this);
+    tools::Tools::centerComponent(*windowTitle_, Center::HORIZONTAL, *this);
+    tools::Tools::centerComponent(*errorStatus_, Center::HORIZONTAL, *this);
 
     Size minMenuSize = menuView_->getMinimumRequiredSize();
     menuView_->setWidth(minMenuSize.width + 4);
     menuView_->setHeight(minMenuSize.height + 4);
-    tools::Tools::centerComponent(*menuView_,
-                                  tools::Center::HORIZONTAL | tools::Center::VERTICAL,
-                                  *this);
+    tools::Tools::centerComponent(*menuView_, Center::CENTER, *this);
 }
 
 void HomeView::displayContent()

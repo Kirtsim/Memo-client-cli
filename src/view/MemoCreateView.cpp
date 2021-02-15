@@ -2,6 +2,7 @@
 #include "view/widget/TextView.hpp"
 #include "tools/Tools.hpp"
 #include "ncurses/functions.hpp"
+#include "utils/Enums.hpp"
 
 namespace memo {
 namespace ui {
@@ -32,13 +33,13 @@ MemoCreateView::MemoCreateView(const Size& size, const Position& position, IComp
 
     //memoTitleText_->setY(getHeight() * 0.3);
     memoTitleText_->setY(5);
-    tools::Tools::centerComponent(*memoTitleText_, tools::Center::HORIZONTAL, *this);
+    tools::Tools::centerComponent(*memoTitleText_, Center::HORIZONTAL, *this);
 
     memoDescriptionText_->setY(memoTitleText_->getY() + memoTitleText_->getHeight() + 2);
-    tools::Tools::centerComponent(*memoDescriptionText_, tools::Center::HORIZONTAL, *this);
+    tools::Tools::centerComponent(*memoDescriptionText_, Center::HORIZONTAL, *this);
 
     memoTagsText_->setY(memoDescriptionText_->getY() + memoDescriptionText_->getHeight() + 2);
-    tools::Tools::centerComponent(*memoTagsText_, tools::Center::HORIZONTAL, *this);
+    tools::Tools::centerComponent(*memoTagsText_, Center::HORIZONTAL, *this);
 
     registerSubView(memoTitleText_);
     registerSubView(memoDescriptionText_);

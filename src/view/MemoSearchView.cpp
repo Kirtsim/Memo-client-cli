@@ -3,6 +3,7 @@
 #include "view/widget/TextView.hpp"
 #include "ncurses/functions.hpp"
 #include "tools/Tools.hpp"
+#include "utils/Enums.hpp"
 
 namespace memo {
 namespace ui {
@@ -25,7 +26,7 @@ MemoSearchView::MemoSearchView(const Size& size, const Position& position, IComp
 
     memoListView_->setWidth(size.width * 0.5);
     memoListView_->setHeight(size.height * 0.5);
-    tools::Tools::centerComponent(*memoListView_, tools::Center::HORIZONTAL | tools::Center::VERTICAL, *this);
+    tools::Tools::centerComponent(*memoListView_, Center::CENTER, *this);
 }
 
 const ListViewPtr& MemoSearchView::memoListView()

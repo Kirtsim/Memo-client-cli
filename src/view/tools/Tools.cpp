@@ -5,23 +5,23 @@ namespace memo {
 namespace ui {
 namespace tools {
 
-void Tools::centerComponent(ui::IComponent& component, const int centerType,
+void Tools::centerComponent(ui::IComponent& component, const Center centerType,
                             const ui::IComponent& parent)
 {
     const Bounds& bounds = componentBoundaries(parent);
     centerComponent(component, centerType, bounds);
 }
 
-void Tools::centerComponent(ui::IComponent& component, const int centerType,
+void Tools::centerComponent(ui::IComponent& component, const Center centerType,
                             const Bounds& bounds)
 {
-    if (centerType & Center::HORIZONTAL)
+    if ((centerType & Center::HORIZONTAL) == Center::HORIZONTAL)
     {
         int newX = (bounds.startX + bounds.endX - component.getWidth()) / 2;
         component.setAbsX(newX);
     }
 
-    if (centerType & Center::VERTICAL)
+    if ((centerType & Center::VERTICAL) == Center::VERTICAL)
     {
         int newY = (bounds.startY + bounds.endY - component.getHeight()) / 2;
         component.setAbsY(newY);
