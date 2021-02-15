@@ -1,5 +1,6 @@
 #include "controller/HomeController.hpp"
 #include "controller/SearchController.hpp"
+#include "controller/MemoCreateController.hpp"
 #include "view/home/HomeView.hpp"
 #include "view/home/MenuView.hpp"
 #include "manager/ControllerManager.hpp"
@@ -69,8 +70,11 @@ void HomeController::onMenuOptionSelected(std::pair<bool, ui::MenuItem> selected
     switch (menuItem.getId())
     {
         case ui::E_MenuItem::CREATE_MEMO:
-            home_view->setErrorStatus(menuItem.getName());
-            break;
+        {
+            auto manager = getResources()->controllerManager();
+            manager->add(std::make_shared<MemoCreateController>(getResources()));
+            home_view->refreshOnRequest();
+        } break;
         case ui::E_MenuItem::CREATE_TAG:
             home_view->setErrorStatus(menuItem.getName());
             break;

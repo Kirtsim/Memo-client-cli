@@ -34,11 +34,13 @@ HomeView::HomeView(const Size& size, IComponent* parent) :
 
 HomeView::HomeView(const Size& size, const Position& position, IComponent* parent) :
     BaseView(size, position, parent),
-    errorStatus_(std::make_unique<TextView>("SOME TEXT")),
-    windowTitle_(std::make_unique<TextView>("Welcome to the Memo-client-cli")),
+    errorStatus_(std::make_unique<TextView>()),
+    windowTitle_(std::make_unique<TextView>()),
     menuView_(std::make_shared<MenuView>())
 {
     registerSubView(menuView_);
+    errorStatus_->setText("SOME TEXT");
+    windowTitle_->setText("Welcome to the Memo-client-cli");
     menuView_->setMenuItems(kMenuItems);
     menuView_->setSelectionMark(" * ");
     menuView_->setLayout(Rows(4), Cols(2));

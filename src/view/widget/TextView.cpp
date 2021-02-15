@@ -7,25 +7,27 @@ namespace {
     Size TextSize(const std::string& text);
 } // namespace
 
-TextView::TextView() :
-    TextView("", Position())
-{}
+TextView::TextView(IComponent* parent)
+    : TextView(Size(), Position(), parent)
+{
+}
 
-TextView::TextView(const std::string& text) :
-    TextView(text, Position())
-{}
+TextView::TextView(const Size& size, IComponent* parent)
+    : TextView(size, Position(), parent)
+{
+}
 
-TextView::TextView(const std::string& text, const Position& position) :
-    BaseView(TextSize(text), position),
-    text_(text)
-{}
+TextView::TextView(const Size& size, const Position& position, IComponent* parent)
+    : BaseView(size, position, parent)
+{
+}
 
 TextView::~TextView() = default;
 
 void TextView::setText(const std::string& text)
 {
     text_ = text;
-    setSize(TextSize(text_));
+    //setSize(TextSize(text_));
 }
 
 const std::string& TextView::text() const
@@ -42,7 +44,6 @@ bool TextView::empty()
 {
     return text_.empty();
 }
-
 namespace {
 
 Size TextSize(const std::string& text)
