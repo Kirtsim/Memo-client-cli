@@ -4,11 +4,11 @@ namespace memo {
 
 enum Align {
     LEFT = 1,
-    RIGHT = 3,
-    TOP = 7,
-    BOTTOM = 15,
-    CENTER_HORIZONTAL = 31,
-    CENTER_VERTICAL = 63,
+    RIGHT = 2,
+    TOP = 4,
+    BOTTOM = 8,
+    CENTER_HORIZONTAL = 16,
+    CENTER_VERTICAL = 32,
     TOP_LEFT = (LEFT | TOP),
     TOP_RIGHT = (RIGHT | TOP),
     BOTTOM_LEFT = (LEFT | BOTTOM),
