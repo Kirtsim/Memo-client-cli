@@ -31,7 +31,6 @@ MemoCreateView::MemoCreateView(const Size& size, const Position& position, IComp
     memoTagsText_->setWidth(textViewWidth);
     memoTagsText_->setHeight(5);
 
-    //memoTitleText_->setY(getHeight() * 0.3);
     memoTitleText_->setY(5);
     tools::Tools::centerComponent(*memoTitleText_, Center::HORIZONTAL, *this);
 
@@ -44,6 +43,10 @@ MemoCreateView::MemoCreateView(const Size& size, const Position& position, IComp
     registerSubView(memoTitleText_);
     registerSubView(memoDescriptionText_);
     registerSubView(memoTagsText_);
+
+    memoTitleText_->setText("Type the memo title here.");
+    memoDescriptionText_->setText("Type description here.");
+    memoTagsText_->setText("Tags will be displayed here.");
 }
 
 MemoCreateView::~MemoCreateView() = default;

@@ -1,4 +1,5 @@
 #include "view/widget/TextView.hpp"
+#include "ncurses/functions.hpp"
 
 namespace memo {
 namespace ui {
@@ -27,12 +28,21 @@ TextView::~TextView() = default;
 void TextView::setText(const std::string& text)
 {
     text_ = text;
-    //setSize(TextSize(text_));
 }
 
 const std::string& TextView::text() const
 {
     return text_;
+}
+
+void TextView::setTextAlignment(Align alignment)
+{
+    textAlignment_ = alignment;
+}
+
+Align TextView::textAlignment() const
+{
+    return textAlignment_;
 }
 
 int TextView::length()
@@ -44,11 +54,36 @@ bool TextView::empty()
 {
     return text_.empty();
 }
+
+void TextView::displayContent()
+{
+    auto textSize = TextSize(text_);
+    Position textPos;
+
+    if (textAlignment_ & Align::CENTER_HORIZONTAL)
+        textPos.x += (getWidth() / 2) - (textSize.width / 2);
+    else if (textAlignment_ & Align::RIGHT)
+        textPos.x += getWidth() - textSize.width - 1;
+    else
+        textPos.x += 1;
+
+    if (textAlignment_ & Align::CENTER_VERTICAL)
+        textPos.y += (getHeight() / 2) - (textSize.height / 2);
+    else if (textAlignment_ & Align::BOTTOM)
+        textPos.y += getHeight() - textSize.height - 1;
+    else
+        textPos.y += 1;
+
+    curses::PrintText(text_, getWindow(), textPos);
+}
+
 namespace {
 
 Size TextSize(const std::string& text)
 {
-    size_t lineCount = 0, maxLineLen = 0;
+    if (text.empty())
+        return {};
+    size_t lineCount = 1, maxLineLen = 0;
     size_t lastPos = 0;
     size_t pos = text.find('\n');
     while(pos != std::string::npos)

@@ -1,5 +1,6 @@
 #pragma once
 #include "view/BaseView.hpp"
+#include "utils/Enums.hpp"
 
 #include <string>
 
@@ -18,11 +19,18 @@ public:
     void setText(const std::string& text);
     const std::string& text() const;
 
+    void setTextAlignment(Align alignment);
+    Align textAlignment() const;
+
     int length();
     bool empty();
 
+protected:
+    void displayContent() override;
+
 private:
     std::string text_;
+    Align textAlignment_ = Align::TOP_LEFT;
 };
 
 } // namespace ui
