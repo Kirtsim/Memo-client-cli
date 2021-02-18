@@ -58,4 +58,54 @@ bool Position::operator!=(const Position& other) const
     return x != other.x && y != other.y;
 }
 
+Rect::Rect(const Position& pos)
+    : x(pos.x), y(pos.y)
+{
+}
+
+Rect::Rect(const Size& size)
+    : height(size.height), width(size.width)
+{
+}
+
+Rect::Rect(const Position& pos, const Size& size)
+    : x(pos.x), y(pos.y)
+    , height(size.height), width(size.width)
+{
+}
+
+void Rect::setPosition(const Position& pos)
+{
+    x = pos.x;
+    y = pos.y;
+}
+
+Position Rect::position() const
+{
+    return { PosX(x), PosY(y) };
+}
+
+void Rect::setSize(const Size& size)
+{
+    width = size.width;
+    height = size.height;
+}
+
+Size Rect::size() const
+{
+    return { Height(height), Width(width) };
+}
+
+bool Rect::operator==(const Rect& other) const
+{
+    return x == other.x 
+        && y == other.y
+        && height == other.height
+        && width  == other.width;
+}
+bool Rect::operator!=(const Rect& other) const
+{
+    return !operator==(other);
+}
+
 } // namespace memo

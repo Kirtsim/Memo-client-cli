@@ -56,6 +56,26 @@ struct Position
     int x, y;
 };
 
+struct Rect
+{
+    Rect() = default;
+    Rect(const Position& pos);
+    Rect(const Size& size);
+    Rect(const Position& pos, const Size& size);
+
+    void setPosition(const Position& pos);
+    Position position() const;
+
+    void setSize(const Size& size);
+    Size size() const;
+
+    bool operator==(const Rect& other) const;
+    bool operator!=(const Rect& other) const;
+
+    int x = 0, y = 0;
+    int height = 0, width = 0;
+};
+
 struct Border
 {
     unsigned int
