@@ -49,17 +49,7 @@ BaseWindow& BaseWindow::operator=(BaseWindow&& other)
 
 bool BaseWindow::redraw()
 {
-    int status = wborder(cursesWindow(), ' ', ' ', ' ',' ',' ',' ',' ',' ');
-    if (status != OK)
-        return false;
-
-    status = box(cursesWindow(), border_.left, border_.top);
-    if (status == OK)
-    {
-        status = wrefresh(cursesWindow());
-        setWindowBorder(border_);
-    }
-    return status == OK;
+    return wrefresh(cursesWindow()) == OK;
 }
 
 bool BaseWindow::setPosition(const Position& newPosition)
