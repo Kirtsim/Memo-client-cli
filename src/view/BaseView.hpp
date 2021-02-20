@@ -42,6 +42,7 @@ protected:
     virtual void beforeViewResized();
     virtual void positionComponents();
     virtual void displayContent();
+    virtual void printForeground();
 
     void registerSubView(View::Ptr subView);
     void removeSubView(View::Ptr subView);

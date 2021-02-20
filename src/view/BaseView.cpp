@@ -44,6 +44,9 @@ void BaseView::refresh()
         displayContent();
 
         window_->setWindowBorder(newBorder_);
+
+        printForeground();
+
         window_->redraw();
         for (const auto& subView : subViews_)
         {
@@ -80,7 +83,7 @@ void BaseView::setBorder(const Border& border)
 
 Border BaseView::getBorder() const
 {
-    return window_->windowBorder();
+    return newBorder_;
 }
 
 void BaseView::displayText(const std::string& text, const Position& position)
@@ -157,6 +160,7 @@ void BaseView::focus() {}
 void BaseView::beforeViewResized() {}
 void BaseView::displayContent() {}
 void BaseView::positionComponents() {}
+void BaseView::printForeground() {}
 
 } // namespace ui
 } // namespace memo
