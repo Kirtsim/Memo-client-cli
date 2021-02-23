@@ -136,12 +136,12 @@ bool BaseWindow::setWindowBorder(const Border& newBorder)
 {
     int result =
         wborder(cursesWindow(),
-                border_.left, border_.right,
-                border_.top, border_.bottom,
-                border_.corner.upperLeft,
-                border_.corner.upperRight,
-                border_.corner.lowerLeft,
-                border_.corner.lowerRight);
+                newBorder.left, newBorder.right,
+                newBorder.top, newBorder.bottom,
+                newBorder.corner.upperLeft,
+                newBorder.corner.upperRight,
+                newBorder.corner.lowerLeft,
+                newBorder.corner.lowerRight);
     if (result == OK)
     {
         border_ = newBorder;
