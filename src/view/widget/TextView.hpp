@@ -27,6 +27,10 @@ public:
 
 protected:
     void displayContent() override;
+    void printForeground() override;
+
+private:
+    Rect computeAvailableTextArea();
 
 private:
     std::string text_;
