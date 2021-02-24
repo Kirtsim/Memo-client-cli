@@ -24,6 +24,7 @@ TextView::TextView(const Size& size, IComponent* parent)
 TextView::TextView(const Size& size, const Position& position, IComponent* parent)
     : BaseView(size, position, parent)
 {
+    setBorder(Border::NoBorder());
 }
 
 TextView::~TextView() = default;

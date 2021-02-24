@@ -40,12 +40,19 @@ HomeView::HomeView(const Size& size, const Position& position, IComponent* paren
     menuView_(std::make_shared<MenuView>())
 {
     registerSubView(menuView_);
+    registerSubView(errorStatus_);
+    registerSubView(windowTitle_);
     errorStatus_->setText("SOME TEXT");
+    errorStatus_->setHeight(1);
     windowTitle_->setText("Welcome to the Memo-client-cli");
+    windowTitle_->setHeight(1);
     menuView_->setMenuItems(kMenuItems);
     menuView_->setSelectionMark(" * ");
     menuView_->setLayout(Rows(4), Cols(2));
     menuView_->applyMenuChanges();
+
+    registerSubView(errorStatus_);
+    registerSubView(windowTitle_);
 }
 
 HomeView::~HomeView() = default;
@@ -64,10 +71,12 @@ void HomeView::setErrorStatus(const std::string& status)
     errorStatus_->setText(status);
 }
 
-void HomeView::positionComponents()
+void HomeView::displayContent()
 {
-    windowTitle_->setY(getY() + 2);
-    errorStatus_->setY(getY() + getHeight() - 2);
+    windowTitle_->setY(2);
+    errorStatus_->setY(getHeight() - 2);
+    windowTitle_->setWidth(windowTitle_->text().size());
+    errorStatus_->setWidth(errorStatus_->text().size());
     tools::Tools::centerComponent(*windowTitle_, Center::HORIZONTAL, *this);
     tools::Tools::centerComponent(*errorStatus_, Center::HORIZONTAL, *this);
 
@@ -75,12 +84,7 @@ void HomeView::positionComponents()
     menuView_->setWidth(minMenuSize.width + 4);
     menuView_->setHeight(minMenuSize.height + 4);
     tools::Tools::centerComponent(*menuView_, Center::CENTER, *this);
-}
 
-void HomeView::displayContent()
-{
-    displayText(windowTitle_->text(), windowTitle_->getPosition());
-    displayText(errorStatus_->text(), errorStatus_->getPosition());
 }
 
 } // namespace ui

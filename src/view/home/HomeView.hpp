@@ -32,14 +32,13 @@ public:
     void setErrorStatus(const std::string& status);
 
 protected:
-    void positionComponents() override;
     void displayContent() override;
 
 private:
     static const std::vector<MenuItem> kMenuItems;
 
-    std::unique_ptr<TextView> errorStatus_;
-    std::unique_ptr<TextView> windowTitle_;
+    std::shared_ptr<TextView> errorStatus_;
+    std::shared_ptr<TextView> windowTitle_;
     std::shared_ptr<MenuView> menuView_;
 };
 

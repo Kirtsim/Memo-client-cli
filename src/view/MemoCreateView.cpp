@@ -44,9 +44,13 @@ MemoCreateView::MemoCreateView(const Size& size, const Position& position, IComp
     registerSubView(memoDescriptionText_);
     registerSubView(memoTagsText_);
 
+    auto border = curses::DefaultBorder();
     memoTitleText_->setText("Type the memo title here.");
+    memoTitleText_->setBorder(border);
     memoDescriptionText_->setText("Type description here.");
+    memoDescriptionText_->setBorder(border);
     memoTagsText_->setText("Tags will be displayed here.");
+    memoTagsText_->setBorder(border);
 }
 
 MemoCreateView::~MemoCreateView() = default;
