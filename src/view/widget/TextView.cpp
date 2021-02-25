@@ -35,7 +35,11 @@ TextView::~TextView() = default;
 
 void TextView::setText(const std::string& text)
 {
-    text_ = text;
+    if (text_ != text)
+    {
+        refreshOnRequest();
+        text_ = text;
+    }
 }
 
 const std::string& TextView::text() const
@@ -127,6 +131,7 @@ void TextView::resizeToText()
     if (hasRightBorder(border))
         textSize.width += 1;
     setSize(textSize);
+    refreshOnRequest();
 }
 
 Rect TextView::computeAvailableTextArea()

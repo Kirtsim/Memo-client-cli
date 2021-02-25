@@ -43,9 +43,7 @@ HomeView::HomeView(const Size& size, const Position& position, IComponent* paren
     registerSubView(errorStatus_);
     registerSubView(windowTitle_);
     errorStatus_->setText("SOME TEXT");
-    errorStatus_->resizeToText();
     windowTitle_->setText("Welcome to the Memo-client-cli");
-    windowTitle_->resizeToText();
     menuView_->setMenuItems(kMenuItems);
     menuView_->setSelectionMark(" * ");
     menuView_->setLayout(Rows(4), Cols(2));
@@ -69,14 +67,15 @@ void HomeView::focus()
 void HomeView::setErrorStatus(const std::string& status)
 {
     errorStatus_->setText(status);
+    refreshOnRequest();
 }
 
 void HomeView::displayContent()
 {
     windowTitle_->setY(2);
     errorStatus_->setY(getHeight() - 2);
-    windowTitle_->setWidth(windowTitle_->text().size());
-    errorStatus_->setWidth(errorStatus_->text().size());
+    windowTitle_->resizeToText();
+    errorStatus_->resizeToText();
     tools::Tools::centerComponent(*windowTitle_, Center::HORIZONTAL, *this);
     tools::Tools::centerComponent(*errorStatus_, Center::HORIZONTAL, *this);
 
