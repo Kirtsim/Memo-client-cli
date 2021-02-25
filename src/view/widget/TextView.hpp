@@ -25,6 +25,8 @@ public:
     int length();
     bool empty();
 
+    void resizeToText();
+
 protected:
     void displayContent() override;
     void printForeground() override;

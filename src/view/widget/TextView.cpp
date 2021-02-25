@@ -8,6 +8,10 @@ namespace memo {
 namespace ui {
 
 namespace {
+    bool hasTopBorder(const Border& border);
+    bool hasBotBorder(const Border& border);
+    bool hasLeftBorder(const Border& border);
+    bool hasRightBorder(const Border& border);
     std::vector<std::string> SplitIntoLines(const std::string& text);
 } // namespace
 
@@ -101,30 +105,50 @@ void TextView::printForeground()
     auto pos = Position();
 }
 
+void TextView::resizeToText()
+{
+    auto lines = SplitIntoLines(text_);
+    Size textSize;
+    textSize.height = static_cast<int>(lines.size());
+
+    for (const auto& line : lines)
+    {
+        const int lineWidth = static_cast<int>(line.size());
+        textSize.width = std::max(lineWidth, textSize.width);
+    }
+
+    const auto border = getBorder();
+    if (hasTopBorder(border))
+        textSize.height += 1;
+    if (hasBotBorder(border))
+        textSize.height += 1;
+    if (hasLeftBorder(border))
+        textSize.width += 1;
+    if (hasRightBorder(border))
+        textSize.width += 1;
+    setSize(textSize);
+}
+
 Rect TextView::computeAvailableTextArea()
 {
     const auto border = getBorder();
     auto area = Rect(getSize());
 
-    bool hasTopBorder = border.top    != ' ' || border.corner.upperLeft != ' ' || border.corner.upperRight != ' ';
-    bool hasBotBorder = border.bottom != ' ' || border.corner.lowerLeft != ' ' || border.corner.lowerRight != ' ';
-    bool hasLeftBorder  = border.left  != ' ' || border.corner.upperLeft != ' ' || border.corner.lowerLeft != ' ';
-    bool hasRightBorder = border.right != ' ' || border.corner.upperRight != ' ' || border.corner.lowerRight != ' ';
-    if (hasLeftBorder)
+    if (hasLeftBorder(border))
     {
         area.width--;
         area.x = 1;
     }
-    if (hasRightBorder)
+    if (hasRightBorder(border))
     {
         area.width--;
     }
-    if (hasTopBorder)
+    if (hasTopBorder(border))
     {
         area.height--;
         area.y = 1;
     }
-    if (hasBotBorder)
+    if (hasBotBorder(border))
     {
         area.height--;
     }
@@ -132,6 +156,25 @@ Rect TextView::computeAvailableTextArea()
 }
 
 namespace {
+bool hasTopBorder(const Border& border)
+{
+    return border.top != ' ' || border.corner.upperLeft != ' ' || border.corner.upperRight != ' ';
+}
+
+bool hasBotBorder(const Border& border)
+{
+    return border.bottom != ' ' || border.corner.lowerLeft != ' ' || border.corner.lowerRight != ' ';
+}
+
+bool hasLeftBorder(const Border& border)
+{
+    return border.left != ' ' || border.corner.upperLeft != ' ' || border.corner.lowerLeft != ' ';
+}
+
+bool hasRightBorder(const Border& border)
+{
+    return border.right != ' ' || border.corner.upperRight != ' ' || border.corner.lowerRight != ' ';
+}
 
 std::vector<std::string> SplitIntoLines(const std::string& text)
 {

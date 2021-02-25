@@ -43,9 +43,9 @@ HomeView::HomeView(const Size& size, const Position& position, IComponent* paren
     registerSubView(errorStatus_);
     registerSubView(windowTitle_);
     errorStatus_->setText("SOME TEXT");
-    errorStatus_->setHeight(1);
+    errorStatus_->resizeToText();
     windowTitle_->setText("Welcome to the Memo-client-cli");
-    windowTitle_->setHeight(1);
+    windowTitle_->resizeToText();
     menuView_->setMenuItems(kMenuItems);
     menuView_->setSelectionMark(" * ");
     menuView_->setLayout(Rows(4), Cols(2));
