@@ -94,6 +94,16 @@ int ReadCharAt(const Position& position);
 int ReadCharAt(const IWindow& window, const Position& position);
 
 ///
+/// \brief Prints a character at the specified position on the screen.
+///
+void PrintCharAt(int character, const Position& position);
+
+///
+/// \brief Prints a character at the specified position in the given window.
+///
+void PrintCharAt(int character, const IWindow& window, const Position& position);
+
+///
 /// \brief Prints the given text at the specified position on the screen.
 /// \param text Text to print
 /// \param position Position on the screen.

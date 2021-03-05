@@ -76,6 +76,16 @@ int ReadCharAt(const IWindow& window, const Position& position)
     return mvwgetch(window.cursesWindow(), position.y, position.x);
 }
 
+void PrintCharAt(int character, const Position& position)
+{
+    mvaddch(position.y, position.x, character);
+}
+
+void PrintCharAt(int character, const IWindow& window, const Position& position)
+{
+    mvwaddch(window.cursesWindow(), position.y, position.x, character);
+}
+
 int ScreenWidth()
 {
     return COLS;
