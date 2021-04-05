@@ -12,6 +12,10 @@ public:
     static const int kRight;
 
     static const int kEnter;
+    static const int kEsc;
+    static const int kTab;
+    static const int kShiftTab;
+    static const int kBackSpace;
 
 
     Key() = delete;
