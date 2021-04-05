@@ -28,6 +28,23 @@ void CursorVisible(bool visible)
     curs_set(visibility);
 }
 
+Position CursorPosition(const IWindow& window)
+{
+    Position pos;
+    getyx(window.cursesWindow(), pos.y, pos.x);
+    return pos;
+}
+
+void PositionCursor(const Position& pos)
+{
+    move(pos.y, pos.x);
+}
+
+void PositionCursor(const IWindow& window, const Position& pos)
+{
+    wmove(window.cursesWindow(), pos.y, pos.x);
+}
+
 void LineBuffering(bool enable)
 {
     if (enable)

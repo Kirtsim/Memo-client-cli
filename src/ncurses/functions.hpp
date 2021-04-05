@@ -35,6 +35,25 @@ void Refresh();
 void CursorVisible(bool visible);
 
 ///
+/// \brief Returns the cursor position in the given window
+///
+Position CursorPosition(const IWindow& window);
+
+///
+/// \brief Positions the cursor on the screen.
+///
+/// Requires call to IWindow::redraw() to take effect.
+///
+void PositionCursor(const Position& pos);
+
+///
+/// \brief Positions the cursor in the given window.
+///
+/// Requires call to IWindow::redraw() to take effect.
+///
+void PositionCursor(const IWindow& window, const Position& pos);
+
+///
 /// \brief If enabled, text is being buffered as it's being typed. It becomes available
 /// to the program once user types an interrupt or a control character such as <ENTER>.
 /// If disabled, typed characters are immediately passed to the program without entering
