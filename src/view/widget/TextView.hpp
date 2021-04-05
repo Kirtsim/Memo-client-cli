@@ -19,7 +19,7 @@ public:
     void setText(const std::string& text);
     const std::string& text() const;
 
-    void setTextAlignment(Align alignment);
+    virtual void setTextAlignment(Align alignment);
     Align textAlignment() const;
 
     int length();
@@ -30,8 +30,6 @@ public:
 protected:
     void displayContent() override;
     void printForeground() override;
-
-private:
     Rect computeAvailableTextArea();
 
 private:
