@@ -23,6 +23,8 @@ public:
     virtual void refreshOnRequest() = 0;
 
     virtual void focus() = 0;
+    virtual void looseFocus() = 0;
+    virtual bool hasFocus() const = 0;
 
     virtual void setVisible(bool visible) = 0;
     virtual bool isVisible() const = 0;

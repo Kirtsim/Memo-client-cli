@@ -25,6 +25,8 @@ public:
     void refreshOnRequest() override;
 
     virtual void focus() override;
+    virtual void looseFocus() override;
+    virtual bool hasFocus() const override;
 
     void setVisible(bool visible) override;
     bool isVisible() const override;
@@ -60,6 +62,7 @@ private:
 
     bool visible_ = true;
     bool needsRefresh_ = true;;
+    bool hasFocus_ = false;
     std::shared_ptr<curses::IWindow> window_;
     std::unordered_set<View::Ptr> subViews_;
 };
