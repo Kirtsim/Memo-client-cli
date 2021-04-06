@@ -156,7 +156,21 @@ void BaseView::parentRequestOnRefresh()
         parentView->refreshOnRequest();
 }
 
-void BaseView::focus() {}
+void BaseView::focus()
+{
+    hasFocus_ = true;
+}
+
+void BaseView::looseFocus()
+{
+    hasFocus_ = false;
+}
+
+bool BaseView::hasFocus() const
+{
+    return hasFocus_;
+}
+
 void BaseView::beforeViewResized() {}
 void BaseView::displayContent() {}
 void BaseView::positionComponents() {}

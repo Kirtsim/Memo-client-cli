@@ -35,6 +35,25 @@ void Refresh();
 void CursorVisible(bool visible);
 
 ///
+/// \brief Returns the cursor position in the given window
+///
+Position CursorPosition(const IWindow& window);
+
+///
+/// \brief Positions the cursor on the screen.
+///
+/// Requires call to IWindow::redraw() to take effect.
+///
+void PositionCursor(const Position& pos);
+
+///
+/// \brief Positions the cursor in the given window.
+///
+/// Requires call to IWindow::redraw() to take effect.
+///
+void PositionCursor(const IWindow& window, const Position& pos);
+
+///
 /// \brief If enabled, text is being buffered as it's being typed. It becomes available
 /// to the program once user types an interrupt or a control character such as <ENTER>.
 /// If disabled, typed characters are immediately passed to the program without entering
@@ -92,6 +111,16 @@ int ReadCharAt(const Position& position);
 /// \return Integer representation of the read character.
 ///
 int ReadCharAt(const IWindow& window, const Position& position);
+
+///
+/// \brief Prints a character at the specified position on the screen.
+///
+void PrintCharAt(int character, const Position& position);
+
+///
+/// \brief Prints a character at the specified position in the given window.
+///
+void PrintCharAt(int character, const IWindow& window, const Position& position);
 
 ///
 /// \brief Prints the given text at the specified position on the screen.
