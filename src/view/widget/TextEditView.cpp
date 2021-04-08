@@ -15,6 +15,7 @@ namespace {
     std::vector<std::string> splitIntoLines(const std::string& text, const Rect& textArea);
 } // namespace
 
+
 TextEditView::TextEditView(IComponent* parent)
     : TextEditView(Size(), Position(), parent)
 {
@@ -39,17 +40,22 @@ void TextEditView::focus()
 {
     TextView::focus();
 
+    curses::KeyPad(getWindow(), ENABLE);
     curses::CursorVisible(true);
 
     while (hasFocus())
     {
         const auto cursorPos = curses::CursorPosition(getWindow());
         auto character = curses::ReadCharAt(getWindow(), cursorPos);
-        processInputCharacter(character);
+        if (!keyFilter_ || !keyFilter_->filterKey(character))
+        {
+            processInputCharacter(character);
+        }
         getWindow().redraw();
     }
 
     curses::CursorVisible(false);
+    curses::KeyPad(getWindow(), DISABLE);
 }
 
 void TextEditView::processInputCharacter(const int character)
@@ -304,6 +310,11 @@ void TextEditView::applyBackSpace()
         newCursorPos.x = std::min(newCursorPos.x, textArea.x + textArea.width -1);
     }
     curses::PositionCursor(getWindow(), newCursorPos);
+}
+
+void TextEditView::setKeyFilter(const std::shared_ptr<KeyFilter>& filter)
+{
+    keyFilter_ = filter;
 }
 
 void TextEditView::setTextAlignment(Align alignment) {}

@@ -6,6 +6,7 @@ namespace memo {
 namespace ui {
 
 class TextView;
+class TextEditView;
 
 class MemoCreateView : public BaseView
 {
@@ -21,18 +22,17 @@ public:
 
     void refresh() override;
 
-    const std::shared_ptr<TextView>& memoTitleTextView();
-    const std::shared_ptr<TextView>& memoDescriptioneTextView();
-    const std::shared_ptr<TextView>& memoTagsTextView();
+    const std::shared_ptr<TextEditView>& memoTitleTextEditView();
+    const std::shared_ptr<TextEditView>& memoDescriptionTextEditView();
+    const std::shared_ptr<TextEditView>& memoTagsTextEditView();
 
 protected:
     void displayContent() override;
 
 private:
-    std::shared_ptr<TextView> memoTitleText_;
-    std::shared_ptr<TextView> memoDescriptionText_;
-    std::shared_ptr<TextView> memoTagsText_;
-
+    std::shared_ptr<TextEditView> memoTitleTextEditView_;
+    std::shared_ptr<TextEditView> memoDescriptionTextEditView_;
+    std::shared_ptr<TextEditView> memoTagsTextEditView_;
 };
 
 } // namespace ui

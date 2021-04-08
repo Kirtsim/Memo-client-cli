@@ -3,7 +3,13 @@
 #include "view/MemoCreateView.hpp"
 
 namespace memo {
+namespace ui {
+    class TextEditView;
+}
 namespace ctrl {
+
+class TextEditKeyFilter;
+
 
 class MemoCreateController : public BaseController<ui::MemoCreateView>
 {
@@ -11,8 +17,18 @@ class MemoCreateController : public BaseController<ui::MemoCreateView>
 
 public:
     MemoCreateController(const ResourcesPtr_t& resources);
+    ~MemoCreateController();
 
     void processInput() override;
+
+private:
+    bool processKey(int key);
+
+private:
+    friend class TextEditKeyFilter;
+    std::shared_ptr<TextEditKeyFilter> keyFilter_;
+    std::shared_ptr<ui::TextEditView> viewInFocus_;
+    bool run_ = true;
 };
 
 } // namespace ctrl

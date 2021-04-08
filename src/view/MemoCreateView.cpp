@@ -1,5 +1,6 @@
 #include "view/MemoCreateView.hpp"
 #include "view/widget/TextView.hpp"
+#include "view/widget/TextEditView.hpp"
 #include "tools/Tools.hpp"
 #include "ncurses/functions.hpp"
 #include "utils/Enums.hpp"
@@ -19,38 +20,35 @@ MemoCreateView::MemoCreateView(const Size& size, IComponent* parent)
 
 MemoCreateView::MemoCreateView(const Size& size, const Position& position, IComponent* parent)
     : BaseView(size, position, parent)
-    , memoTitleText_(std::make_shared<TextView>())
-    , memoDescriptionText_(std::make_shared<TextView>())
-    , memoTagsText_(std::make_shared<TextView>())
+    , memoTitleTextEditView_(std::make_shared<TextEditView>())
+    , memoDescriptionTextEditView_(std::make_shared<TextEditView>())
+    , memoTagsTextEditView_(std::make_shared<TextEditView>())
 {
     auto textViewWidth = getWidth() * 0.5;
-    memoTitleText_->setWidth(textViewWidth);
-    memoTitleText_->setHeight(3);
-    memoDescriptionText_->setWidth(textViewWidth);
-    memoDescriptionText_->setHeight(13);
-    memoTagsText_->setWidth(textViewWidth);
-    memoTagsText_->setHeight(5);
+    memoTitleTextEditView_->setWidth(textViewWidth);
+    memoTitleTextEditView_->setHeight(3);
+    memoDescriptionTextEditView_->setWidth(textViewWidth);
+    memoDescriptionTextEditView_->setHeight(13);
+    memoTagsTextEditView_->setWidth(textViewWidth);
+    memoTagsTextEditView_->setHeight(5);
 
-    memoTitleText_->setY(5);
-    tools::Tools::centerComponent(*memoTitleText_, Center::HORIZONTAL, *this);
+    memoTitleTextEditView_->setY(5);
+    tools::Tools::centerComponent(*memoTitleTextEditView_, Center::HORIZONTAL, *this);
 
-    memoDescriptionText_->setY(memoTitleText_->getY() + memoTitleText_->getHeight() + 2);
-    tools::Tools::centerComponent(*memoDescriptionText_, Center::HORIZONTAL, *this);
+    memoDescriptionTextEditView_->setY(memoTitleTextEditView_->getY() + memoTitleTextEditView_->getHeight() + 2);
+    tools::Tools::centerComponent(*memoDescriptionTextEditView_, Center::HORIZONTAL, *this);
 
-    memoTagsText_->setY(memoDescriptionText_->getY() + memoDescriptionText_->getHeight() + 2);
-    tools::Tools::centerComponent(*memoTagsText_, Center::HORIZONTAL, *this);
+    memoTagsTextEditView_->setY(memoDescriptionTextEditView_->getY() + memoDescriptionTextEditView_->getHeight() + 2);
+    tools::Tools::centerComponent(*memoTagsTextEditView_, Center::HORIZONTAL, *this);
 
-    registerSubView(memoTitleText_);
-    registerSubView(memoDescriptionText_);
-    registerSubView(memoTagsText_);
+    registerSubView(memoTitleTextEditView_);
+    registerSubView(memoDescriptionTextEditView_);
+    registerSubView(memoTagsTextEditView_);
 
     auto border = curses::DefaultBorder();
-    memoTitleText_->setText("Type the memo title here.");
-    memoTitleText_->setBorder(border);
-    memoDescriptionText_->setText("Type description here.");
-    memoDescriptionText_->setBorder(border);
-    memoTagsText_->setText("Tags will be displayed here.");
-    memoTagsText_->setBorder(border);
+    memoTitleTextEditView_->setBorder(border);
+    memoDescriptionTextEditView_->setBorder(border);
+    memoTagsTextEditView_->setBorder(border);
 }
 
 MemoCreateView::~MemoCreateView() = default;
@@ -60,37 +58,37 @@ void MemoCreateView::refresh()
     BaseView::refresh();
 }
 
-const std::shared_ptr<TextView>& MemoCreateView::memoTitleTextView()
+const std::shared_ptr<TextEditView>& MemoCreateView::memoTitleTextEditView()
 {
-    return memoTitleText_;
+    return memoTitleTextEditView_;
 }
 
-const std::shared_ptr<TextView>& MemoCreateView::memoDescriptioneTextView()
+const std::shared_ptr<TextEditView>& MemoCreateView::memoDescriptionTextEditView()
 {
-    return memoDescriptionText_;
+    return memoDescriptionTextEditView_;
 }
 
-const std::shared_ptr<TextView>& MemoCreateView::memoTagsTextView()
+const std::shared_ptr<TextEditView>& MemoCreateView::memoTagsTextEditView()
 {
-    return memoTagsText_;
+    return memoTagsTextEditView_;
 }
 
 void MemoCreateView::displayContent()
 {
-    auto position = memoTitleText_->getAbsPosition();
+    auto position = memoTitleTextEditView_->getAbsPosition();
     position.x += 1;
     position.y -= 1;
     curses::PrintText("Title", getWindow(), position);
 
-    position.y = memoDescriptionText_->getAbsY() - 1;
+    position.y = memoDescriptionTextEditView_->getAbsY() - 1;
     curses::PrintText("Description", getWindow(), position);
 
-    position.y = memoTagsText_->getAbsY() - 1;
+    position.y = memoTagsTextEditView_->getAbsY() - 1;
     curses::PrintText("Tags", getWindow(), position);
 
     position.x = 2;
     position.y = getHeight() - 2;
-    curses::PrintText("Press 'q' to go back.", getWindow(), position);
+    curses::PrintText("Press 'ESC' to go back.", getWindow(), position);
 }
 
 } // namespace ui
