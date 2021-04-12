@@ -27,10 +27,7 @@ MemoCreateController::MemoCreateController(const ResourcesPtr_t& resources)
 {
     auto view = std::make_shared<ui::MemoCreateView>();
     setView(view);
-    view->memoTitleTextEditView()->setKeyFilter(keyFilter_);
-    view->memoDescriptionTextEditView()->setKeyFilter(keyFilter_);
-    view->memoTagsTextEditView()->setKeyFilter(keyFilter_);
-    viewInFocus_ = view->memoTitleTextEditView();
+    view->registerKeyFilter(keyFilter_);
 }
 
 MemoCreateController::~MemoCreateController()
@@ -40,63 +37,51 @@ MemoCreateController::~MemoCreateController()
 
 void MemoCreateController::processInput()
 {
-    while(run_ && viewInFocus_)
+    view()->focusSubView(ui::MemoCreateView::kTitleArea);
+    while(run_)
     {
-        viewInFocus_->focus();
+        view()->readInput();
     }
 }
 
 bool MemoCreateController::processKey(int key)
 {
-    if (!viewInFocus_)
-    {
-        run_ = false;
-        return true;
-    }
-
-    auto parentView = view();
     if (key == curses::Key::kTab)
     {
-        viewInFocus_->looseFocus();
-        if (viewInFocus_ == parentView->memoTitleTextEditView())
-        {
-            viewInFocus_ = parentView->memoDescriptionTextEditView();
-        }
-        else if (viewInFocus_ == parentView->memoDescriptionTextEditView())
-        {
-            viewInFocus_ = parentView->memoTagsTextEditView();
-        }
-        else
-        {
-            viewInFocus_ = parentView->memoTitleTextEditView();
-        }
+        view()->focusNextSubView();
         return true;
     }
     else if (key == curses::Key::kShiftTab)
     {
-        viewInFocus_->looseFocus();
-        if (viewInFocus_ == parentView->memoTitleTextEditView())
-        {
-            viewInFocus_ = parentView->memoTagsTextEditView();
-        }
-        else if (viewInFocus_ == parentView->memoDescriptionTextEditView())
-        {
-            viewInFocus_ = parentView->memoTitleTextEditView();
-        }
-        else
-        {
-            viewInFocus_ = parentView->memoDescriptionTextEditView();
-        }
+        view()->focusPrevSubView();
         return true;
     }
     else if (key == curses::Key::kEsc)
     {
-        viewInFocus_->looseFocus();
-        run_ = false;
-        getResources()->controllerManager()->pop();
+        stop();
         return true;
     }
+    else if (key == curses::Key::kEnter)
+    {
+        auto viewInFocus = view()->subViewInFocus();
+        if (viewInFocus == ui::MemoCreateView::kCancelButton)
+        {
+            stop();
+            return true;
+        }
+        else if (viewInFocus == ui::MemoCreateView::kConfirmButton)
+        {
+            stop();
+            return true;
+        }
+    }
     return false;
+}
+
+bool MemoCreateController::stop()
+{
+    run_ = false;
+    getResources()->controllerManager()->pop();
 }
 
 TextEditKeyFilter::TextEditKeyFilter(MemoCreateController* controller)

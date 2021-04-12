@@ -1,15 +1,23 @@
 #pragma once
 #include "view/BaseView.hpp"
 #include <memory>
+#include <array>
 
 namespace memo {
 namespace ui {
 
 class TextView;
 class TextEditView;
+class KeyFilter;
 
 class MemoCreateView : public BaseView
 {
+public:
+    enum SubView
+    {
+        kTitleArea, kDescriptionArea, kTagsArea, kConfirmButton, kCancelButton, kSubViewCount, kNone
+    };
+
 public:
     explicit MemoCreateView(IComponent* parent=nullptr);
     explicit MemoCreateView(const Size& size, IComponent* parent=nullptr);
@@ -22,9 +30,16 @@ public:
 
     void refresh() override;
 
-    const std::shared_ptr<TextEditView>& memoTitleTextEditView();
-    const std::shared_ptr<TextEditView>& memoDescriptionTextEditView();
-    const std::shared_ptr<TextEditView>& memoTagsTextEditView();
+    void readInput();
+
+    void registerKeyFilter(const std::shared_ptr<KeyFilter>& keyFilter);
+
+    void focusSubView(SubView subView);
+    void unfocusSubView(SubView subView);
+    SubView subViewInFocus() const;
+
+    SubView focusNextSubView();
+    SubView focusPrevSubView();
 
 protected:
     void displayContent() override;
@@ -33,6 +48,13 @@ private:
     std::shared_ptr<TextEditView> memoTitleTextEditView_;
     std::shared_ptr<TextEditView> memoDescriptionTextEditView_;
     std::shared_ptr<TextEditView> memoTagsTextEditView_;
+
+    std::shared_ptr<TextView> cancelButton_;
+    std::shared_ptr<TextView> confirmButton_;
+
+    std::shared_ptr<KeyFilter> keyFilter_ = nullptr;
+    SubView subViewInFocus_ = SubView::kNone;
+    std::array<std::shared_ptr<View>, kSubViewCount> subViewMapping_;
 };
 
 } // namespace ui

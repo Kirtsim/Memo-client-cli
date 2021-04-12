@@ -15,9 +15,9 @@ public:
 
     ~TextEditView();
 
-    void focus() override;
     void setTextAlignment(Align alignment) override;
 
+    void readInput();
     void setKeyFilter(const std::shared_ptr<KeyFilter>& filter);
 
 private:

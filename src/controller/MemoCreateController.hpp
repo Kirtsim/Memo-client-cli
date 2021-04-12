@@ -23,11 +23,11 @@ public:
 
 private:
     bool processKey(int key);
+    bool stop();
 
 private:
     friend class TextEditKeyFilter;
     std::shared_ptr<TextEditKeyFilter> keyFilter_;
-    std::shared_ptr<ui::TextEditView> viewInFocus_;
     bool run_ = true;
 };
 

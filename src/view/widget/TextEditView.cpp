@@ -36,7 +36,7 @@ TextEditView::TextEditView(const Size& size, const Position& position, IComponen
 TextEditView::~TextEditView() = default;
 
 
-void TextEditView::focus()
+void TextEditView::readInput()
 {
     TextView::focus();
 
