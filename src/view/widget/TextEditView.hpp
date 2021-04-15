@@ -38,6 +38,7 @@ private:
 class KeyFilter
 {
 public:
+    virtual ~KeyFilter() = default;
     /// Filters the input key. Returns true if the key was processed. The key
     /// is then ignored by the View. If false is returned, the View will
     /// process the key.
