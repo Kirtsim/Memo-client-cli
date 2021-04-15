@@ -13,9 +13,11 @@ class KeyFilter;
 class MemoCreateView : public BaseView
 {
 public:
+    static const size_t kSubViewCount = 5;
+
     enum SubView
     {
-        kTitleArea, kDescriptionArea, kTagsArea, kConfirmButton, kCancelButton, kSubViewCount, kNone
+        kTitleArea, kDescriptionArea, kTagsArea, kConfirmButton, kCancelButton
     };
 
 public:
@@ -35,7 +37,6 @@ public:
     void registerKeyFilter(const std::shared_ptr<KeyFilter>& keyFilter);
 
     void focusSubView(SubView subView);
-    void unfocusSubView(SubView subView);
     SubView subViewInFocus() const;
 
     SubView focusNextSubView();
@@ -53,7 +54,7 @@ private:
     std::shared_ptr<TextView> confirmButton_;
 
     std::shared_ptr<KeyFilter> keyFilter_ = nullptr;
-    SubView subViewInFocus_ = SubView::kNone;
+    SubView subViewInFocus_ = SubView::kTitleArea;
     std::array<std::shared_ptr<View>, kSubViewCount> subViewMapping_;
 };
 

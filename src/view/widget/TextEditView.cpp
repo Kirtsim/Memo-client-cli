@@ -35,11 +35,8 @@ TextEditView::TextEditView(const Size& size, const Position& position, IComponen
 
 TextEditView::~TextEditView() = default;
 
-
 void TextEditView::readInput()
 {
-    TextView::focus();
-
     curses::KeyPad(getWindow(), ENABLE);
     curses::CursorVisible(true);
 

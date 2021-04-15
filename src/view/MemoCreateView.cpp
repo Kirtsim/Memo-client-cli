@@ -8,6 +8,14 @@
 namespace memo {
 namespace ui {
 
+namespace {
+    bool isAButton(MemoCreateView::SubView subView);
+
+    void setButtonSelected(bool selected, const std::shared_ptr<TextView>& button);
+
+    void unselectView(const std::shared_ptr<View>& view, const MemoCreateView::SubView type);
+} // namespace
+
 MemoCreateView::MemoCreateView(IComponent* parent)
     : MemoCreateView(Size(), Position(), parent)
 {
@@ -80,23 +88,18 @@ void MemoCreateView::refresh()
 
 void MemoCreateView::readInput()
 {
-    if ((subViewInFocus_ >= kSubViewCount ||
-         subViewInFocus_ == kCancelButton ||
-         subViewInFocus_ == kConfirmButton) && keyFilter_)
+    auto focusedView = subViewMapping_[subViewInFocus_];
+
+    if (auto editText = std::dynamic_pointer_cast<TextEditView>(focusedView))
     {
-        curses::KeyPad(confirmButton_->getWindow(), ENABLE);
-        int key = curses::ReadChar(confirmButton_->getWindow());
-        curses::KeyPad(confirmButton_->getWindow(), DISABLE);
-        keyFilter_->filterKey(key);
+        editText->readInput();
+        return;
     }
-    else
-    {
-        auto editView = std::dynamic_pointer_cast<TextEditView>(subViewMapping_[subViewInFocus_]);
-        if (editView)
-        {
-            editView->readInput();
-        }
-    }
+
+    curses::KeyPad(confirmButton_->getWindow(), ENABLE);
+    int key = curses::ReadChar(confirmButton_->getWindow());
+    curses::KeyPad(confirmButton_->getWindow(), DISABLE);
+    keyFilter_->filterKey(key);
 }
 
 void MemoCreateView::registerKeyFilter(const std::shared_ptr<KeyFilter>& keyFilter)
@@ -115,49 +118,14 @@ void MemoCreateView::focusSubView(const MemoCreateView::SubView subView)
     }
 
     auto viewToFocus = subViewMapping_[subView];
-    unfocusSubView(subViewInFocus_);
     subViewInFocus_ = subView;
 
     if (subView == kCancelButton || subView == kConfirmButton)
     {
-        auto textView = std::dynamic_pointer_cast<TextView>(viewToFocus);
-        auto text = textView->text();
-        if (!text.empty())
-        {
-            text.front() = '_';
-            text.back() = '_';
-            textView->setText(text);
-            textView->refresh();
-        }
-        // change the view background colour or sth
+        auto button = std::dynamic_pointer_cast<TextView>(viewToFocus);
+        setButtonSelected(true, button);
     }
     viewToFocus->focus();
-}
-
-void MemoCreateView::unfocusSubView(MemoCreateView::SubView subView)
-{
-    if (subView >= kSubViewCount)
-    {
-        return;
-    }
-    auto viewToFocus = subViewMapping_[subViewInFocus_];
-    if (subView == kCancelButton || subView == kConfirmButton)
-    {
-        auto textView = std::dynamic_pointer_cast<TextView>(viewToFocus);
-        auto text = textView->text();
-        if (!text.empty())
-        {
-            text.front() = ' ';
-            text.back() = ' ';
-            textView->setText(text);
-            textView->refresh();
-        }
-        // change the view background colour or sth
-    }
-
-    auto viewToUnfocus = subViewMapping_[subView];
-    viewToUnfocus->looseFocus();
-    subViewInFocus_ = SubView::kNone;
 }
 
 MemoCreateView::SubView MemoCreateView::subViewInFocus() const
@@ -168,6 +136,10 @@ MemoCreateView::SubView MemoCreateView::subViewInFocus() const
 MemoCreateView::SubView MemoCreateView::focusNextSubView()
 {
     auto index = static_cast<size_t>(subViewInFocus_) + 1;
+    auto currentView = subViewMapping_[index-1];
+    currentView->looseFocus();
+    unselectView(currentView, subViewInFocus_);
+
     if (index >= subViewMapping_.size())
     {
         index = 0;
@@ -180,10 +152,10 @@ MemoCreateView::SubView MemoCreateView::focusNextSubView()
 MemoCreateView::SubView MemoCreateView::focusPrevSubView()
 {
     auto index = static_cast<size_t>(subViewInFocus_) - 1;
-    if (subViewInFocus_ == kNone)
-    {
-        index = 0;
-    }
+    auto currentView = subViewMapping_[index+1];
+    currentView->looseFocus();
+    unselectView(currentView, subViewInFocus_);
+
     index = std::min(index, subViewMapping_.size()-1);
     auto newSubView = static_cast<SubView>(index);
     focusSubView(newSubView);
@@ -207,6 +179,40 @@ void MemoCreateView::displayContent()
     position.y = getHeight() - 2;
     curses::PrintText("Press 'ESC' to go back.", getWindow(), position);
 }
+
+namespace {
+
+    bool isAButton(const MemoCreateView::SubView subView)
+    {
+        return subView == MemoCreateView::kCancelButton ||
+               subView == MemoCreateView::kConfirmButton;
+    }
+
+    void setButtonSelected(const bool selected, const std::shared_ptr<TextView>& button)
+    {
+        if (!button)
+            return;
+
+        auto text = button->text();
+        char selectionMark = selected ? '_' : ' ';
+        if (!text.empty())
+        {
+            text.front() = selectionMark;
+            text.back() = selectionMark;
+            button->setText(text);
+            button->refresh();
+        }
+    }
+
+    void unselectView(const std::shared_ptr<View>& view, const MemoCreateView::SubView type)
+    {
+        if (isAButton(type))
+        {
+            auto button = std::dynamic_pointer_cast<TextView>(view);
+            setButtonSelected(false, button);
+        }
+    }
+} // namespace
 
 } // namespace ui
 } // namespace memo
