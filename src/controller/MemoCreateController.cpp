@@ -78,7 +78,7 @@ bool MemoCreateController::processKey(int key)
     return false;
 }
 
-bool MemoCreateController::stop()
+void MemoCreateController::stop()
 {
     run_ = false;
     getResources()->controllerManager()->pop();

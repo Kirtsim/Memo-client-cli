@@ -23,7 +23,7 @@ public:
 
 private:
     bool processKey(int key);
-    bool stop();
+    void stop();
 
 private:
     friend class TextEditKeyFilter;

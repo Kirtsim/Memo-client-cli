@@ -13,6 +13,12 @@ namespace {
     Position mapCursorToText(const Position& cursorPos, const Rect& textArea);
     size_t mapCursorPositionToTextIndex(const Position& cursorPos, const Rect& textArea, const std::string& text);
     std::vector<std::string> splitIntoLines(const std::string& text, const Rect& textArea);
+
+    inline int count(const std::vector<std::string>& vec);
+    inline int len(const std::string& str);
+    inline int to_int(size_t value);
+    inline size_t to_size_t(int value);
+
 } // namespace
 
 
@@ -92,7 +98,7 @@ void TextEditView::processInputCharacter(const int character)
         auto cursPos = curses::CursorPosition(getWindow());
 
         const auto maxY = textArea.y + textArea.height-1;
-        if (lines.size() < textArea.height && cursPos.y < maxY)
+        if (count(lines) < textArea.height && cursPos.y < maxY)
         {
             printCharacter(character);
             ++cursPos.y;
@@ -115,9 +121,9 @@ void TextEditView::printCharacter(int character)
     {
         theText.insert(cursTxtIdx, 1, static_cast<char>(character));
         const auto lines = splitIntoLines(theText, textArea);
-        if (lines.size() > textArea.height && lines.back().empty())
+        if (count(lines) > textArea.height && lines.back().empty())
             return; 
-        if (lines.size() == textArea.height && lines.back().size() > textArea.width)
+        if (count(lines) == textArea.height && len(lines.back()) > textArea.width)
         {
             return;
         }
@@ -156,11 +162,11 @@ void TextEditView::moveCursorLeft()
     {
         const auto lines = splitIntoLines(text(), textArea);
         const auto cursorTextPos = mapCursorToText(cursorPos, textArea);
-        const int lineIdx = cursorTextPos.y;
+        const auto lineIdx = static_cast<size_t>(cursorTextPos.y);
         if (lineIdx > 0)
         {
             --cursorPos.y;
-            cursorPos.x = textArea.x + static_cast<int>(lines[lineIdx-1].size());
+            cursorPos.x = textArea.x + len(lines[lineIdx-1]);
             cursorPos.x = std::min(cursorPos.x, textArea.x + textArea.width - 1);
         }
     }
@@ -178,7 +184,7 @@ void TextEditView::moveCursorRight()
     const size_t lineIdx = static_cast<size_t>(cursorTextPos.y);
     if (lineIdx >= lines.size())
         return;
-    if (cursorPos.x == maxX || cursorTextPos.x == lines[lineIdx].size())
+    if (cursorPos.x == maxX || cursorTextPos.x == len(lines[lineIdx]))
     {
         //if (lineIdx + 1 < lines.size() || (lineIdx < lines.size() && lines[lineIdx].size() == static_cast<size_t>(textArea.width)))
         const auto maxY = textArea.y + textArea.height - 1;
@@ -188,7 +194,7 @@ void TextEditView::moveCursorRight()
             cursorPos.x = textArea.x;
         }
     }
-    else if (cursorTextPos.x < lines[lineIdx].size())
+    else if (cursorTextPos.x < len(lines[lineIdx]))
     {
         ++cursorPos.x;
     }
@@ -208,11 +214,10 @@ void TextEditView::moveCursorUp()
         if (lines.empty())
             return;
         const auto cursorTextPos = mapCursorToText(cursorPos, textArea);
-        const int lineIdx = cursorTextPos.y;
+        const auto lineIdx = static_cast<size_t>(cursorTextPos.y);
         if (lineIdx < lines.size())
         {
-            const int lineLen = static_cast<int>(lines[lineIdx].size());
-            cursorPos.x = std::min(cursorPos.x, textArea.x + lineLen);
+            cursorPos.x = std::min(cursorPos.x, textArea.x + len(lines[lineIdx]));
             cursorPos.x = std::min(cursorPos.x, textArea.x + textArea.width - 1);
             curses::PositionCursor(getWindow(), cursorPos);
         }
@@ -231,12 +236,11 @@ void TextEditView::moveCursorDown()
             return;
 
         const auto cursorTextPos = mapCursorToText(cursorPos, textArea);
-        const int lineIdx = cursorTextPos.y;
+        const auto lineIdx = static_cast<size_t>(cursorTextPos.y);
         if (lineIdx < lines.size() - 1)
         {
             ++cursorPos.y;
-            const int lineLen = static_cast<int>(lines[lineIdx+1].size());
-            cursorPos.x = std::min(cursorPos.x, textArea.x + lineLen);
+            cursorPos.x = std::min(cursorPos.x, textArea.x + len(lines[lineIdx+1]));
             cursorPos.x = std::min(cursorPos.x, textArea.x + textArea.width - 1);
             curses::PositionCursor(getWindow(), cursorPos);
         }
@@ -265,9 +269,10 @@ void TextEditView::applyBackSpace()
         return totalChars;
     };
 
-    const size_t cursVerIdx = static_cast<size_t>(cursorPos.y - textArea.y);
-    const size_t cursHorIdx = static_cast<size_t>(cursorPos.x - textArea.x);
-    size_t deleteAt = std::accumulate(lines.begin(), lines.begin() + cursVerIdx, 0, sumUpChars);
+    const auto cursVerIdx = to_size_t(cursorPos.y - textArea.y);
+    const auto cursHorIdx = to_size_t(cursorPos.x - textArea.x);
+    int charCount = std::accumulate(lines.begin(), lines.begin() + to_int(cursVerIdx), 0, sumUpChars);
+    size_t deleteAt = to_size_t(charCount);
     deleteAt += cursHorIdx - 1;
     if (deleteAt >= theText.size())
         return;
@@ -276,9 +281,9 @@ void TextEditView::applyBackSpace()
     setText(theText);
 
     auto newLines = splitIntoLines(theText, textArea);
-    const std::string spaces(textArea.width, ' ');
+    const std::string spaces(to_size_t(textArea.width), ' ');
 
-    Position linePos { PosX(textArea.x), PosY(textArea.y + cursVerIdx) };
+    Position linePos { PosX(textArea.x), PosY(textArea.y + to_int(cursVerIdx)) };
     size_t lineIdx = cursVerIdx;
     if (cursVerIdx > 0)
     {
@@ -303,7 +308,7 @@ void TextEditView::applyBackSpace()
     else if (cursVerIdx != 0)
     {
         --newCursorPos.y; 
-        newCursorPos.x = textArea.x + lines[cursVerIdx-1].size();
+        newCursorPos.x = textArea.x + len(lines[cursVerIdx-1]);
         newCursorPos.x = std::min(newCursorPos.x, textArea.x + textArea.width -1);
     }
     curses::PositionCursor(getWindow(), newCursorPos);
@@ -314,7 +319,7 @@ void TextEditView::setKeyFilter(const std::shared_ptr<KeyFilter>& filter)
     keyFilter_ = filter;
 }
 
-void TextEditView::setTextAlignment(Align alignment) {}
+void TextEditView::setTextAlignment(Align) {}
 
 namespace {
     Position mapCursorToText(const Position& cursorPos, const Rect& textArea)
@@ -343,8 +348,8 @@ namespace {
         const size_t cursVerIdx = static_cast<size_t>(cursorPos.y - textArea.y);
         const size_t cursHorIdx = static_cast<size_t>(cursorPos.x - textArea.x);
         const auto lines = splitIntoLines(text, textArea);
-        const auto charCount = std::accumulate(lines.begin(), lines.begin() + cursVerIdx, 0, sumUpChars);
-        return (charCount + cursHorIdx);
+        const auto charCount = std::accumulate(lines.begin(), lines.begin() + to_int(cursVerIdx), 0, sumUpChars);
+        return (to_size_t(charCount) + cursHorIdx);
     }
 
     std::vector<std::string> splitIntoLines(const std::string& text, const Rect& textArea)
@@ -383,6 +388,26 @@ namespace {
         if (text.back() == '\n' || lines.back().size() == maxLineLen)
             lines.emplace_back();
         return lines;
+    }
+
+    int count(const std::vector<std::string>& vec)
+    {
+        return static_cast<int>(vec.size());
+    }
+
+    int len(const std::string& str)
+    {
+        return static_cast<int>(str.size());
+    }
+
+    inline int to_int(size_t value)
+    {
+        return static_cast<int>(value);
+    }
+
+    size_t to_size_t(int value)
+    {
+        return static_cast<size_t>(value);
     }
 } // namespace
 
