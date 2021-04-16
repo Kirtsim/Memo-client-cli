@@ -5,11 +5,33 @@
 #include <ncurses.h>
 #include <numeric>
 #include <vector>
+#include <set>
 
 namespace memo {
 namespace ui {
 
 namespace {
+    const std::unordered_set<int> kSpecialChars {
+        curses::Key::kDown,
+        curses::Key::kRight,
+        curses::Key::kUp,
+        curses::Key::kLeft,
+        curses::Key::kBackSpace,
+        curses::Key::kEnter,
+        curses::Key::kEsc,
+    };
+
+    bool isCharBanned(int character)
+    {
+        if (kSpecialChars.find(character) != std::end(kSpecialChars))
+            return false;
+        if (0 <= character && character <= 31)
+            return true;
+        if (character >= 127)
+            return true;
+        return false;
+    }
+
     Position mapCursorToText(const Position& cursorPos, const Rect& textArea);
     size_t mapCursorPositionToTextIndex(const Position& cursorPos, const Rect& textArea, const std::string& text);
     std::vector<std::string> splitIntoLines(const std::string& text, const Rect& textArea);
@@ -63,14 +85,10 @@ void TextEditView::readInput()
 
 void TextEditView::processInputCharacter(const int character)
 {
-    if (character == -1)
+    if (character == -1 || isCharBanned(character))
         return;
     if (character == curses::Key::kEsc)
         looseFocus(); 
-    else if (character == curses::Key::kTab)
-        ;
-    else if (character == curses::Key::kShiftTab)
-        ;
     else if (character == curses::Key::kLeft)
     {
         moveCursorLeft();
