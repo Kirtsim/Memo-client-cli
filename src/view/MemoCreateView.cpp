@@ -112,7 +112,19 @@ void MemoCreateView::registerKeyFilter(const std::shared_ptr<KeyFilter>& keyFilt
 
 void MemoCreateView::focusSubView(const MemoCreateView::SubView subView)
 {
-    if (subView >= kSubViewCount)
+    if (subView == subViewInFocus_ || subView > kNone)
+    {
+        return;
+    }
+
+    if (subViewInFocus_ != kNone)
+    {
+        auto currentView = subViewMapping_[subViewInFocus_];
+        currentView->looseFocus();
+        unselectView(currentView, subViewInFocus_);
+    }
+
+    if (subView == kNone)
     {
         return;
     }
@@ -135,15 +147,12 @@ MemoCreateView::SubView MemoCreateView::subViewInFocus() const
 
 MemoCreateView::SubView MemoCreateView::focusNextSubView()
 {
-    auto index = static_cast<size_t>(subViewInFocus_) + 1;
-    auto currentView = subViewMapping_[index-1];
-    currentView->looseFocus();
-    unselectView(currentView, subViewInFocus_);
-
-    if (index >= subViewMapping_.size())
+    size_t index = subViewInFocus_ + 1;
+    if (index >= kSubViewCount)
     {
         index = 0;
     }
+
     auto newSubView = static_cast<SubView>(index);
     focusSubView(newSubView);
     return newSubView;
@@ -151,12 +160,9 @@ MemoCreateView::SubView MemoCreateView::focusNextSubView()
 
 MemoCreateView::SubView MemoCreateView::focusPrevSubView()
 {
-    auto index = static_cast<size_t>(subViewInFocus_) - 1;
-    auto currentView = subViewMapping_[index+1];
-    currentView->looseFocus();
-    unselectView(currentView, subViewInFocus_);
+    size_t index = subViewInFocus_ - 1;
+    index = std::min(index, kSubViewCount-1);
 
-    index = std::min(index, subViewMapping_.size()-1);
     auto newSubView = static_cast<SubView>(index);
     focusSubView(newSubView);
     return newSubView;

@@ -17,7 +17,7 @@ public:
 
     enum SubView
     {
-        kTitleArea, kDescriptionArea, kTagsArea, kConfirmButton, kCancelButton
+        kTitleArea, kDescriptionArea, kTagsArea, kConfirmButton, kCancelButton, kNone
     };
 
 public:
@@ -54,7 +54,7 @@ private:
     std::shared_ptr<TextView> confirmButton_;
 
     std::shared_ptr<KeyFilter> keyFilter_ = nullptr;
-    SubView subViewInFocus_ = SubView::kTitleArea;
+    SubView subViewInFocus_ = kNone;
     std::array<std::shared_ptr<View>, kSubViewCount> subViewMapping_;
 };
 

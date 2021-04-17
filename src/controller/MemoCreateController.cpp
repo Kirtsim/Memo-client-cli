@@ -81,6 +81,7 @@ bool MemoCreateController::processKey(int key)
 void MemoCreateController::stop()
 {
     run_ = false;
+    view()->focusSubView(ui::MemoCreateView::kNone);
     getResources()->controllerManager()->pop();
 }
 
