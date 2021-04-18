@@ -95,12 +95,12 @@ int ReadCharAt(const IWindow& window, const Position& position)
 
 void PrintCharAt(int character, const Position& position)
 {
-    mvaddch(position.y, position.x, character);
+    mvaddch(position.y, position.x, static_cast<chtype>(character));
 }
 
 void PrintCharAt(int character, const IWindow& window, const Position& position)
 {
-    mvwaddch(window.cursesWindow(), position.y, position.x, character);
+    mvwaddch(window.cursesWindow(), position.y, position.x, static_cast<chtype>(character));
 }
 
 int ScreenWidth()

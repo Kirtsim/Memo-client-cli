@@ -92,7 +92,7 @@ void TextView::printForeground()
     {
         textPos.x = textArea.x;
 
-        const auto line = lines[lineIdx].substr(0, textArea.width);
+        const auto line = lines[lineIdx].substr(0, static_cast<size_t>(textArea.width));
         const int lineWidth = static_cast<int>(line.size());
         if (textAlignment_ & Align::CENTER_HORIZONTAL)
             textPos.x = textArea.x + (textArea.width / 2) - (lineWidth / 2);
