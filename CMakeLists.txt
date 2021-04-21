@@ -4,17 +4,23 @@ project (Memo-server LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 add_compile_options(-std=c++17 -g -Wall -Wextra -Wsign-conversion)
 
-include("src/model/CMakeLists.txt")
+# variable denoting where the "absolute" include paths start in
+set(base_path "${CMAKE_SOURCE_DIR}/src/")
+
+set(exe memo_client_cli)
+add_executable(${exe} "")
+
+add_subdirectory(${base_path})
+
+# make include paths in the project "absolute"
+target_include_directories(${exe} PRIVATE ${base_path})
+
 # Use the "gold-linker" to speed-up the linking phase
 if (UNIX AND NOT APPLE)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=gold")
 endif()
 
-# variable denoting where the "absolute" include paths start in
-set(BASEPATH "${CMAKE_SOURCE_DIR}/src/")
-
-file(GLOB_RECURSE SOURCES src/*.cpp)
-file(GLOB_RECURSE HEADERS src/*.hpp)
+include(${base_path}/model/CMakeLists.txt)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -58,11 +64,7 @@ else()
     set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:gRPC::grpc_cpp_plugin>)
 endif()
 
-# Building server
-add_executable(memo_client_cli
-    ${SOURCES})
-
-target_link_libraries(memo_client_cli
+target_link_libraries(${exe}
     MemoGrpcLib
     ${_REFLECTION}
     ${_GRPC_GRPCPP}
@@ -88,9 +90,6 @@ endif()
 
 message("Linked ncurses library directory: " ${curses_lib_dir})
 message("Ncurses include directory: " ${curses_include_dir})
-target_include_directories(memo_client_cli PRIVATE ${curses_include_dir})
-target_link_directories(memo_client_cli PRIVATE ${curses_lib_dir})
-target_link_libraries(memo_client_cli ncurses menu)
-
-# needed for "absolute" include paths
-target_include_directories(memo_client_cli PRIVATE ${BASEPATH})
+target_include_directories(${exe} PRIVATE ${curses_include_dir})
+target_link_directories(${exe} PRIVATE ${curses_lib_dir})
+target_link_libraries(${exe} ncurses menu)

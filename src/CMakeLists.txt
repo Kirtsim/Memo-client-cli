@@ -1,0 +1,32 @@
+set(pwd ${CMAKE_CURRENT_LIST_DIR})
+target_sources(${exe}
+    PRIVATE
+        ${pwd}/main.cpp
+        ${pwd}/Client.cpp
+        ${pwd}/context/Resources.cpp
+        ${pwd}/controller/HomeController.cpp
+        ${pwd}/controller/MemoCreateController.cpp
+        ${pwd}/controller/SearchController.cpp
+        ${pwd}/manager/ControllerManager.cpp
+        ${pwd}/ncurses/BaseWindow.cpp
+        ${pwd}/ncurses/functions.cpp
+        ${pwd}/ncurses/keys.cpp
+        ${pwd}/ncurses/SubWindow.cpp
+        ${pwd}/ncurses/Window.cpp
+        ${pwd}/remote/ListMemoCall.cpp
+        ${pwd}/remote/MemoDao.cpp
+        ${pwd}/remote/factory/MemoCallFactory.cpp
+        ${pwd}/utils/Structs.cpp
+        ${pwd}/view/BaseComponent.cpp
+        ${pwd}/view/BaseView.cpp
+        ${pwd}/view/MemoCreateView.cpp
+        ${pwd}/view/MemoSearchView.cpp
+        ${pwd}/view/View.cpp
+        ${pwd}/view/home/HomeView.cpp
+        ${pwd}/view/home/MenuItem.cpp
+        ${pwd}/view/home/MenuView.cpp
+        ${pwd}/view/tools/Tools.cpp
+        ${pwd}/view/widget/ListView.cpp
+        ${pwd}/view/widget/TextEditView.cpp
+        ${pwd}/view/widget/TextView.cpp
+)
