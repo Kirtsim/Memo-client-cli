@@ -1,11 +1,8 @@
 set(src_dir ${CMAKE_CURRENT_LIST_DIR})
 include(${src_dir}/model/CMakeLists.txt)
 
-set(exe memo_client_cli)
-set(exe_lib memo_client_cli_lib)
 add_executable(${exe} "")
 add_library(${exe_lib} "")
-
 target_sources(${exe} PRIVATE ${src_dir}/main.cpp)
 
 target_sources(${exe_lib}
