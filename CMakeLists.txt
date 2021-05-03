@@ -16,7 +16,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 set(exe memo_client_cli)
 set(exe_lib memo_client_cli_lib)
 set(exe_test memo_client_cli_test)
-
+include_directories(src)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/test/)

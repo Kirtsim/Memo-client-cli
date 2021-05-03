@@ -1,4 +1,5 @@
 #include "view/widget/TextEditView.hpp"
+#include "view/tools/StringTools.hpp"
 #include "ncurses/IWindow.hpp"
 #include "ncurses/functions.hpp"
 #include "ncurses/keys.hpp"
@@ -34,7 +35,6 @@ namespace {
 
     Position mapCursorToText(const Position& cursorPos, const Rect& textArea);
     size_t mapCursorPositionToTextIndex(const Position& cursorPos, const Rect& textArea, const std::string& text);
-    std::vector<std::string> splitIntoLines(const std::string& text, const Rect& textArea);
 
     inline int count(const std::vector<std::string>& vec);
     inline int len(const std::string& str);
@@ -112,7 +112,7 @@ void TextEditView::processInputCharacter(const int character)
     else if (character == curses::Key::kEnter)
     {
         const auto textArea = computeAvailableTextArea();
-        const auto lines = splitIntoLines(text(), textArea);
+        const auto lines = tools::splitIntoLines(text(), textArea);
         auto cursPos = curses::CursorPosition(getWindow());
 
         const auto maxY = textArea.y + textArea.height-1;
@@ -138,7 +138,7 @@ void TextEditView::printCharacter(int character)
     if (cursTxtIdx <= theText.size())
     {
         theText.insert(cursTxtIdx, 1, static_cast<char>(character));
-        const auto lines = splitIntoLines(theText, textArea);
+        const auto lines = tools::splitIntoLines(theText, textArea);
         if (count(lines) > textArea.height && lines.back().empty())
             return; 
         if (count(lines) == textArea.height && len(lines.back()) > textArea.width)
@@ -178,7 +178,7 @@ void TextEditView::moveCursorLeft()
         --cursorPos.x;
     else if (cursorPos.y > textArea.y)
     {
-        const auto lines = splitIntoLines(text(), textArea);
+        const auto lines = tools::splitIntoLines(text(), textArea);
         const auto cursorTextPos = mapCursorToText(cursorPos, textArea);
         const auto lineIdx = static_cast<size_t>(cursorTextPos.y);
         if (lineIdx > 0)
@@ -197,9 +197,9 @@ void TextEditView::moveCursorRight()
     const auto textArea = computeAvailableTextArea();
     auto cursorPos = curses::CursorPosition(getWindow());
     const auto maxX = textArea.x + textArea.width - 1;
-    const auto lines = splitIntoLines(text(), textArea);
+    const auto lines = tools::splitIntoLines(text(), textArea);
     const auto cursorTextPos = mapCursorToText(cursorPos, textArea);
-    const size_t lineIdx = static_cast<size_t>(cursorTextPos.y);
+    const auto lineIdx = static_cast<size_t>(cursorTextPos.y);
     if (lineIdx >= lines.size())
         return;
     if (cursorPos.x == maxX || cursorTextPos.x == len(lines[lineIdx]))
@@ -228,7 +228,7 @@ void TextEditView::moveCursorUp()
     if (cursorPos.y > textArea.y)
     {
         --cursorPos.y;
-        const auto lines = splitIntoLines(text(), textArea);
+        const auto lines = tools::splitIntoLines(text(), textArea);
         if (lines.empty())
             return;
         const auto cursorTextPos = mapCursorToText(cursorPos, textArea);
@@ -249,7 +249,7 @@ void TextEditView::moveCursorDown()
 
     if (cursorPos.y < textArea.y + textArea.height - 1) // still may want to scroll
     {
-        const auto lines = splitIntoLines(text(), textArea);
+        const auto lines = tools::splitIntoLines(text(), textArea);
         if (lines.empty())
             return;
 
@@ -273,7 +273,7 @@ void TextEditView::applyBackSpace()
         return;
 
     auto theText = text();
-    auto lines = splitIntoLines(theText, textArea);
+    auto lines = tools::splitIntoLines(theText, textArea);
     if (lines.empty())
         return;
 
@@ -298,7 +298,7 @@ void TextEditView::applyBackSpace()
     theText.erase(deleteAt, 1); 
     setText(theText);
 
-    auto newLines = splitIntoLines(theText, textArea);
+    auto newLines = tools::splitIntoLines(theText, textArea);
     const std::string spaces(to_size_t(textArea.width), ' ');
 
     Position linePos { PosX(textArea.x), PosY(textArea.y + to_int(cursVerIdx)) };
@@ -365,47 +365,9 @@ namespace {
 
         const size_t cursVerIdx = static_cast<size_t>(cursorPos.y - textArea.y);
         const size_t cursHorIdx = static_cast<size_t>(cursorPos.x - textArea.x);
-        const auto lines = splitIntoLines(text, textArea);
+        const auto lines = tools::splitIntoLines(text, textArea);
         const auto charCount = std::accumulate(lines.begin(), lines.begin() + to_int(cursVerIdx), 0, sumUpChars);
         return (to_size_t(charCount) + cursHorIdx);
-    }
-
-    std::vector<std::string> splitIntoLines(const std::string& text, const Rect& textArea)
-    {
-        if (text.empty())
-            return { "" };
-
-        std::vector<std::string> lines;
-
-        const size_t maxLineLen = static_cast<size_t>(textArea.width);
-        const size_t textSize = text.size();
-        size_t pos = 0;
-        size_t endPos = text.find('\n');
-        while(endPos != std::string::npos)
-        {
-            do
-            {
-                auto lineLen = std::min(pos + maxLineLen, endPos) - pos;
-                lines.emplace_back(text.substr(pos, lineLen));
-                pos += lineLen;
-            } while (pos < endPos);
-            if (lines.back().size() == maxLineLen)
-            {
-                lines.emplace_back();
-            }
-            
-            pos = endPos + 1;
-            endPos = text.find('\n', pos);
-        }
-        while (pos < textSize)
-        {
-            auto lineLen = std::min(pos + maxLineLen, textSize) - pos;
-            lines.emplace_back(text.substr(pos, lineLen));
-            pos += lineLen;
-        }
-        if (text.back() == '\n' || lines.back().size() == maxLineLen)
-            lines.emplace_back();
-        return lines;
     }
 
     int count(const std::vector<std::string>& vec)

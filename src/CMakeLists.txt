@@ -32,6 +32,7 @@ target_sources(${exe_lib}
         ${src_dir}/view/home/MenuItem.cpp
         ${src_dir}/view/home/MenuView.cpp
         ${src_dir}/view/tools/Tools.cpp
+        ${src_dir}/view/tools/StringTools.cpp
         ${src_dir}/view/widget/ListView.cpp
         ${src_dir}/view/widget/TextEditView.cpp
         ${src_dir}/view/widget/TextView.cpp
@@ -67,6 +68,7 @@ target_sources(${exe_lib}
         ${src_dir}/view/home/MenuItem.hpp
         ${src_dir}/view/home/MenuView.hpp
         ${src_dir}/view/tools/Tools.hpp
+        ${src_dir}/view/tools/StringTools.hpp
         ${src_dir}/view/widget/ListView.hpp
         ${src_dir}/view/widget/TextEditView.hpp
         ${src_dir}/view/widget/TextView.hpp
