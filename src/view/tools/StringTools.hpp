@@ -3,10 +3,8 @@
 #include <string>
 #include <vector>
 
-namespace memo {
-namespace tools {
+namespace memo::tools {
 
-std::vector<std::string> splitIntoLines(const std::string& text, const Rect& textArea);
+std::vector<std::string> splitIntoLines(const std::string& text, size_t maxLineLen);
 
-} // namespace tools
 } // namespace memo

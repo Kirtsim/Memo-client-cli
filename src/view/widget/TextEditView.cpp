@@ -8,8 +8,7 @@
 #include <vector>
 #include <set>
 
-namespace memo {
-namespace ui {
+namespace memo::ui {
 
 namespace {
     const std::unordered_set<int> kSpecialChars {
@@ -112,7 +111,7 @@ void TextEditView::processInputCharacter(const int character)
     else if (character == curses::Key::kEnter)
     {
         const auto textArea = computeAvailableTextArea();
-        const auto lines = tools::splitIntoLines(text(), textArea);
+        const auto lines = tools::splitIntoLines(text(), static_cast<size_t>(textArea.width));
         auto cursPos = curses::CursorPosition(getWindow());
 
         const auto maxY = textArea.y + textArea.height-1;
@@ -138,7 +137,7 @@ void TextEditView::printCharacter(int character)
     if (cursTxtIdx <= theText.size())
     {
         theText.insert(cursTxtIdx, 1, static_cast<char>(character));
-        const auto lines = tools::splitIntoLines(theText, textArea);
+        const auto lines = tools::splitIntoLines(theText, static_cast<size_t>(textArea.width));
         if (count(lines) > textArea.height && lines.back().empty())
             return; 
         if (count(lines) == textArea.height && len(lines.back()) > textArea.width)
@@ -178,7 +177,7 @@ void TextEditView::moveCursorLeft()
         --cursorPos.x;
     else if (cursorPos.y > textArea.y)
     {
-        const auto lines = tools::splitIntoLines(text(), textArea);
+        const auto lines = tools::splitIntoLines(text(), static_cast<size_t>(textArea.width));
         const auto cursorTextPos = mapCursorToText(cursorPos, textArea);
         const auto lineIdx = static_cast<size_t>(cursorTextPos.y);
         if (lineIdx > 0)
@@ -197,7 +196,7 @@ void TextEditView::moveCursorRight()
     const auto textArea = computeAvailableTextArea();
     auto cursorPos = curses::CursorPosition(getWindow());
     const auto maxX = textArea.x + textArea.width - 1;
-    const auto lines = tools::splitIntoLines(text(), textArea);
+    const auto lines = tools::splitIntoLines(text(), static_cast<size_t>(textArea.width));
     const auto cursorTextPos = mapCursorToText(cursorPos, textArea);
     const auto lineIdx = static_cast<size_t>(cursorTextPos.y);
     if (lineIdx >= lines.size())
@@ -228,7 +227,7 @@ void TextEditView::moveCursorUp()
     if (cursorPos.y > textArea.y)
     {
         --cursorPos.y;
-        const auto lines = tools::splitIntoLines(text(), textArea);
+        const auto lines = tools::splitIntoLines(text(), static_cast<size_t>(textArea.width));
         if (lines.empty())
             return;
         const auto cursorTextPos = mapCursorToText(cursorPos, textArea);
@@ -249,7 +248,7 @@ void TextEditView::moveCursorDown()
 
     if (cursorPos.y < textArea.y + textArea.height - 1) // still may want to scroll
     {
-        const auto lines = tools::splitIntoLines(text(), textArea);
+        const auto lines = tools::splitIntoLines(text(), static_cast<size_t>(textArea.width));
         if (lines.empty())
             return;
 
@@ -273,7 +272,7 @@ void TextEditView::applyBackSpace()
         return;
 
     auto theText = text();
-    auto lines = tools::splitIntoLines(theText, textArea);
+    auto lines = tools::splitIntoLines(theText, static_cast<size_t>(textArea.width));
     if (lines.empty())
         return;
 
@@ -298,7 +297,7 @@ void TextEditView::applyBackSpace()
     theText.erase(deleteAt, 1); 
     setText(theText);
 
-    auto newLines = tools::splitIntoLines(theText, textArea);
+    auto newLines = tools::splitIntoLines(theText, static_cast<size_t>(textArea.width));
     const std::string spaces(to_size_t(textArea.width), ' ');
 
     Position linePos { PosX(textArea.x), PosY(textArea.y + to_int(cursVerIdx)) };
@@ -365,7 +364,7 @@ namespace {
 
         const size_t cursVerIdx = static_cast<size_t>(cursorPos.y - textArea.y);
         const size_t cursHorIdx = static_cast<size_t>(cursorPos.x - textArea.x);
-        const auto lines = tools::splitIntoLines(text, textArea);
+        const auto lines = tools::splitIntoLines(text, static_cast<size_t>(textArea.width));
         const auto charCount = std::accumulate(lines.begin(), lines.begin() + to_int(cursVerIdx), 0, sumUpChars);
         return (to_size_t(charCount) + cursHorIdx);
     }
@@ -391,5 +390,4 @@ namespace {
     }
 } // namespace
 
-} // namespace ui
 } // namespace memo

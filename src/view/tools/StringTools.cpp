@@ -1,16 +1,14 @@
 #include "view/tools/StringTools.hpp"
 
-namespace memo {
-namespace tools {
+namespace memo::tools {
     
-std::vector<std::string> splitIntoLines(const std::string& text, const Rect& textArea)
+std::vector<std::string> splitIntoLines(const std::string& text, const size_t maxLineLen)
 {
     if (text.empty())
         return { "" };
 
     std::vector<std::string> lines;
 
-    const size_t maxLineLen = static_cast<size_t>(textArea.width);
     const size_t textSize = text.size();
     size_t pos = 0;
     size_t endPos = text.find('\n');
@@ -41,5 +39,4 @@ std::vector<std::string> splitIntoLines(const std::string& text, const Rect& tex
     return lines;
 }
 
-} // namespace tools
 } // namespace memo
