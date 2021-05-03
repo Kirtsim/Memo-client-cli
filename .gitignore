@@ -27,3 +27,6 @@ compile_flags.txt
 .vscode
 
 3rdparty
+
+# JetBrains
+.idea
