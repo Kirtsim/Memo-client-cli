@@ -1,18 +1,17 @@
 #include "view/widget/TextView.hpp"
+#include "view/tools/StringTools.hpp"
 #include "ncurses/functions.hpp"
 #include "ncurses/Window.hpp"
 
 #include <vector>
 
-namespace memo {
-namespace ui {
+namespace memo::ui {
 
 namespace {
     bool hasTopBorder(const Border& border);
     bool hasBotBorder(const Border& border);
     bool hasLeftBorder(const Border& border);
     bool hasRightBorder(const Border& border);
-    std::vector<std::string> SplitIntoLines(const std::string& text);
 } // namespace
 
 TextView::TextView(IComponent* parent)
@@ -28,7 +27,7 @@ TextView::TextView(const Size& size, IComponent* parent)
 TextView::TextView(const Size& size, const Position& position, IComponent* parent)
     : BaseView(size, position, parent)
 {
-    setBorder(Border::NoBorder());
+    BaseView::setBorder(Border::NoBorder());
 }
 
 TextView::~TextView() = default;
@@ -75,7 +74,7 @@ void TextView::displayContent()
 void TextView::printForeground()
 {
     auto textArea = computeAvailableTextArea();
-    auto lines = SplitIntoLines(text_);
+    auto lines = tools::splitIntoLines(text_, static_cast<size_t>(textArea.width));
     auto textPos = textArea.position();
 
     int textHeight = static_cast<int>(lines.size());
@@ -111,7 +110,8 @@ void TextView::printForeground()
 
 void TextView::resizeToText()
 {
-    auto lines = SplitIntoLines(text_);
+    const auto textArea = computeAvailableTextArea().width;
+    auto lines = tools::splitIntoLines(text_, static_cast<size_t>(textArea));
     Size textSize;
     textSize.height = static_cast<int>(lines.size());
 
@@ -181,25 +181,6 @@ bool hasRightBorder(const Border& border)
     return border.right != ' ' || border.corner.upperRight != ' ' || border.corner.lowerRight != ' ';
 }
 
-std::vector<std::string> SplitIntoLines(const std::string& text)
-{
-    std::vector<std::string> lines;
-
-    size_t pos = 0;
-    size_t endPos = text.find('\n');
-    while(endPos != std::string::npos)
-    {
-        const auto length = endPos - pos;
-        lines.emplace_back(text.substr(pos, length));
-        pos = endPos + 1;
-        endPos = text.find('\n', pos);
-    }
-    lines.emplace_back(text.substr(pos));
-
-    return lines;
-}
-
 } // namespace
 
-} // namespace ui
 } // namespace memo
