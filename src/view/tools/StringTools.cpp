@@ -34,7 +34,7 @@ std::vector<std::string> splitIntoLines(const std::string& text, const size_t ma
         lines.emplace_back(text.substr(pos, lineLen));
         pos += lineLen;
     }
-    if (text.back() == '\n' || lines.back().size() == maxLineLen)
+    if (text.back() == '\n')
         lines.emplace_back();
     return lines;
 }

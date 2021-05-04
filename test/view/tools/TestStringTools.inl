@@ -93,9 +93,8 @@ TEST(TestStringTools, splitIntoLines_Line_length_equals_max_width_Return_the_tex
 
     auto lines = splitIntoLines(inputText, 5);
     ASSERT_FALSE(lines.empty());
-    EXPECT_EQ(lines.size(), 2);
+    EXPECT_EQ(lines.size(), 1);
     EXPECT_EQ(lines.front(), inputText);
-    EXPECT_EQ(lines.back(), "");
 }
 
 TEST(TestStringTools, splitIntoLines_Line_length_equals_max_width_with_LineFeed_at_the_end_Return_the_text_on_first_line_plus_two_empty_lines)
