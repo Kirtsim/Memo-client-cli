@@ -1,11 +1,19 @@
 #include "view/tools/StringTools.hpp"
 
 namespace memo::tools {
-    
-std::vector<std::string> splitIntoLines(const std::string& text, const size_t maxLineLen)
+
+std::vector<std::string> splitIntoLines(const std::string& text, const size_t maxLineLen, const bool wordWrap)
 {
     if (text.empty())
         return { "" };
+
+    auto computeLineLength = [&](const size_t currentPos, const size_t maxEndPos)
+    {
+        auto actualEndPos = maxEndPos;
+        if (wordWrap && maxLineLen > 0)
+            actualEndPos = std::min(currentPos + maxLineLen, actualEndPos);
+        return actualEndPos - currentPos;
+    };
 
     std::vector<std::string> lines;
 
@@ -16,24 +24,21 @@ std::vector<std::string> splitIntoLines(const std::string& text, const size_t ma
     {
         do
         {
-            auto lineLen = std::min(pos + maxLineLen, endPos) - pos;
+            const auto lineLen = computeLineLength(pos, endPos);
             lines.emplace_back(text.substr(pos, lineLen));
             pos += lineLen;
         } while (pos < endPos);
-        if (lines.back().size() == maxLineLen)
-        {
-            lines.emplace_back();
-        }
-        
+
         pos = endPos + 1;
         endPos = text.find('\n', pos);
     }
     while (pos < textSize)
     {
-        auto lineLen = std::min(pos + maxLineLen, textSize) - pos;
+        const auto lineLen = computeLineLength(pos, endPos);
         lines.emplace_back(text.substr(pos, lineLen));
         pos += lineLen;
     }
+
     if (text.back() == '\n')
         lines.emplace_back();
     return lines;

@@ -16,6 +16,6 @@ namespace memo::tools {
 /// \param text The text to be split into lines.
 /// \param maxLineLen The maximum allowed length for a line.
 /// \return A vector of lines (strings).
-std::vector<std::string> splitIntoLines(const std::string& text, size_t maxLineLen);
+std::vector<std::string> splitIntoLines(const std::string& text, size_t maxLineLen, bool wordWrap=false);
 
 } // namespace memo

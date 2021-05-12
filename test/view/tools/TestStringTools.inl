@@ -4,125 +4,173 @@
 
 using namespace memo;
 using namespace memo::tools;
+namespace {
+    const bool kApplyWordWrap = true;
+} // namespace
 
-TEST(TestStringTools, splitIntoLines_From_empty_string_return_a_vector_with_an_empty_string)
+TEST(TestStringTools, splitIntoLines_From_empty_string_Return_a_vector_with_an_empty_string)
 {
     auto lines = splitIntoLines("", 100);
+    auto linesWithWordWrap = splitIntoLines("", 100, kApplyWordWrap);
     ASSERT_FALSE(lines.empty());
     EXPECT_EQ(lines.size(), 1);
     EXPECT_TRUE(lines.front().empty());
+    EXPECT_EQ(lines, linesWithWordWrap);
 }
 
-TEST(TestStringTools, splitIntoLines_From_simple_text_return_one_line_with_the_text)
+TEST(TestStringTools, splitIntoLines_From_simple_text_Return_one_line_with_the_text)
 {
     std::string inputText = "This is my text for testing.";
     auto lines = splitIntoLines(inputText, 100);
+    auto linesWithWordWrap = splitIntoLines(inputText, 100, kApplyWordWrap);
     ASSERT_FALSE(lines.empty());
     EXPECT_EQ(lines.size(), 1);
     EXPECT_EQ(lines.front(), inputText);
+    EXPECT_EQ(lines, linesWithWordWrap);
 }
 
 TEST(TestStringTools, splitIntoLines_From_text_containing_only_a_lineFeed_return_two_empty_lines)
 {
+    const std::vector<std::string> expectedLines { "", "" };
     auto lines = splitIntoLines("\n", 100);
-    ASSERT_FALSE(lines.empty());
-    EXPECT_EQ(lines.size(), 2);
-    EXPECT_EQ(lines.front(), "");
-    EXPECT_EQ(lines.back(), "");
+    auto linesWithWordWrap = splitIntoLines("\n", 100, kApplyWordWrap);
+
+    EXPECT_EQ(lines.size(), expectedLines.size());
+    EXPECT_EQ(lines, expectedLines);
+
+    EXPECT_EQ(linesWithWordWrap.size(), expectedLines.size());
+    EXPECT_EQ(linesWithWordWrap, expectedLines);
 }
 
 TEST(TestStringTools, splitIntoLines_From_text_containing_only_lineFeeds_return_empty_lines)
 {
-    auto lines = splitIntoLines("\n\n\n\n", 100);
-    ASSERT_FALSE(lines.empty());
-    EXPECT_EQ(lines.size(), 5);
-    for (size_t i = 0; i < lines.size(); ++i)
-    {
-        EXPECT_EQ(lines[i], "") << "On index " << i << ".";
-    }
+    const std::string inputText = "\n\n\n\n";
+    const std::vector<std::string> expectedLines { "", "", "", "", "" };
+    auto lines = splitIntoLines(inputText, 100);
+    auto linesWithWordWrap = splitIntoLines(inputText, 100, kApplyWordWrap);
+
+    EXPECT_EQ(lines.size(), expectedLines.size());
+    EXPECT_EQ(lines, expectedLines);
+
+    EXPECT_EQ(linesWithWordWrap.size(), expectedLines.size());
+    EXPECT_EQ(linesWithWordWrap, expectedLines);
 }
 
 TEST(TestStringTools, splitIntoLines_From_text_with_lineFeed_at_the_end_return_two_lines)
 {
-    const std::string expectedFirstLine = "This is my text for testing.";
-    const auto inputText = expectedFirstLine + "\n";
+    const std::vector<std::string> expectedLines { "This is my text for testing.", "" };
+    const auto inputText = expectedLines[0] + "\n";
 
     auto lines = splitIntoLines(inputText, 100);
-    ASSERT_FALSE(lines.empty());
-    EXPECT_EQ(lines.size(), 2);
-    EXPECT_EQ(lines.front(), expectedFirstLine);
-    EXPECT_EQ(lines.back(), "");
+    auto linesWithWordWrap = splitIntoLines(inputText, 100, kApplyWordWrap);
+
+    EXPECT_EQ(lines.size(), expectedLines.size());
+    EXPECT_EQ(lines, expectedLines);
+
+    EXPECT_EQ(linesWithWordWrap.size(), expectedLines.size());
+    EXPECT_EQ(linesWithWordWrap, expectedLines);
 }
 
 TEST(TestStringTools, splitIntoLines_From_text_with_lineFeeds_in_middle_return_lines_with_empty_text_in_middle)
 {
-    const std::string expectedFirstLine = "This is the first line.";
-    const std::string expectedLastLine = "This is the last line.";
-    const auto inputText = expectedFirstLine + "\n\n\n" + expectedLastLine;
+    const std::vector<std::string> expectedLines { "This is the first line.", "", "", "This is the last line." };
+    const auto inputText = expectedLines.front() + "\n\n\n" + expectedLines.back();
 
     auto lines = splitIntoLines(inputText, 100);
-    ASSERT_FALSE(lines.empty());
-    EXPECT_EQ(lines.size(), 4);
-    EXPECT_EQ(lines.front(), expectedFirstLine);
+    auto linesWithWordWrap = splitIntoLines(inputText, 100, kApplyWordWrap);
+    EXPECT_EQ(lines.size(), expectedLines.size());
+    EXPECT_EQ(lines, expectedLines);
 
-    ASSERT_TRUE(lines.size() > 1);
-    EXPECT_EQ(lines[1], "");
-    ASSERT_TRUE(lines.size() > 2);
-    EXPECT_EQ(lines[2], "");
-    ASSERT_TRUE(lines.size() > 3);
-    EXPECT_EQ(lines[3], expectedLastLine);
+    EXPECT_EQ(linesWithWordWrap.size(), expectedLines.size());
+    EXPECT_EQ(linesWithWordWrap, expectedLines);
 }
 
-TEST(TestStringTools, splitIntoLines_Line_is_longer_than_max_width_Return_the_text_split_in_two_lines)
+TEST(TestStringTools, splitIntoLines_Apply_wordWrap_on_long_line_Return_the_text_split_in_two_lines)
 {
-    const std::string expectedFirstLine = "12345";
-    const std::string expectedSecondLine = "678";
+    const std::vector<std::string> expectedLines { "12345", "678" };
+    const auto inputText = expectedLines.front() + expectedLines.back();
 
-    const auto inputText = expectedFirstLine + expectedSecondLine;
+    auto lines = splitIntoLines(inputText, 5, kApplyWordWrap);
+    EXPECT_EQ(lines.size(), expectedLines.size());
+    EXPECT_EQ(lines, expectedLines);
+}
+
+TEST(TestStringTools, splitIntoLines_Do_not_apply_wordWrap_on_long_line_Return_single_line)
+{
+    const std::vector<std::string> expectedLines { "12345678" };
+    const std::string inputText = "12345678";
 
     auto lines = splitIntoLines(inputText, 5);
-    ASSERT_FALSE(lines.empty());
-    EXPECT_EQ(lines.size(), 2);
-    EXPECT_EQ(lines.front(), expectedFirstLine);
-    EXPECT_EQ(lines.back(), expectedSecondLine);
+    EXPECT_EQ(lines.size(), expectedLines.size());
+    EXPECT_EQ(lines, expectedLines);
 }
 
-TEST(TestStringTools, splitIntoLines_Line_length_equals_max_width_Return_the_text_on_first_line_plus_empty_line)
+TEST(TestStringTools, splitIntoLines_Multiple_long_lines_No_wordWrap_Do_not_split_the_lines)
 {
+    std::vector<std::string> expectedLines { "123456789", "uvwx", "abcdefghijkl" };
+    const auto inputText = expectedLines[0] + "\n" + expectedLines[1] + "\n" + expectedLines[2];
+
+    auto lines = splitIntoLines(inputText, 5);
+    EXPECT_EQ(lines.size(), expectedLines.size());
+    EXPECT_EQ(lines, expectedLines);
+}
+
+TEST(TestStringTools, splitIntoLines_Apply_wordWrap_on_multiple_long_lines)
+{
+    std::vector<std::string> expectedLines { "12345", "6789", "uvwx", "abcde", "fghij", "kl" };
+    const auto inputText = expectedLines[0] + expectedLines[1] + "\n"
+            + expectedLines[2] + "\n"
+            + expectedLines[3] + expectedLines[4] + expectedLines[5];
+
+    auto lines = splitIntoLines(inputText, 5, true);
+    EXPECT_EQ(lines.size(), expectedLines.size());
+    EXPECT_EQ(lines, expectedLines);
+}
+
+TEST(TestStringTools, splitIntoLines_Line_length_equals_max_width_Return_single_line)
+{
+    std::vector<std::string> expectedLines { "12345" };
     const std::string inputText = "12345";
 
     auto lines = splitIntoLines(inputText, 5);
-    ASSERT_FALSE(lines.empty());
-    EXPECT_EQ(lines.size(), 1);
-    EXPECT_EQ(lines.front(), inputText);
+    EXPECT_EQ(lines.size(), expectedLines.size());
+    EXPECT_EQ(lines, expectedLines);
 }
 
-TEST(TestStringTools, splitIntoLines_Line_length_equals_max_width_with_LineFeed_at_the_end_Return_the_text_on_first_line_plus_two_empty_lines)
+TEST(TestStringTools, splitIntoLines_Line_length_equals_max_width_with_LineFeed_at_the_end_Return_the_text_on_first_line_and_an_empty_line)
 {
-    const std::string firstExpectedLine = "12345";
-    const std::string inputText = firstExpectedLine + "\n";
+    std::vector<std::string> expectedLines { "12345", "" };
+    const std::string inputText = expectedLines.front() + "\n";
 
     auto lines = splitIntoLines(inputText, 5);
-    ASSERT_FALSE(lines.empty());
-    EXPECT_EQ(lines.size(), 3);
-    EXPECT_EQ(lines.front(), firstExpectedLine);
-    for (size_t i = 1; i < lines.size(); ++i)
-        EXPECT_EQ(lines[i], "");
+    EXPECT_EQ(lines.size(), expectedLines.size());
+    EXPECT_EQ(lines, expectedLines);
 }
 
-// TODO: failing test
-TEST(TestStringTools, DISABLED_splitIntoLines_For_non_empty_text_and_0_available_width_treat_does_not_impose_text_wrap)
+TEST(TestStringTools, splitIntoLines_Without_wordWrap_For_non_empty_text_and_0_available_width_Return_unsplit_lines)
 {
-    const std::string firstExpectedLine = "Some extra long text that would have otherwise had to be wrapped on a new line.";
-    const std::string secondExpectedLine = "This text is deliberately placed on a new line.";
-    const auto inputText = firstExpectedLine + "\n" + secondExpectedLine +"\n";
+    const std::vector<std::string> expectedLines {
+        "Some extra long text that would have otherwise had to be wrapped on a new line.",
+        "This text is deliberately placed on a new line.",
+        ""
+    };
+    const auto inputText = expectedLines[0] + "\n" + expectedLines[1] +"\n";
     auto lines = splitIntoLines(inputText, 0);
 
-    ASSERT_FALSE(lines.empty());
-    EXPECT_EQ(lines.size(), 3);
-    EXPECT_EQ(lines.front(), firstExpectedLine);
-    ASSERT_TRUE(lines.size() > 1);
-    EXPECT_EQ(lines[1], secondExpectedLine);
-    ASSERT_TRUE(lines.size() > 2);
-    EXPECT_EQ(lines[2], "");
+    EXPECT_EQ(lines.size(), expectedLines.size());
+    EXPECT_EQ(lines, expectedLines);
+}
+
+TEST(TestStringTools, splitIntoLines_With_wordWrap_For_non_empty_text_and_0_available_width_Return_unsplit_lines)
+{
+    const std::vector<std::string> expectedLines {
+        "Some extra long text that would have otherwise had to be wrapped on a new line.",
+        "This text is deliberately placed on a new line.",
+        ""
+    };
+    const auto inputText = expectedLines[0] + "\n" + expectedLines[1] +"\n";
+    auto lines = splitIntoLines(inputText, 0, true);
+
+    EXPECT_EQ(lines.size(), expectedLines.size());
+    EXPECT_EQ(lines, expectedLines);
 }
