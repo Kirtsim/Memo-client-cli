@@ -372,7 +372,8 @@ namespace {
 
     std::vector<std::string> splitIntoLines(const std::string& text, size_t maxLineWidth)
     {
-        auto lines = tools::splitIntoLines(text, maxLineWidth);
+        const auto applyWordWrap = true;
+        auto lines = tools::splitIntoLines(text, maxLineWidth, applyWordWrap);
         if (!lines.empty() && lines.back().size() == maxLineWidth)
             lines.emplace_back();
         return lines;
