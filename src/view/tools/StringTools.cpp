@@ -44,4 +44,24 @@ std::vector<std::string> splitIntoLines(const std::string& text, const size_t ma
     return lines;
 }
 
+std::vector<std::string> splitText(const std::string& text, const std::string& delimiter)
+{
+    if (delimiter.empty())
+        return { text };
+    std::vector<std::string> tokens;
+    size_t pos = 0;
+    size_t delimiterPos = text.find(delimiter, pos);
+    while (pos < text.size())
+    {
+        tokens.emplace_back(text.substr(pos, delimiterPos - pos));
+        pos += tokens.back().size() + delimiter.size();
+        delimiterPos = text.find(delimiter, pos);
+    }
+    const bool endsWithDelimiter = !text.empty() && pos == text.size();
+    if (endsWithDelimiter)
+        tokens.emplace_back();
+
+    return tokens;
+}
+
 } // namespace memo

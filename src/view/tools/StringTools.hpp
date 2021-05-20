@@ -20,4 +20,15 @@ namespace memo::tools {
 /// \return A vector of lines (strings).
 std::vector<std::string> splitIntoLines(const std::string& text, size_t maxLineLen, bool wordWrap=false);
 
+/// Splits the given text into tokens using the provided delimiter.
+///
+/// Ex.:
+/// splitText(".abc..def") returns ["", "abc", "", "def"].
+///
+/// In case of an empty delimiter the entire text is returned in a vector of size 1.
+///
+/// \param text Text to be split
+/// \param delimiter Delimiting string
+/// \return Vector of tokens.
+std::vector<std::string> splitText(const std::string& text, const std::string& delimiter);
 } // namespace memo

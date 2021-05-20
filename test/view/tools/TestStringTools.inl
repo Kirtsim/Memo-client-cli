@@ -174,3 +174,85 @@ TEST(TestStringTools, splitIntoLines_With_wordWrap_For_non_empty_text_and_0_avai
     EXPECT_EQ(lines.size(), expectedLines.size());
     EXPECT_EQ(lines, expectedLines);
 }
+
+TEST(TestStringTools, splitText_For_empty_text_and_non_empty_delimiter_Return_empty_vector)
+{
+    const auto tokens = splitText("", ";");
+    EXPECT_TRUE(tokens.empty());
+}
+
+TEST(TestStringTools, splitText_For_empty_text_and_empty_delimiter_Return_vector_with_one_empty_string)
+{
+    const std::vector<std::string> expectedTokens = { "" };
+    const auto tokens = splitText("", "");
+
+    EXPECT_EQ(tokens.size(), expectedTokens.size());
+    EXPECT_EQ(tokens, expectedTokens);
+}
+
+TEST(TestStringTools, splitText_For_empty_delimiter_Return_entire_text_as_token)
+{
+    const std::vector<std::string> expectedTokens = { "This is a text." };
+    const auto tokens = splitText(expectedTokens.front(), "");
+
+    EXPECT_EQ(tokens.size(), expectedTokens.size());
+    EXPECT_EQ(tokens, expectedTokens);
+}
+
+TEST(TestStringTools, splitText_For_delimiter_longer_than_text_Return_the_text)
+{
+    const std::vector<std::string> expectedTokens = { "22" };
+    const auto tokens = splitText(expectedTokens.front(), "222");
+
+    EXPECT_EQ(tokens.size(), expectedTokens.size());
+    EXPECT_EQ(tokens, expectedTokens);
+}
+
+TEST(TestStringTools, splitText_For_text_without_delimiter_occurrence_Return_the_entire_text)
+{
+    const std::vector<std::string> expectedTokens = { "This is a text." };
+    const auto tokens = splitText(expectedTokens.front(), "+");
+
+    EXPECT_EQ(tokens.size(), expectedTokens.size());
+    EXPECT_EQ(tokens, expectedTokens);
+}
+
+TEST(TestStringTools, splitText_For_text_with_several_delimiter_occurrences_Return_correctly_split_text)
+{
+    const std::string text = "_This_is_a_text._";
+    const std::vector<std::string> expectedTokens = { "", "This", "is", "a", "text.", "" };
+    const auto tokens = splitText(text, "_");
+
+    EXPECT_EQ(tokens.size(), expectedTokens.size());
+    EXPECT_EQ(tokens, expectedTokens);
+}
+
+TEST(TestStringTools, splitText_For_text_with_several_multi_char_delimiter_occurrences_Return_correctly_split_text)
+{
+    const std::string text = "._.This._.is._.a._.text.._.";
+    const std::vector<std::string> expectedTokens = { "", "This", "is", "a", "text.", "" };
+    const auto tokens = splitText(text, "._.");
+
+    EXPECT_EQ(tokens.size(), expectedTokens.size());
+    EXPECT_EQ(tokens, expectedTokens);
+}
+
+TEST(TestStringTools, splitText_For_text_of_only_repeating_multichar_delimiters_Return_empty_strings)
+{
+    const std::string text = "88888888";
+    const std::vector<std::string> expectedTokens = { "", "", "", "", ""};
+    const auto tokens = splitText(text, "88");
+
+    EXPECT_EQ(tokens.size(), expectedTokens.size());
+    EXPECT_EQ(tokens, expectedTokens);
+}
+
+TEST(TestStringTools, splitText_For_text_of_only_repeating_multichar_delimiters_with_extra_delim_chars_Return_empty_strings_with_the_chars_at_the_end)
+{
+    const std::string text = "88888888";
+    const std::vector<std::string> expectedTokens = { "", "", "88"};
+    const auto tokens = splitText(text, "888");
+
+    EXPECT_EQ(tokens.size(), expectedTokens.size());
+    EXPECT_EQ(tokens, expectedTokens);
+}
