@@ -186,6 +186,24 @@ void MemoCreateView::displayContent()
     curses::PrintText("Press 'ESC' to go back.", getWindow(), position);
 }
 
+    const std::string &MemoCreateView::memoTitle() const
+    {
+        return memoTitleTextEditView_->text();
+    }
+
+    const std::string &MemoCreateView::memoDescription() const
+    {
+        return memoDescriptionTextEditView_->text();
+    }
+
+    std::vector<std::string> MemoCreateView::memoTags() const
+    {
+        std::vector<std::string> tags;
+        const auto tagsText = memoTagsTextEditView_->text();
+
+        return  tags;
+    }
+
 namespace {
 
     bool isAButton(const MemoCreateView::SubView subView)

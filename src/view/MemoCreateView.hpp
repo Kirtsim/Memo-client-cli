@@ -1,6 +1,7 @@
 #pragma once
 #include "view/BaseView.hpp"
 #include <memory>
+#include <vector>
 #include <array>
 
 namespace memo {
@@ -41,6 +42,12 @@ public:
 
     SubView focusNextSubView();
     SubView focusPrevSubView();
+
+    const std::string& memoTitle() const;
+
+    const std::string& memoDescription() const;
+
+    std::vector<std::string> memoTags() const;
 
 protected:
     void displayContent() override;
