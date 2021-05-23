@@ -20,6 +20,7 @@ target_sources(${exe_lib}
         ${src_dir}/ncurses/SubWindow.cpp
         ${src_dir}/ncurses/Window.cpp
         ${src_dir}/remote/ListMemoCall.cpp
+        ${src_dir}/remote/MemoCreateCall.cpp
         ${src_dir}/remote/MemoDao.cpp
         ${src_dir}/remote/factory/MemoCallFactory.cpp
         ${src_dir}/utils/Structs.cpp
@@ -54,6 +55,7 @@ target_sources(${exe_lib}
         ${src_dir}/remote/Call.hpp
         ${src_dir}/remote/BaseCall.hpp
         ${src_dir}/remote/ListMemoCall.hpp
+        ${src_dir}/remote/MemoCreateCall.hpp
         ${src_dir}/remote/MemoDao.hpp
         ${src_dir}/remote/factory/MemoCallFactory.hpp
         ${src_dir}/utils/Enums.hpp

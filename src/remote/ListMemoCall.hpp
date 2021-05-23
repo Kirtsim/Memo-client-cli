@@ -2,15 +2,14 @@
 #include "remote/BaseCall.hpp"
 #include "model/MemoSvc.grpc.pb.h"
 
-namespace memo {
-namespace remote {
+namespace memo::remote {
 
 class ListMemoCall : public BaseCall<model::MemoSvc::Stub, model::MemoSearchRs>
 {
 public:
     using ReaderPtr_t = std::unique_ptr<grpc::ClientAsyncResponseReader<model::MemoSearchRs>>;
 
-    ListMemoCall(model::MemoSvc::Stub& stub);
+    explicit ListMemoCall(model::MemoSvc::Stub& stub);
 
     void setRequest(const model::MemoSearchRq& request);
 
@@ -28,5 +27,4 @@ private:
     model::MemoSearchRq request_;
 };
 
-} // namespace remote
 } // namespace memo

@@ -1,10 +1,10 @@
 #include "remote/MemoDao.hpp"
 #include "remote/ListMemoCall.hpp"
+#include "remote/MemoCreateCall.hpp"
 #include "remote/factory/MemoCallFactory.hpp"
 
 
-namespace memo {
-namespace remote {
+namespace memo::remote {
 
 std::shared_ptr<MemoDaoImpl> MemoDaoImpl::Create(
     std::unique_ptr<MemoCallFactory> callFactory)
@@ -34,10 +34,26 @@ std::vector<model::Memo> MemoDaoImpl::fetchAll()
     return result;
 }
 
-bool MemoDaoImpl::success()
+model::MemoCreateRs MemoDaoImpl::add(const model::Memo& memo)
+{
+    auto memoCall = factory_->createMemoCreateCall();
+    success_ = false;
+    model::MemoCreateRs result;
+    result.mutable_operationstatus()->set_status(model::OperationStatus::FAILURE);
+    if (!memoCall)
+        return result;
+
+    memoCall->setMemo(memo);
+    if ((success_ = memoCall->exec()))
+    {
+        result = memoCall->getReply();
+    }
+    return result;
+}
+
+bool MemoDaoImpl::success() const
 {
     return success_;
 }
 
-} // namespace remote
-} // namespace memo
+} // namespace memo::remote
