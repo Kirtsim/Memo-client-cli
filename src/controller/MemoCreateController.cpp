@@ -1,18 +1,18 @@
 #include "controller/MemoCreateController.hpp"
 #include "view/widget/TextView.hpp"
 #include "view/widget/TextEditView.hpp"
+#include "view/tools/StringTools.hpp"
 #include "manager/ControllerManager.hpp"
+#include "remote/MemoDao.hpp"
 
-#include "ncurses/functions.hpp"
 #include "ncurses/keys.hpp"
 
-namespace memo {
-namespace ctrl {
+namespace memo::ctrl {
 
 class TextEditKeyFilter : public ui::KeyFilter
 {
 public:
-    TextEditKeyFilter(MemoCreateController* view);
+    explicit TextEditKeyFilter(MemoCreateController* controller);
 
     bool filterKey(int key) override;
     void resetView();
@@ -71,9 +71,44 @@ bool MemoCreateController::processKey(int key)
         }
         else if (viewInFocus == ui::MemoCreateView::kConfirmButton)
         {
+            saveMemoDetails();
             stop();
             return true;
         }
+    }
+    return false;
+}
+
+bool MemoCreateController::checkMemoTitleAvailability(const std::string& title)
+{
+    return !title.empty();
+}
+
+
+bool MemoCreateController::saveMemoDetails()
+{
+    if (!checkMemoTitleAvailability(view()->memoTitle()))
+        return false;
+
+    if (auto memoDao = getResources()->memoDao())
+    {
+        model::Memo memo;
+        memo.set_title(view()->memoTitle());
+        memo.set_description(view()->memoDescription());
+
+        const auto tagsString = view()->memoTags();
+        const auto tagNames = tools::splitText(tagsString, "#");
+        for (const auto& tagName : tagNames)
+        {
+            if (!tagName.empty())
+            {
+                memo.add_tagnames(tagName);
+            }
+        }
+        const auto response = memoDao->add(memo);
+        // TODO: Do something with the ID
+        return response.IsInitialized()
+            && response.operationstatus().status() == model::OperationStatus::SUCCESS;
     }
     return false;
 }
@@ -104,6 +139,5 @@ void TextEditKeyFilter::resetView()
     controller_ = nullptr;
 }
 
-} // namespace ctrl
-} // namespace memo
+} // namespace memo::ctrl
 

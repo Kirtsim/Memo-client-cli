@@ -4,8 +4,7 @@
 #include <vector>
 #include <array>
 
-namespace memo {
-namespace ui {
+namespace memo::ui {
 
 class TextView;
 class TextEditView;
@@ -25,7 +24,7 @@ public:
     explicit MemoCreateView(IComponent* parent=nullptr);
     explicit MemoCreateView(const Size& size, IComponent* parent=nullptr);
     MemoCreateView(const Size& size, const Position& position, IComponent* parent=nullptr);
-    ~MemoCreateView();
+    ~MemoCreateView() override;
 
     MemoCreateView(const MemoCreateView&) = delete;
     MemoCreateView(const MemoCreateView&&) = delete;
@@ -47,7 +46,7 @@ public:
 
     const std::string& memoDescription() const;
 
-    std::vector<std::string> memoTags() const;
+    const std::string& memoTags() const;
 
 protected:
     void displayContent() override;
@@ -65,5 +64,4 @@ private:
     std::array<std::shared_ptr<View>, kSubViewCount> subViewMapping_;
 };
 
-} // namespace ui
-} // namespace memo
+} // namespace memo::ui

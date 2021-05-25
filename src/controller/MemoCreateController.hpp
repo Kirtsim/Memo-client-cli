@@ -2,11 +2,10 @@
 #include "controller/BaseController.hpp"
 #include "view/MemoCreateView.hpp"
 
-namespace memo {
-namespace ui {
+namespace memo::ui {
     class TextEditView;
 }
-namespace ctrl {
+namespace memo::ctrl {
 
 class TextEditKeyFilter;
 
@@ -16,10 +15,12 @@ class MemoCreateController : public BaseController<ui::MemoCreateView>
     using ResourcesPtr_t = std::shared_ptr<IResources>;
 
 public:
-    MemoCreateController(const ResourcesPtr_t& resources);
-    ~MemoCreateController();
+    explicit MemoCreateController(const ResourcesPtr_t& resources);
+    ~MemoCreateController() override;
 
     void processInput() override;
+    bool checkMemoTitleAvailability(const std::string& title);
+    bool saveMemoDetails();
 
 private:
     bool processKey(int key);
@@ -31,5 +32,4 @@ private:
     bool run_ = true;
 };
 
-} // namespace ctrl
-} // namespace memo
+} // namespace memo::ctrl
