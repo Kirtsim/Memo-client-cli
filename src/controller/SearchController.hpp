@@ -3,7 +3,7 @@
 #include "controller/BaseController.hpp"
 #include "view/MemoSearchView.hpp"
 #include "manager/ControllerManager.hpp"
-#include "model/Memo.pb.h"
+#include "Memo.pb.h"
 
 namespace memo {
 namespace ctrl {

@@ -1,6 +1,6 @@
 #pragma once
-#include "model/Memo.pb.h"
-#include "model/MemoSvc.pb.h"
+#include "Memo.pb.h"
+#include "MemoSvc.pb.h"
 #include <vector>
 #include <memory>
 

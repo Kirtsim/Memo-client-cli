@@ -1,6 +1,6 @@
 #pragma once
 #include "remote/BaseCall.hpp"
-#include "model/MemoSvc.grpc.pb.h"
+#include "MemoSvc.grpc.pb.h"
 
 namespace memo::remote {
 

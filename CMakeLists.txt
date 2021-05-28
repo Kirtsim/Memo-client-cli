@@ -13,10 +13,15 @@ if (UNIX AND NOT APPLE)
 endif()
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
+set(memo_proto_lib_include_dir ${CMAKE_SOURCE_DIR}/Memo-proto/model)
+
 set(exe memo_client_cli)
-set(exe_lib memo_client_cli_lib)
 set(exe_test memo_client_cli_test)
+set(exe_lib memo_client_cli_lib)
+set(memo_proto_lib memo_proto_lib)
+set(proto_src_dir ${CMAKE_SOURCE_DIR}/Memo-proto/model)
 include_directories(src)
 
+add_subdirectory(${CMAKE_SOURCE_DIR}/Memo-proto/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/test/)

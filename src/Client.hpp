@@ -1,6 +1,6 @@
 #pragma once
-#include "model/MemoSvc.grpc.pb.h"
-#include "model/TagSvc.grpc.pb.h"
+#include "MemoSvc.grpc.pb.h"
+#include "TagSvc.grpc.pb.h"
 
 #include <string>
 #include <memory>
