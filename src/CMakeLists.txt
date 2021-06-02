@@ -23,6 +23,7 @@ target_sources(${exe_lib}
         ${src_dir}/remote/MemoDao.cpp
         ${src_dir}/remote/factory/MemoCallFactory.cpp
         ${src_dir}/utils/Structs.cpp
+        ${src_dir}/utils/ModelMapper.cpp
         ${src_dir}/view/BaseComponent.cpp
         ${src_dir}/view/BaseView.cpp
         ${src_dir}/view/MemoCreateView.cpp
@@ -36,6 +37,8 @@ target_sources(${exe_lib}
         ${src_dir}/view/widget/ListView.cpp
         ${src_dir}/view/widget/TextEditView.cpp
         ${src_dir}/view/widget/TextView.cpp
+        ${src_dir}/model/Memo.cpp
+        ${src_dir}/model/Tag.cpp
     INTERFACE
         ${src_dir}/Client.hpp
         ${src_dir}/context/Resources.hpp
@@ -59,6 +62,7 @@ target_sources(${exe_lib}
         ${src_dir}/remote/factory/MemoCallFactory.hpp
         ${src_dir}/utils/Enums.hpp
         ${src_dir}/utils/Structs.hpp
+        ${src_dir}/utils/ModelMapper.hpp
         ${src_dir}/view/IComponent.hpp
         ${src_dir}/view/BaseComponent.hpp
         ${src_dir}/view/BaseView.hpp
@@ -73,6 +77,8 @@ target_sources(${exe_lib}
         ${src_dir}/view/widget/ListView.hpp
         ${src_dir}/view/widget/TextEditView.hpp
         ${src_dir}/view/widget/TextView.hpp
+        ${src_dir}/model/Memo.hpp
+        ${src_dir}/model/Tag.hpp
 )
 
 # OpenSSL
