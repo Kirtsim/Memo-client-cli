@@ -1,13 +1,12 @@
 #include "remote/ListMemoCall.hpp"
 
-namespace memo {
-namespace remote {
+namespace memo::remote {
 
-ListMemoCall::ListMemoCall(model::MemoSvc::Stub& stub) :
+ListMemoCall::ListMemoCall(proto::MemoSvc::Stub& stub) :
     BaseCall(stub)
 {}
 
-ListMemoCall::ReaderPtr_t ListMemoCall::makeCall(model::MemoSvc::Stub& stub,
+ListMemoCall::ReaderPtr_t ListMemoCall::makeCall(proto::MemoSvc::Stub& stub,
                                                  grpc::ClientContext& context,
                                                  grpc::CompletionQueue& completionQueue)
 {
@@ -15,16 +14,15 @@ ListMemoCall::ReaderPtr_t ListMemoCall::makeCall(model::MemoSvc::Stub& stub,
     return reader;
 }
 
-void ListMemoCall::setRequest(const model::MemoSearchRq& request)
+void ListMemoCall::setRequest(const proto::MemoSearchRq& request)
 {
     request_ = request;
 }
 
-const model::MemoSearchRq& ListMemoCall::request() const
+const proto::MemoSearchRq& ListMemoCall::request() const
 {
     return request_;
 }
 
 
-} // namespace remote
-} // namespace memo
+} // namespace memo::remote

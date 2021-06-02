@@ -3,21 +3,19 @@
 #include "controller/BaseController.hpp"
 #include "view/MemoSearchView.hpp"
 #include "manager/ControllerManager.hpp"
-#include "Memo.pb.h"
+#include "model/Memo.hpp"
 
-namespace memo {
-namespace ctrl {
+namespace memo::ctrl {
 
 class SearchController : public BaseController<ui::MemoSearchView>
 {
     using ResourcesPtr_t = std::shared_ptr<IResources>;
 public:
-    SearchController(const ResourcesPtr_t& resources);
+    explicit SearchController(const ResourcesPtr_t& resources);
     void processInput() override;
 
 private:
     std::vector<model::Memo> memos_;
 };
 
-} // namespace ctrl
-} // namespace memo
+} // namespace memo::ctrl

@@ -8,8 +8,7 @@
 #include "ncurses/functions.hpp"
 #include "ncurses/keys.hpp"
 
-namespace memo {
-namespace ctrl {
+namespace memo::ctrl {
 
 HomeController::HomeController(const ResourcesPtr_t& resources) :
     BaseController(resources)
@@ -101,5 +100,4 @@ void HomeController::onMenuOptionSelected(std::pair<bool, ui::MenuItem> selected
     }
 }
 
-} // namespace ctrl
-} // namespace memo
+} // namespace memo::ctrl

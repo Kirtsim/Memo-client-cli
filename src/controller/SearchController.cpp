@@ -4,13 +4,12 @@
 #include "remote/MemoDao.hpp"
 #include "view/widget/ListView.hpp"
 
-namespace memo {
-namespace ctrl {
+namespace memo::ctrl {
 
 class TestListItem : public ui::ListItem
 {
 public:
-    TestListItem(const std::string& text)
+    explicit TestListItem(const std::string& text)
         : text_(text)
     {
     }
@@ -33,7 +32,7 @@ SearchController::SearchController(const ResourcesPtr_t& resources)
     auto memos = memoDao->fetchAll();
     std::vector<ui::ListItemPtr> memoTitles;
     std::transform(memos.begin(), memos.end(), std::back_inserter(memoTitles),
-        [](const model::Memo& memo)
+        [](const proto::Memo& memo)
         {
             return std::make_shared<TestListItem>(memo.title());
         });
@@ -64,5 +63,4 @@ void SearchController::processInput()
     curses::KeyPad(window, DISABLE);
 }
 
-} // namespace ctrl
-} // namespace memo
+} // namespace memo::ctrl

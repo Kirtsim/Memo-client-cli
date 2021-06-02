@@ -15,10 +15,10 @@
 namespace memo {
 
 Client::Client(const std::string& address) :
-    memoStub_(model::MemoSvc::NewStub(grpc::CreateChannel(
+    memoStub_(proto::MemoSvc::NewStub(grpc::CreateChannel(
                     address,
                     grpc::InsecureChannelCredentials()))),
-    tagStub_(model::TagSvc::NewStub(grpc::CreateChannel(
+    tagStub_(proto::TagSvc::NewStub(grpc::CreateChannel(
                     address,
                     grpc::InsecureChannelCredentials()))),
     controllerManager_(std::make_shared<manager::ControllerManager>()),
@@ -61,12 +61,12 @@ void Client::run()
     curses::CloseCurses();
 }
 
-model::MemoSvc::Stub& Client::getMemoStub()
+proto::MemoSvc::Stub& Client::getMemoStub()
 {
     return *memoStub_;
 }
 
-model::TagSvc::Stub& Client::getTagStub()
+proto::TagSvc::Stub& Client::getTagStub()
 {
     return *tagStub_;
 }

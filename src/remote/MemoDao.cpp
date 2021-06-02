@@ -17,7 +17,7 @@ MemoDaoImpl::MemoDaoImpl(std::unique_ptr<MemoCallFactory> callFactory)
 {
 }
 
-std::vector<model::Memo> MemoDaoImpl::fetchAll()
+std::vector<proto::Memo> MemoDaoImpl::fetchAll()
 {
     auto memoCall = factory_->createMemoSearchCall();
     success_ = false;
@@ -25,7 +25,7 @@ std::vector<model::Memo> MemoDaoImpl::fetchAll()
         return {};
 
     success_ = memoCall->exec();
-    std::vector<model::Memo> result;
+    std::vector<proto::Memo> result;
     if (success_)
     {
         const auto& memos = memoCall->getReply().memos();
@@ -34,12 +34,12 @@ std::vector<model::Memo> MemoDaoImpl::fetchAll()
     return result;
 }
 
-model::MemoCreateRs MemoDaoImpl::add(const model::Memo& memo)
+proto::MemoCreateRs MemoDaoImpl::add(const proto::Memo& memo)
 {
     auto memoCall = factory_->createMemoCreateCall();
     success_ = false;
-    model::MemoCreateRs result;
-    result.mutable_operationstatus()->set_status(model::OperationStatus::FAILURE);
+    proto::MemoCreateRs result;
+    result.mutable_operation_status()->set_status(proto::OperationStatus::FAILURE);
     if (!memoCall)
         return result;
 

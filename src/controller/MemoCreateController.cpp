@@ -84,7 +84,6 @@ bool MemoCreateController::checkMemoTitleAvailability(const std::string& title)
     return !title.empty();
 }
 
-
 bool MemoCreateController::saveMemoDetails()
 {
     if (!checkMemoTitleAvailability(view()->memoTitle()))
@@ -92,7 +91,7 @@ bool MemoCreateController::saveMemoDetails()
 
     if (auto memoDao = getResources()->memoDao())
     {
-        model::Memo memo;
+        proto::Memo memo;
         memo.set_title(view()->memoTitle());
         memo.set_description(view()->memoDescription());
 
@@ -102,13 +101,13 @@ bool MemoCreateController::saveMemoDetails()
         {
             if (!tagName.empty())
             {
-                memo.add_tagnames(tagName);
+                memo.add_tag_names(tagName);
             }
         }
         const auto response = memoDao->add(memo);
         // TODO: Do something with the ID
         return response.IsInitialized()
-            && response.operationstatus().status() == model::OperationStatus::SUCCESS;
+            && response.operation_status().status() == proto::OperationStatus::SUCCESS;
     }
     return false;
 }

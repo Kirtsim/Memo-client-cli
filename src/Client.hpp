@@ -21,12 +21,12 @@ public:
     /// If theres is no view to be dipslayed the client terminates.
     void run();
 
-    model::MemoSvc::Stub& getMemoStub();
-    model::TagSvc::Stub& getTagStub();
+    proto::MemoSvc::Stub& getMemoStub();
+    proto::TagSvc::Stub& getTagStub();
 
 private:
-    std::shared_ptr<model::MemoSvc::Stub> memoStub_;
-    std::shared_ptr<model::TagSvc::Stub>  tagStub_;
+    std::shared_ptr<proto::MemoSvc::Stub> memoStub_;
+    std::shared_ptr<proto::TagSvc::Stub>  tagStub_;
     std::shared_ptr<manager::ControllerManager> controllerManager_;
     std::shared_ptr<IResources> resources_;
 };

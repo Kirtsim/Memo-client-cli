@@ -1,6 +1,7 @@
 #pragma once
 #include "Memo.pb.h"
 #include "MemoSvc.pb.h"
+#include "model/Memo.hpp"
 #include <vector>
 #include <memory>
 
@@ -12,8 +13,8 @@ class IMemoDao
 {
 public:
     virtual ~IMemoDao() = default;
-    virtual std::vector<model::Memo> fetchAll() = 0;
-    virtual model::MemoCreateRs add(const model::Memo& memo) = 0;
+    virtual std::vector<proto::Memo> fetchAll() = 0;
+    virtual proto::MemoCreateRs add(const proto::Memo& memo) = 0;
 };
 
 class MemoDaoImpl : public IMemoDao
@@ -23,9 +24,9 @@ public:
 
     explicit MemoDaoImpl(std::unique_ptr<MemoCallFactory> callFactory);
 
-    std::vector<model::Memo> fetchAll() override;
+    std::vector<proto::Memo> fetchAll() override;
 
-    model::MemoCreateRs add(const model::Memo& memo) override;
+    proto::MemoCreateRs add(const proto::Memo& memo) override;
 
     bool success() const;
 

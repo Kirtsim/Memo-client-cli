@@ -4,27 +4,27 @@
 
 namespace memo::remote {
 
-class ListMemoCall : public BaseCall<model::MemoSvc::Stub, model::MemoSearchRs>
+class ListMemoCall : public BaseCall<proto::MemoSvc::Stub, proto::MemoSearchRs>
 {
 public:
-    using ReaderPtr_t = std::unique_ptr<grpc::ClientAsyncResponseReader<model::MemoSearchRs>>;
+    using ReaderPtr_t = std::unique_ptr<grpc::ClientAsyncResponseReader<proto::MemoSearchRs>>;
 
-    explicit ListMemoCall(model::MemoSvc::Stub& stub);
+    explicit ListMemoCall(proto::MemoSvc::Stub& stub);
 
-    void setRequest(const model::MemoSearchRq& request);
+    void setRequest(const proto::MemoSearchRq& request);
 
-    const model::MemoSearchRq& request() const;
+    const proto::MemoSearchRq& request() const;
 
     ListMemoCall(const ListMemoCall&) = delete;
     ListMemoCall& operator=(const ListMemoCall&) = delete;
 
 protected:
-    ReaderPtr_t makeCall(model::MemoSvc::Stub& stub,
+    ReaderPtr_t makeCall(proto::MemoSvc::Stub& stub,
                          grpc::ClientContext& context,
                          grpc::CompletionQueue& completionQueue) override;
 
 private:
-    model::MemoSearchRq request_;
+    proto::MemoSearchRq request_;
 };
 
 } // namespace memo

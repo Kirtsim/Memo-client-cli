@@ -2,11 +2,11 @@
 
 namespace memo::remote {
 
-MemoCreateCall::MemoCreateCall(model::MemoSvc::Stub& stub) :
+MemoCreateCall::MemoCreateCall(proto::MemoSvc::Stub& stub) :
         BaseCall(stub)
 {}
 
-MemoCreateCall::ReaderPtr_t MemoCreateCall::makeCall(model::MemoSvc::Stub& stub,
+MemoCreateCall::ReaderPtr_t MemoCreateCall::makeCall(proto::MemoSvc::Stub& stub,
                                                  grpc::ClientContext& context,
                                                  grpc::CompletionQueue& completionQueue)
 {
@@ -14,12 +14,12 @@ MemoCreateCall::ReaderPtr_t MemoCreateCall::makeCall(model::MemoSvc::Stub& stub,
     return reader;
 }
 
-void MemoCreateCall::setMemo(const model::Memo& memo)
+void MemoCreateCall::setMemo(const proto::Memo& memo)
 {
     memo_ = memo;
 }
 
-const model::Memo& MemoCreateCall::memo() const
+const proto::Memo& MemoCreateCall::memo() const
 {
     return memo_;
 }

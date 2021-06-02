@@ -6,7 +6,7 @@ namespace memo::remote {
 
 class ListMemoCall;
 class MemoCreateCall;
-using MemoSvcStubPtr_t = std::shared_ptr<model::MemoSvc::Stub>;
+using MemoSvcStubPtr_t = std::shared_ptr<proto::MemoSvc::Stub>;
 
 class MemoCallFactory
 {

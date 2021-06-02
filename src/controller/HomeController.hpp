@@ -13,7 +13,7 @@ class HomeController : public BaseController<ui::HomeView>
     using ResourcesPtr_t = std::shared_ptr<IResources>;
 
 public:
-    HomeController(const ResourcesPtr_t& resources);
+    explicit HomeController(const ResourcesPtr_t& resources);
     void processInput() override;
 private:
     void onMenuOptionSelected(std::pair<bool, ui::MenuItem> selectedOption);
