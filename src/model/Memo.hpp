@@ -7,8 +7,8 @@ namespace memo::model {
 class Memo
 {
 public:
-    const std::string& id() const;
-    void setId(const std::string& id);
+    unsigned long id() const;
+    void setId(unsigned long id);
 
     const std::string& title() const;
     void setTitle(const std::string& title);
@@ -24,7 +24,7 @@ public:
     void setTimestamp(unsigned long timestamp);
 
 private:
-    std::string id_;
+    unsigned long id_;
     std::string title_;
     std::string description_;
     std::vector<std::string> tagNames_;

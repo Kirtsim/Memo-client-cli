@@ -11,7 +11,7 @@ model::Memo ToModel(const proto::Memo& proto)
     memo.setDescription(proto.description());
     for (const auto& tagName : proto.tag_names())
         memo.addTagName(tagName);
-    memo.setTimestamp(static_cast<unsigned long>(proto.timestamp()));
+    memo.setTimestamp(proto.timestamp());
     return memo;
 }
 
@@ -23,7 +23,7 @@ proto::Memo ToProto(const model::Memo& model)
     memo.set_description(model.description());
     for (const auto& tagName : model.tagNames())
         memo.add_tag_names(tagName);
-    memo.set_timestamp(static_cast<long>(model.timestamp()));
+    memo.set_timestamp(model.timestamp());
     return memo;
 }
 
@@ -36,7 +36,7 @@ model::Tag ToModel(const proto::Tag& proto)
     model::Tag tag;
     tag.setName(proto.name());
     tag.setColor(proto.color());
-    tag.setTimestamp(static_cast<unsigned long>(proto.timestamp()));
+    tag.setTimestamp(proto.timestamp());
     return tag;
 }
 
@@ -45,7 +45,7 @@ proto::Tag ToProto(const model::Tag& proto)
     proto::Tag tag;
     tag.set_name(proto.name());
     tag.set_color(proto.color());
-    tag.set_timestamp(static_cast<long>(proto.timestamp()));
+    tag.set_timestamp(proto.timestamp());
     return tag;
 }
 

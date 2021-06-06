@@ -2,7 +2,7 @@
 
 namespace memo::model {
 
-const std::string& Memo::id() const
+unsigned long Memo::id() const
 {
     return id_;
 }
@@ -27,7 +27,7 @@ unsigned long Memo::timestamp() const
     return timestamp_;
 }
 
-void Memo::setId(const std::string& id)
+void Memo::setId(const unsigned long id)
 {
     id_ = id;
 }
