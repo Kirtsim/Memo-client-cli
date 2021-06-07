@@ -79,6 +79,7 @@ target_sources(${exe_lib}
         ${src_dir}/view/widget/TextView.hpp
         ${src_dir}/model/Memo.hpp
         ${src_dir}/model/Tag.hpp
+        ${src_dir}/model/ModelDefs.hpp
 )
 
 # OpenSSL
