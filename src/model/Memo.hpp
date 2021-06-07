@@ -1,4 +1,5 @@
 #pragma once
+#include "model/ModelDefs.hpp"
 #include <vector>
 #include <string>
 
@@ -16,9 +17,9 @@ public:
     const std::string& description() const;
     void setDescription(const std::string& description);
 
-    const std::vector<std::string>& tagNames() const;
-    void setTagNames(const std::vector<std::string>& tagNames);
-    void addTagName(const std::string& tagName);
+    const std::vector<TagPtr>& tags() const;
+    void setTags(const std::vector<TagPtr>& tagNames);
+    void addTag(const TagPtr& tagName);
 
     unsigned long timestamp() const;
     void setTimestamp(unsigned long timestamp);
@@ -27,7 +28,7 @@ private:
     unsigned long id_;
     std::string title_;
     std::string description_;
-    std::vector<std::string> tagNames_;
+    std::vector<TagPtr> tags_;
     unsigned long timestamp_;
 };
 

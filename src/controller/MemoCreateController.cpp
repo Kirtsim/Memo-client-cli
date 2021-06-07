@@ -1,9 +1,10 @@
 #include "controller/MemoCreateController.hpp"
-#include "view/widget/TextView.hpp"
 #include "view/widget/TextEditView.hpp"
 #include "view/tools/StringTools.hpp"
 #include "manager/ControllerManager.hpp"
 #include "remote/MemoDao.hpp"
+#include "model/Tag.hpp"
+#include "model/ModelDefs.hpp"
 
 #include "ncurses/keys.hpp"
 
@@ -97,12 +98,11 @@ bool MemoCreateController::saveMemoDetails()
 
         const auto tagsString = view()->memoTags();
         const auto tagNames = tools::splitText(tagsString, "#");
-        for (const auto& tagName : tagNames)
+        const auto tags = fetchTags(tagNames);
+        for (const auto& tag : tags)
         {
-            if (!tagName.empty())
-            {
-                memo.add_tag_names(tagName);
-            }
+            if (tag)
+                memo.add_tag_ids(tag->id());
         }
         const auto response = memoDao->add(memo);
         // TODO: Do something with the ID
@@ -110,6 +110,13 @@ bool MemoCreateController::saveMemoDetails()
             && response.operation_status().status() == proto::OperationStatus::SUCCESS;
     }
     return false;
+}
+
+std::vector<model::TagPtr> MemoCreateController::fetchTags(const std::vector<std::string>& /*tagNames*/) const
+{
+    // TODO:
+    //auto tagDao = getResources()->TagDao();
+    return {};
 }
 
 void MemoCreateController::stop()

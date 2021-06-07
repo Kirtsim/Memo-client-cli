@@ -1,13 +1,15 @@
 #pragma once
+#include "model/ModelDefs.hpp"
 #include "model/Memo.hpp"
 #include "model/Tag.hpp"
 #include "Memo.pb.h"
 #include "Tag.pb.h"
+#include <map>
 
 namespace memo {
 namespace Memo {
 
-model::Memo ToModel(const proto::Memo& proto);
+model::Memo ToModel(const proto::Memo& proto, const std::map<unsigned long, model::TagPtr>& tags);
 
 proto::Memo ToProto(const model::Memo& model);
 

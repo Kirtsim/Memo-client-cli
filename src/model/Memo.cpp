@@ -1,4 +1,5 @@
-#include "Memo.hpp"
+#include "model/Memo.hpp"
+#include "model/Tag.hpp"
 
 namespace memo::model {
 
@@ -17,9 +18,9 @@ const std::string& Memo::description() const
     return description_;
 }
 
-const std::vector<std::string>& Memo::tagNames() const
+const std::vector<TagPtr>& Memo::tags() const
 {
-    return tagNames_;
+    return tags_;
 }
 
 unsigned long Memo::timestamp() const
@@ -42,14 +43,14 @@ void Memo::setDescription(const std::string& description)
     description_ = description;
 }
 
-void Memo::setTagNames(const std::vector<std::string>& tagNames)
+void Memo::setTags(const std::vector<TagPtr>& tags)
 {
-    tagNames_ = tagNames;
+    tags_ = tags;
 }
 
-void Memo::addTagName(const std::string& tagName)
+void Memo::addTag(const TagPtr& tagName)
 {
-    tagNames_.emplace_back(tagName);
+    tags_.emplace_back(tagName);
 }
 
 void Memo::setTimestamp(const unsigned long timestamp)

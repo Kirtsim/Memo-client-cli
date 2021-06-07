@@ -1,6 +1,7 @@
 #pragma once
 #include "controller/BaseController.hpp"
 #include "view/MemoCreateView.hpp"
+#include "model/ModelDefs.hpp"
 
 namespace memo::ui {
     class TextEditView;
@@ -23,6 +24,7 @@ public:
     bool saveMemoDetails();
 
 private:
+    std::vector<model::TagPtr> fetchTags(const std::vector<std::string>& tagNames) const;
     bool processKey(int key);
     void stop();
 

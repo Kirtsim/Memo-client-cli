@@ -1,16 +1,20 @@
-#include "ModelMapper.hpp"
+#include "utils/ModelMapper.hpp"
 
 namespace memo {
 namespace Memo {
 
-model::Memo ToModel(const proto::Memo& proto)
+model::Memo ToModel(const proto::Memo& proto, std::map<unsigned long, model::TagPtr>& tags)
 {
     model::Memo memo;
     memo.setId(proto.id());
     memo.setTitle(proto.title());
     memo.setDescription(proto.description());
-    for (const auto& tagName : proto.tag_names())
-        memo.addTagName(tagName);
+    for (const auto& tagId : proto.tag_ids())
+    {
+        auto iter = tags.find(tagId);
+        if (iter != std::end(tags))
+            memo.addTag(iter->second);
+    }
     memo.setTimestamp(proto.timestamp());
     return memo;
 }
@@ -21,8 +25,13 @@ proto::Memo ToProto(const model::Memo& model)
     memo.set_id(model.id());
     memo.set_title(model.title());
     memo.set_description(model.description());
-    for (const auto& tagName : model.tagNames())
-        memo.add_tag_names(tagName);
+    for (const auto& tag : model.tags())
+    {
+        if (tag)
+        {
+            memo.add_tag_ids(tag->id());
+        }
+    }
     memo.set_timestamp(model.timestamp());
     return memo;
 }
