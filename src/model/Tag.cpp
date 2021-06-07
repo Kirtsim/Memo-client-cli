@@ -2,6 +2,16 @@
 
 namespace memo::model {
 
+unsigned long Tag::id() const
+{
+    return id_;
+}
+
+void Tag::setId(unsigned long id)
+{
+    id_ = id;
+}
+
 const std::string& Tag::name() const
 {
     return name_;
