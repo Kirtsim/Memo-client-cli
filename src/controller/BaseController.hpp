@@ -24,7 +24,7 @@ public:
 protected:
     void setView(const ViewPtr_t& view);
     const ViewPtr_t& view();
-    const ResourcesPtr_t& getResources();
+    const ResourcesPtr_t& getResources() const;
 
 private:
     ResourcesPtr_t resources_;
@@ -49,7 +49,7 @@ const std::shared_ptr<ViewType>& BaseController<ViewType>::view()
 }
 
 template <class ViewType>
-const std::shared_ptr<IResources>& BaseController<ViewType>::getResources()
+const std::shared_ptr<IResources>& BaseController<ViewType>::getResources() const
 {
     return resources_;
 }
