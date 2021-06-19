@@ -1,7 +1,3 @@
-//
-// Created by Filip Mistrik on 17/06/2021.
-//
-
 #include "ListMemoRequest.hpp"
 
 namespace memo::remote {
@@ -56,7 +52,9 @@ void ListMemoRequest::setPageToken(const std::string& pageToken)
     pageToken_ = pageToken;
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////
+///                         ListMemoRequestBuilder
+//////////////////////////////////////////////////////////////////////////////////////////
 
 ListMemoRequestBuilder& ListMemoRequestBuilder::setRequestId(const std::string& uuid)
 {
