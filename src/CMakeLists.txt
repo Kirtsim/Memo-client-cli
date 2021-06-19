@@ -22,7 +22,9 @@ target_sources(${exe_lib}
         ${src_dir}/remote/MemoCreateCall.cpp
         ${src_dir}/remote/MemoDao.cpp
         ${src_dir}/remote/ServiceResponse.cpp
+        ${src_dir}/remote/ListMemoRequest.cpp
         ${src_dir}/remote/ListMemoResponseData.cpp
+        ${src_dir}/remote/AddMemoRequest.cpp
         ${src_dir}/remote/AddMemoResponseData.cpp
         ${src_dir}/remote/factory/MemoCallFactory.cpp
         ${src_dir}/utils/Structs.cpp
@@ -66,7 +68,9 @@ target_sources(${exe_lib}
         ${src_dir}/remote/MemoCreateCall.hpp
         ${src_dir}/remote/MemoDao.hpp
         ${src_dir}/remote/ServiceResponse.hpp
+        ${src_dir}/remote/ListMemoRequest.hpp
         ${src_dir}/remote/ListMemoResponseData.hpp
+        ${src_dir}/remote/AddMemoRequest.hpp
         ${src_dir}/remote/AddMemoResponseData.hpp
         ${src_dir}/remote/factory/MemoCallFactory.hpp
         ${src_dir}/utils/Enums.hpp
