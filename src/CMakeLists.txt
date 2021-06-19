@@ -21,6 +21,7 @@ target_sources(${exe_lib}
         ${src_dir}/remote/ListMemoCall.cpp
         ${src_dir}/remote/MemoCreateCall.cpp
         ${src_dir}/remote/MemoDao.cpp
+        ${src_dir}/remote/MemoService.cpp
         ${src_dir}/remote/ServiceResponse.cpp
         ${src_dir}/remote/ListMemoRequest.cpp
         ${src_dir}/remote/ListMemoResponseData.cpp
@@ -46,7 +47,6 @@ target_sources(${exe_lib}
         ${src_dir}/model/Tag.cpp
     PUBLIC
         ${src_dir}/remote/RemoteDefs.hpp
-        ${src_dir}/remote/MemoService.hpp
     INTERFACE
         ${src_dir}/Client.hpp
         ${src_dir}/context/Resources.hpp
@@ -67,6 +67,7 @@ target_sources(${exe_lib}
         ${src_dir}/remote/ListMemoCall.hpp
         ${src_dir}/remote/MemoCreateCall.hpp
         ${src_dir}/remote/MemoDao.hpp
+        ${src_dir}/remote/MemoService.hpp
         ${src_dir}/remote/ServiceResponse.hpp
         ${src_dir}/remote/ListMemoRequest.hpp
         ${src_dir}/remote/ListMemoResponseData.hpp

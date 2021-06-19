@@ -6,10 +6,6 @@ namespace memo::remote {
 class ListMemoRequest;
 class AddMemoRequest;
 
-class IServiceResponse;
-class ListMemoResponseData;
-
-
 class IMemoService
 {
 public:
@@ -17,11 +13,19 @@ public:
 
     virtual ListMemoResponsePtr listMemos(const ListMemoRequest& request) = 0;
 
-    virtual ListMemoResponsePtr addMemo(const AddMemoRequest& request) = 0;
+    virtual AddMemoResponsePtr addMemo(const AddMemoRequest& request) = 0;
 
     //virtual ListMemoResponsePtr UpdateMemo(const UpdateMemoRequest& request) = 0;
 
     //virtual ListMemoResponsePtr RemoveMemo(const RemoveMemoRequest& request) = 0;
+};
+
+class MemoServiceImpl : public IMemoService
+{
+public:
+    ListMemoResponsePtr listMemos(const ListMemoRequest& request) override;
+
+    AddMemoResponsePtr addMemo(const AddMemoRequest& request) override;
 };
 
 
