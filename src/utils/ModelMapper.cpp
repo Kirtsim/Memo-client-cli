@@ -44,17 +44,22 @@ model::Tag ToModel(const proto::Tag& proto)
 {
     model::Tag tag;
     tag.setName(proto.name());
-    tag.setColor(proto.color());
     tag.setTimestamp(proto.timestamp());
+    const auto& protoColour = proto.colour();
+    model::Colour colour { protoColour.red(), protoColour.green(), protoColour.blue() };
+    tag.setColour(colour);
     return tag;
 }
 
-proto::Tag ToProto(const model::Tag& proto)
+proto::Tag ToProto(const model::Tag& model)
 {
     proto::Tag tag;
-    tag.set_name(proto.name());
-    tag.set_color(proto.color());
-    tag.set_timestamp(proto.timestamp());
+    tag.set_name(model.name());
+    tag.set_timestamp(model.timestamp());
+    const auto& modelColour = model.colour();
+    tag.mutable_colour()->set_red(modelColour.red);
+    tag.mutable_colour()->set_green(modelColour.green);
+    tag.mutable_colour()->set_blue(modelColour.blue);
     return tag;
 }
 

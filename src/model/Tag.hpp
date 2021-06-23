@@ -3,6 +3,13 @@
 
 namespace memo::model {
 
+struct Colour
+{
+    int red;
+    int green;
+    int blue;
+};
+
 class Tag
 {
 public:
@@ -12,8 +19,8 @@ public:
     const std::string& name() const;
     void setName(const std::string& name);
 
-    const std::string& color() const;
-    void setColor(const std::string& color);
+    const Colour& colour() const;
+    void setColour(const Colour& colour);
 
     unsigned long timestamp() const;
     void setTimestamp(unsigned long timestamp);
@@ -21,7 +28,7 @@ public:
 private:
     unsigned long id_;
     std::string name_;
-    std::string color_;
+    Colour colour_;
     unsigned long timestamp_;
 };
 

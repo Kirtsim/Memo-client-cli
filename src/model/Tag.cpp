@@ -17,9 +17,9 @@ const std::string& Tag::name() const
     return name_;
 }
 
-const std::string& Tag::color() const
+const Colour& Tag::colour() const
 {
-    return color_;
+    return colour_;
 }
 
 unsigned long Tag::timestamp() const
@@ -32,9 +32,9 @@ void Tag::setName(const std::string& name)
     name_ = name;
 }
 
-void Tag::setColor(const std::string& color)
+void Tag::setColour(const Colour& colour)
 {
-    color_ = color;
+    colour_ = colour;
 }
 
 void Tag::setTimestamp(unsigned long timestamp)
