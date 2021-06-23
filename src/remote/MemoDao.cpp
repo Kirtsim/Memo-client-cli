@@ -39,7 +39,7 @@ proto::MemoCreateRs MemoDaoImpl::add(const proto::Memo& memo)
     auto memoCall = factory_->createMemoCreateCall();
     success_ = false;
     proto::MemoCreateRs result;
-    result.mutable_operation_status()->set_status(proto::OperationStatus::FAILURE);
+    result.mutable_operation_status()->set_type(proto::OperationStatus::FAILURE);
     if (!memoCall)
         return result;
 

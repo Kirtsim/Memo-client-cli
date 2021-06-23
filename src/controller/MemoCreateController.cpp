@@ -107,7 +107,7 @@ bool MemoCreateController::saveMemoDetails()
         const auto response = memoDao->add(memo);
         // TODO: Do something with the ID
         return response.IsInitialized()
-            && response.operation_status().status() == proto::OperationStatus::SUCCESS;
+            && response.operation_status().type() == proto::OperationStatus::SUCCESS;
     }
     return false;
 }
