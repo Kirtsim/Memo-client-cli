@@ -22,7 +22,6 @@ target_sources(${exe_lib}
         ${src_dir}/remote/MemoCreateCall.cpp
         ${src_dir}/remote/MemoDao.cpp
         ${src_dir}/remote/MemoService.cpp
-        ${src_dir}/remote/ServiceResponse.cpp
         ${src_dir}/remote/ListMemoRequest.cpp
         ${src_dir}/remote/ListMemoResponseData.cpp
         ${src_dir}/remote/AddMemoRequest.cpp
