@@ -8,7 +8,6 @@
 
 namespace memo::remote {
 
-class ListMemoResponseDataBuilder;
 class ListMemoResponseData;
 
 class ListMemoResponseData
