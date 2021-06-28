@@ -7,19 +7,26 @@ const std::string& AddMemoResponseData::requestUuid() const
     return requestUuid_;
 }
 
-void AddMemoResponseData::setRequestUuid(const std::string& requestUuid)
-{
-    requestUuid_ = requestUuid;
-}
-
 const model::MemoPtr& AddMemoResponseData::memo() const
 {
     return memo_;
 }
 
-void AddMemoResponseData::setMemo(const memo::model::MemoPtr& memo)
+AddMemoResponseDataBuilder& AddMemoResponseDataBuilder::setRequestUuid(const std::string& requestUuid)
 {
-    memo_ = memo;
+    data_.requestUuid_ = requestUuid;
+    return *this;
+}
+
+AddMemoResponseDataBuilder& AddMemoResponseDataBuilder::setMemo(const model::MemoPtr& memo)
+{
+    data_.memo_ = memo;
+    return *this;
+}
+
+AddMemoResponseData AddMemoResponseDataBuilder::build() const
+{
+    return data_;
 }
 
 } // namespace memo::remote

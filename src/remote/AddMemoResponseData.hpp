@@ -16,14 +16,25 @@ public:
     const model::MemoPtr& memo() const;
 
 private:
-    void setRequestUuid(const std::string& requestUuid);
-
-    void setMemo(const model::MemoPtr& memo);
-
-private:
     std::string requestUuid_;
     model::MemoPtr memo_;
 };
+
+class AddMemoResponseDataBuilder
+{
+public:
+    ~AddMemoResponseDataBuilder() = default;
+
+    AddMemoResponseDataBuilder& setRequestUuid(const std::string& requestUuid);
+
+    AddMemoResponseDataBuilder& setMemo(const model::MemoPtr& memo);
+
+    AddMemoResponseData build() const;
+
+private:
+    AddMemoResponseData data_;
+};
+
 
 } // namespace memo::remote
 

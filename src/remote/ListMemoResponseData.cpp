@@ -9,19 +9,9 @@ const std::string& ListMemoResponseData::requestUuid() const
     return requestUuid_;
 }
 
-void ListMemoResponseData::setRequestUuid(const std::string& requestUuid)
-{
-    requestUuid_ = requestUuid;
-}
-
 const std::vector<model::MemoPtr>& ListMemoResponseData::memos() const
 {
     return memos_;
-}
-
-void ListMemoResponseData::setMemos(const std::vector<model::MemoPtr>& memos)
-{
-    memos_ = memos;
 }
 
 const std::map<unsigned long, model::TagPtr>& ListMemoResponseData::tags() const
@@ -29,39 +19,60 @@ const std::map<unsigned long, model::TagPtr>& ListMemoResponseData::tags() const
     return tags_;
 }
 
-void ListMemoResponseData::setTags(const std::map<unsigned long, model::TagPtr>& tags)
-{
-    tags_ = tags;
-}
-
 size_t ListMemoResponseData::totalCount() const
 {
-    return total_count_;
-}
-
-void ListMemoResponseData::setTotalCount(size_t totalCount)
-{
-    total_count_ = totalCount;
+    return totalCount_;
 }
 
 const std::string& ListMemoResponseData::prevPageToken() const
 {
-    return prev_page_token;
-}
-
-void ListMemoResponseData::setPrevPageToken(const std::string& prevPageToken)
-{
-    prev_page_token = prevPageToken;
+    return prevPageToken_;
 }
 
 const std::string& ListMemoResponseData::nextPageToken() const
 {
-    return next_page_token;
+    return nextPageToken_;
 }
 
-void ListMemoResponseData::setNextPageToken(const std::string& nextPageToken)
+ListMemoResponseDataBuilder& ListMemoResponseDataBuilder::setRequestUuid(const std::string& requestUuid)
 {
-    next_page_token = nextPageToken;
+    data_.requestUuid_ = requestUuid;
+    return *this;
+}
+
+ListMemoResponseDataBuilder& ListMemoResponseDataBuilder::setMemos(const std::vector<model::MemoPtr>& memos)
+{
+    data_.memos_ = memos;
+    return *this;
+}
+
+ListMemoResponseDataBuilder& ListMemoResponseDataBuilder::setTags(const std::map<unsigned long, model::TagPtr>& tags)
+{
+    data_.tags_ = tags;
+    return *this;
+}
+
+ListMemoResponseDataBuilder& ListMemoResponseDataBuilder::setTotalCount(size_t totalCount)
+{
+    data_.totalCount_ = totalCount;
+    return *this;
+}
+
+ListMemoResponseDataBuilder& ListMemoResponseDataBuilder::setPrevPageToken(const std::string& prevPageToken)
+{
+    data_.prevPageToken_ = prevPageToken;
+    return *this;
+}
+
+ListMemoResponseDataBuilder& ListMemoResponseDataBuilder::setNextPageToken(const std::string& nextPageToken)
+{
+    data_.nextPageToken_ = nextPageToken;
+    return *this;
+}
+
+ListMemoResponseData ListMemoResponseDataBuilder::build() const
+{
+    return data_;
 }
 
 } // namespace memo::remote
