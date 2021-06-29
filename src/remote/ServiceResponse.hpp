@@ -154,7 +154,7 @@ public:
         return *this;
     }
 
-    const ResponseType& setData(const ResponseType& data)
+    ServiceResponseBuilder& setData(const ResponseType& data)
     {
         response_.setData(data);
         return *this;
