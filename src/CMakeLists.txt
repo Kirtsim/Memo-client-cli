@@ -18,6 +18,8 @@ target_sources(${exe_lib}
         ${src_dir}/ncurses/keys.cpp
         ${src_dir}/ncurses/SubWindow.cpp
         ${src_dir}/ncurses/Window.cpp
+        ${src_dir}/remote/ListMemosCall.cpp
+        ${src_dir}/remote/AddMemoCall.cpp
         ${src_dir}/remote/ListMemoCall.cpp
         ${src_dir}/remote/MemoCreateCall.cpp
         ${src_dir}/remote/MemoDao.cpp
@@ -63,6 +65,8 @@ target_sources(${exe_lib}
         ${src_dir}/ncurses/keys.hpp
         ${src_dir}/remote/Call.hpp
         ${src_dir}/remote/BaseCall.hpp
+        ${src_dir}/remote/ListMemosCall.hpp
+        ${src_dir}/remote/AddMemoCall.hpp
         ${src_dir}/remote/ListMemoCall.hpp
         ${src_dir}/remote/MemoCreateCall.hpp
         ${src_dir}/remote/MemoDao.hpp
