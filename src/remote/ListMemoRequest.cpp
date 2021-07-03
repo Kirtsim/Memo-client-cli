@@ -17,7 +17,7 @@ int ListMemoRequest::pageSize() const
     return pageSize_;
 }
 
-MemoView ListMemoRequest::memoView() const
+ModelView ListMemoRequest::memoView() const
 {
     return memoView_;
 }
@@ -42,7 +42,7 @@ void ListMemoRequest::setPageSize(int pageSize)
     pageSize_ = pageSize;
 }
 
-void ListMemoRequest::setMemoView(MemoView memoView)
+void ListMemoRequest::setMemoView(ModelView memoView)
 {
     memoView_ = memoView;
 }
@@ -74,7 +74,7 @@ ListMemoRequestBuilder& ListMemoRequestBuilder::setPageSize(int pageSize)
     return *this;
 }
 
-ListMemoRequestBuilder& ListMemoRequestBuilder::setMemoView(MemoView memoView)
+ListMemoRequestBuilder& ListMemoRequestBuilder::setMemoView(ModelView memoView)
 {
     request_.setMemoView(memoView);
     return *this;

@@ -48,6 +48,7 @@ target_sources(${exe_lib}
         ${src_dir}/model/Tag.cpp
     PUBLIC
         ${src_dir}/remote/RemoteDefs.hpp
+        ${src_dir}/remote/ServiceEnums.hpp
     INTERFACE
         ${src_dir}/Client.hpp
         ${src_dir}/context/Resources.hpp

@@ -1,5 +1,5 @@
 #pragma once
-
+#include "remote/ServiceEnums.hpp"
 #include <string>
 #include <vector>
 
@@ -32,7 +32,7 @@ public:
 
     int pageSize() const;
 
-    MemoView memoView() const;
+    ModelView memoView() const;
 
     const std::string& pageToken() const;
 
@@ -43,7 +43,7 @@ private:
 
     void setPageSize(int pageSize);
 
-    void setMemoView(MemoView memoView);
+    void setMemoView(ModelView memoView);
 
     void setPageToken(const std::string& pageToken);
 
@@ -51,7 +51,7 @@ private:
     std::string uuid_;
     MemoFilter filter_;
     int pageSize_;
-    MemoView memoView_;
+    ModelView memoView_;
     std::string pageToken_;
 };
 
@@ -64,7 +64,7 @@ public:
 
     ListMemoRequestBuilder& setPageSize(int pageSize);
 
-    ListMemoRequestBuilder& setMemoView(MemoView memoView);
+    ListMemoRequestBuilder& setMemoView(ModelView memoView);
 
     ListMemoRequestBuilder& setPageToken(const std::string& pageToken);
 

@@ -1,14 +1,10 @@
 #pragma once
 #include "remote/RemoteDefs.hpp"
+#include "remote/ServiceEnums.hpp"
 #include <string>
 #include <memory>
 
 namespace memo::remote {
-
-enum Status
-{
-    kSuccess, kWarning, kError
-};
 
 template <class ResponseType>
 class IServiceResponse
@@ -18,7 +14,7 @@ public:
 
     virtual int code() const = 0;
 
-    virtual Status status() const = 0;
+    virtual ResponseStatus status() const = 0;
 
     virtual const std::string& statusMessage() const = 0 ;
 
@@ -39,7 +35,7 @@ public:
 
     int code() const override;
 
-    Status status() const override;
+    ResponseStatus status() const override;
 
     const std::string& statusMessage() const override;
 
@@ -49,7 +45,7 @@ public:
 
 private:
     int code_ = 0;
-    Status status_ = kError;
+    ResponseStatus status_ = kError;
     std::string statusMessage_;
     std::string requestId_;
     ResponseType data_;
@@ -62,7 +58,7 @@ int ServiceResponseImpl<ResponseType>::code() const
 }
 
 template<class ResponseType>
-Status ServiceResponseImpl<ResponseType>::status() const
+ResponseStatus ServiceResponseImpl<ResponseType>::status() const
 {
     return status_;
 }
@@ -95,7 +91,7 @@ public:
         return *this;
     }
 
-    ServiceResponseBuilder& setStatus(Status status)
+    ServiceResponseBuilder& setStatus(ResponseStatus status)
     {
         response_.status_ = status;
         return *this;
