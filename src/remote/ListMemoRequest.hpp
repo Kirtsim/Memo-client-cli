@@ -8,17 +8,11 @@ namespace memo::remote {
 struct MemoFilter
 {
     std::string titleStartsWith;
-    std::string titleContains;
-    std::string contains;
-    std::vector<unsigned long> taggedBy_;
+    std::vector<std::string> titleContains;
+    std::vector<std::string> contains;
+    std::vector<unsigned long> taggedBy;
     unsigned long dateFrom;
     unsigned long dateUntil;
-};
-
-enum MemoView
-{
-    MINIMAL,     // Memo will contain Id, Title and timestamp
-    COMPLETE     // Memo will contain all of its fields
 };
 
 class ListMemoRequest
