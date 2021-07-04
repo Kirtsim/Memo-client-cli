@@ -31,6 +31,7 @@ target_sources(${exe_lib}
         ${src_dir}/remote/factory/MemoCallFactory.cpp
         ${src_dir}/utils/Structs.cpp
         ${src_dir}/utils/ModelMapper.cpp
+        ${src_dir}/remote/utils/Mapping.cpp
         ${src_dir}/view/BaseComponent.cpp
         ${src_dir}/view/BaseView.cpp
         ${src_dir}/view/MemoCreateView.cpp
@@ -77,6 +78,7 @@ target_sources(${exe_lib}
         ${src_dir}/remote/ListMemoResponseData.hpp
         ${src_dir}/remote/AddMemoRequest.hpp
         ${src_dir}/remote/AddMemoResponseData.hpp
+        ${src_dir}/remote/utils/Mapping.hpp
         ${src_dir}/remote/factory/MemoCallFactory.hpp
         ${src_dir}/utils/Enums.hpp
         ${src_dir}/utils/Structs.hpp
