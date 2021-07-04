@@ -3,7 +3,7 @@
 namespace memo {
 namespace Memo {
 
-model::Memo ToModel(const proto::Memo& proto, std::map<unsigned long, model::TagPtr>& tags)
+model::Memo ToModel(const proto::Memo& proto, const std::map<unsigned long, model::TagPtr>& tags)
 {
     model::Memo memo;
     memo.setId(proto.id());
