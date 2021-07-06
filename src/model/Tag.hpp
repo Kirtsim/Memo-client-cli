@@ -8,6 +8,10 @@ struct Colour
     int red;
     int green;
     int blue;
+
+    bool operator==(const Colour& other) const;
+
+    bool operator!=(const Colour& other) const;
 };
 
 class Tag
@@ -24,6 +28,10 @@ public:
 
     unsigned long timestamp() const;
     void setTimestamp(unsigned long timestamp);
+
+    bool operator==(const Tag& other) const;
+
+    bool operator!=(const Tag& other) const;
 
 private:
     unsigned long id_;
