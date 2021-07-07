@@ -1,4 +1,5 @@
 #pragma once
+#include "model/ModelDefs.hpp"
 #include <string>
 
 namespace memo::model {
@@ -39,5 +40,15 @@ private:
     Colour colour_;
     unsigned long timestamp_;
 };
+
+namespace memo::utils {
+
+/// @brief Compares the two vectors and determines if they contain the same tags.
+/// Performs a deep comparison.
+///
+/// @return true if all tags in the first vector are present in the other vector, false otherwise.
+bool CompareTags(const std::vector<model::TagPtr>& tags, const std::vector<model::TagPtr>& otherTags);
+
+} // namespace memo::utils
 
 } // namespace memo::model
