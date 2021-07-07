@@ -24,6 +24,10 @@ public:
     unsigned long timestamp() const;
     void setTimestamp(unsigned long timestamp);
 
+    bool operator==(const Memo& other);
+
+    bool operator!=(const Memo& other);
+
 private:
     unsigned long id_;
     std::string title_;
