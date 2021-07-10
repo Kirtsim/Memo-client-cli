@@ -43,6 +43,7 @@ namespace Tag {
 model::Tag ToModel(const proto::Tag& proto)
 {
     model::Tag tag;
+    tag.setId(proto.id());
     tag.setName(proto.name());
     tag.setTimestamp(proto.timestamp());
     const auto& protoColour = proto.colour();
