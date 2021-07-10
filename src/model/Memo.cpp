@@ -59,7 +59,7 @@ void Memo::setTimestamp(const unsigned long timestamp)
     timestamp_ = timestamp;
 }
 
-bool Memo::operator==(const Memo& other)
+bool Memo::operator==(const Memo& other) const
 {
     return id_ == other.id_
         && timestamp_ == other.timestamp_
@@ -68,7 +68,7 @@ bool Memo::operator==(const Memo& other)
         && memo::utils::CompareTags(tags_, other.tags_);
 }
 
-bool Memo::operator!=(const Memo& other)
+bool Memo::operator!=(const Memo& other) const
 {
     return !(*this == other);
 }

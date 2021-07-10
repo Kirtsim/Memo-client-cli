@@ -24,9 +24,9 @@ public:
     unsigned long timestamp() const;
     void setTimestamp(unsigned long timestamp);
 
-    bool operator==(const Memo& other);
+    bool operator==(const Memo& other) const;
 
-    bool operator!=(const Memo& other);
+    bool operator!=(const Memo& other) const;
 
 private:
     unsigned long id_;
