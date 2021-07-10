@@ -40,6 +40,7 @@ private:
     Colour colour_;
     unsigned long timestamp_;
 };
+} // namespace memo::model
 
 namespace memo::utils {
 
@@ -51,4 +52,3 @@ bool CompareTags(const std::vector<model::TagPtr>& tags, const std::vector<model
 
 } // namespace memo::utils
 
-} // namespace memo::model
