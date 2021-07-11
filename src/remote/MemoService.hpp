@@ -5,6 +5,7 @@ namespace memo::remote {
 
 class ListMemoRequest;
 class AddMemoRequest;
+class MemoCallFactory;
 
 class IMemoService
 {
@@ -23,9 +24,16 @@ public:
 class MemoServiceImpl : public IMemoService
 {
 public:
+    static std::shared_ptr<MemoServiceImpl> Create(std::unique_ptr<MemoCallFactory> callFactory);
+
+    explicit MemoServiceImpl(std::unique_ptr<MemoCallFactory> callFactory);
+
     ListMemoResponsePtr listMemos(const ListMemoRequest& request) override;
 
     AddMemoResponsePtr addMemo(const AddMemoRequest& request) override;
+
+private:
+    std::unique_ptr<MemoCallFactory> callFactory_;
 };
 
 
