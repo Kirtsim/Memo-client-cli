@@ -26,6 +26,7 @@ public:
 
 private:
     std::shared_ptr<proto::MemoSvc::Stub> memoStub_;
+    std::shared_ptr<proto::MemoService::Stub> memoServiceStub_;
     std::shared_ptr<proto::TagSvc::Stub>  tagStub_;
     std::shared_ptr<manager::ControllerManager> controllerManager_;
     std::shared_ptr<IResources> resources_;
