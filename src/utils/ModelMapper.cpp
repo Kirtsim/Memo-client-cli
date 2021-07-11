@@ -12,7 +12,7 @@ model::Memo ToModel(const proto::Memo& proto, const std::map<unsigned long, mode
     for (const auto& tagId : proto.tag_ids())
     {
         auto iter = tags.find(tagId);
-        if (iter != std::end(tags))
+        if (iter != std::end(tags) && iter->second)
             memo.addTag(iter->second);
     }
     memo.setTimestamp(proto.timestamp());
