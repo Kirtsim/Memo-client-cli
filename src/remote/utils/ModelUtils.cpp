@@ -21,7 +21,6 @@ std::vector<model::MemoPtr> ExtractMemos(const proto::ListMemosRs& memoResponse,
         memos.emplace_back(std::make_shared<model::Memo>(memo));
     }
     return memos;
-    // TODO: write unit-tests for these lovely functions :* and refactor MemoService
 }
 
 std::map<unsigned long, model::TagPtr> ExtractMappedTags(const proto::ListMemosRs& memoResponse)
