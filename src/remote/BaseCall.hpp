@@ -56,8 +56,8 @@ bool BaseCall<Stub, Reply>::exec()
     reader_ = makeCall(stub_, *context_, completionQueue_);
     if (!reader_)
     {
-        std::cerr << "Reader is null. Terminating program." << std::endl;
-        std::exit(1);
+        // TODO: log failure
+        return false;
     }
     reader_->StartCall();
     reader_->Finish(&reply_, &status_, (void*)this);
@@ -66,9 +66,11 @@ bool BaseCall<Stub, Reply>::exec()
     bool status = false;
 
     // block the main thread until a response arrives
-    completionQueue_.Next(&tag, &status);
+    completionQueue_.Next(&tag, &status); // status always true according to the documentation
     if (!status)
-        std::cerr << "GRPC failed." << std::endl;
+    {
+        // TODO: log failure
+    }
     return status;
 }
 
