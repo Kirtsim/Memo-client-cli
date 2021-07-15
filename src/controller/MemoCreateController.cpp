@@ -3,12 +3,20 @@
 #include "view/tools/StringTools.hpp"
 #include "manager/ControllerManager.hpp"
 #include "remote/MemoDao.hpp"
+#include "remote/MemoService.hpp"
+#include "remote/AddMemoRequest.hpp"
+#include "remote/ServiceResponse.hpp"
 #include "model/Tag.hpp"
 #include "model/ModelDefs.hpp"
 
 #include "ncurses/keys.hpp"
 
+#include <ctime>
+
 namespace memo::ctrl {
+#ifndef FEATURE_DEVEL
+#define FEATURE_DEVEL true
+#endif
 
 class TextEditKeyFilter : public ui::KeyFilter
 {
@@ -89,7 +97,28 @@ bool MemoCreateController::saveMemoDetails()
 {
     if (!checkMemoTitleAvailability(view()->memoTitle()))
         return false;
+#if FEATURE_DEVEL
+    auto memo = std::make_shared<model::Memo>();
+    memo->setTitle(view()->memoTitle());
+    memo->setDescription(view()->memoDescription());
+    memo->setTimestamp(static_cast<unsigned long>(std::time(nullptr)));
+    // TODO: also set the tags.
+    remote::AddMemoRequestBuilder requestBuilder;
+    requestBuilder.setRequestUuid("abcd-efgh-ijkl-mnop")
+                  .setMemo(memo);
+    auto memoService = getResources()->memoService();
+    if (!memoService) return false;
 
+    auto response = memoService->addMemo(requestBuilder.build());
+    if (!response || response->status() != remote::ResponseStatus::kSuccess)
+    {
+        // TODO: handle this scenario. Log + display a message to the user.
+        return false;
+    }
+    // TODO: update current memo. Add it to the list of memos held in memory. Inform the user
+    // about the success.
+    return true; //response->status() == remote::ResponseStatus::kSuccess;
+#else
     if (auto memoDao = getResources()->memoDao())
     {
         proto::Memo memo;
@@ -109,6 +138,7 @@ bool MemoCreateController::saveMemoDetails()
         return response.IsInitialized()
             && response.operation_status().type() == proto::OperationStatus::SUCCESS;
     }
+#endif
     return false;
 }
 
