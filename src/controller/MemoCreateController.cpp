@@ -2,10 +2,10 @@
 #include "view/widget/TextEditView.hpp"
 #include "view/tools/StringTools.hpp"
 #include "manager/ControllerManager.hpp"
-#include "remote/MemoDao.hpp"
 #include "remote/MemoService.hpp"
 #include "remote/AddMemoRequest.hpp"
 #include "remote/ServiceResponse.hpp"
+#include "model/Memo.hpp"
 #include "model/Tag.hpp"
 #include "model/ModelDefs.hpp"
 
@@ -14,9 +14,6 @@
 #include <ctime>
 
 namespace memo::ctrl {
-#ifndef FEATURE_DEVEL
-#define FEATURE_DEVEL true
-#endif
 
 class TextEditKeyFilter : public ui::KeyFilter
 {
@@ -97,7 +94,6 @@ bool MemoCreateController::saveMemoDetails()
 {
     if (!checkMemoTitleAvailability(view()->memoTitle()))
         return false;
-#if FEATURE_DEVEL
     auto memo = std::make_shared<model::Memo>();
     memo->setTitle(view()->memoTitle());
     memo->setDescription(view()->memoDescription());
@@ -118,28 +114,6 @@ bool MemoCreateController::saveMemoDetails()
     // TODO: update current memo. Add it to the list of memos held in memory. Inform the user
     // about the success.
     return true; //response->status() == remote::ResponseStatus::kSuccess;
-#else
-    if (auto memoDao = getResources()->memoDao())
-    {
-        proto::Memo memo;
-        memo.set_title(view()->memoTitle());
-        memo.set_description(view()->memoDescription());
-
-        const auto tagsString = view()->memoTags();
-        const auto tagNames = tools::splitText(tagsString, "#");
-        const auto tags = fetchTags(tagNames);
-        for (const auto& tag : tags)
-        {
-            if (tag)
-                memo.add_tag_ids(tag->id());
-        }
-        const auto response = memoDao->add(memo);
-        // TODO: Do something with the ID
-        return response.IsInitialized()
-            && response.operation_status().type() == proto::OperationStatus::SUCCESS;
-    }
-#endif
-    return false;
 }
 
 std::vector<model::TagPtr> MemoCreateController::fetchTags(const std::vector<std::string>& /*tagNames*/) const

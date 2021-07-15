@@ -20,9 +20,6 @@ target_sources(${exe_lib}
         ${src_dir}/ncurses/Window.cpp
         ${src_dir}/remote/ListMemosCall.cpp
         ${src_dir}/remote/AddMemoCall.cpp
-        ${src_dir}/remote/ListMemoCall.cpp
-        ${src_dir}/remote/MemoCreateCall.cpp
-        ${src_dir}/remote/MemoDao.cpp
         ${src_dir}/remote/MemoService.cpp
         ${src_dir}/remote/ListMemoRequest.cpp
         ${src_dir}/remote/ListMemoResponseData.cpp
@@ -70,9 +67,6 @@ target_sources(${exe_lib}
         ${src_dir}/remote/BaseCall.hpp
         ${src_dir}/remote/ListMemosCall.hpp
         ${src_dir}/remote/AddMemoCall.hpp
-        ${src_dir}/remote/ListMemoCall.hpp
-        ${src_dir}/remote/MemoCreateCall.hpp
-        ${src_dir}/remote/MemoDao.hpp
         ${src_dir}/remote/MemoService.hpp
         ${src_dir}/remote/ServiceResponse.hpp
         ${src_dir}/remote/ListMemoRequest.hpp

@@ -1,7 +1,6 @@
 #include "controller/SearchController.hpp"
 #include "ncurses/functions.hpp"
 #include "ncurses/keys.hpp"
-#include "remote/MemoDao.hpp"
 #include "remote/MemoService.hpp"
 #include "remote/ListMemoRequest.hpp"
 #include "remote/ServiceResponse.hpp"
@@ -9,11 +8,8 @@
 #include "remote/ServiceEnums.hpp"
 #include "view/widget/ListView.hpp"
 
-namespace memo::ctrl {
 
-#ifndef NEW_LIST_MEMOS
-#define NEW_LIST_MEMOS
-#endif
+namespace memo::ctrl {
 
 class TestListItem : public ui::ListItem
 {
@@ -43,7 +39,6 @@ SearchController::SearchController(const ResourcesPtr_t& resources)
 
 void SearchController::fetchMemos()
 {
-#ifdef NEW_LIST_MEMOS
     std::vector<ui::ListItemPtr> memoTitles;
     auto memoService = getResources()->memoService();
     if (!memoService)
@@ -68,15 +63,7 @@ void SearchController::fetchMemos()
     {
         //TODO: log an error + show the user a message that sth went wrong
     }
-#else
-    auto memoDao = getResources()->memoDao();
-    auto memos = memoDao->fetchAll();
-    std::transform(memos.begin(), memos.end(), std::back_inserter(memoTitles),
-        [](const proto::Memo& memo)
-        {
-            return std::make_shared<TestListItem>(memo.title());
-        });
-#endif
+
     if (auto rootView = view())
     {
         rootView->memoListView()->setItems(memoTitles);
