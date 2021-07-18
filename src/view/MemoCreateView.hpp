@@ -30,8 +30,6 @@ public:
     MemoCreateView(const MemoCreateView&&) = delete;
     MemoCreateView& operator=(const MemoCreateView&) = delete;
 
-    void refresh() override;
-
     void readInput();
 
     void registerKeyFilter(const std::shared_ptr<KeyFilter>& keyFilter);

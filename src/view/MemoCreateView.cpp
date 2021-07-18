@@ -5,8 +5,7 @@
 #include "ncurses/functions.hpp"
 #include "utils/Enums.hpp"
 
-namespace memo {
-namespace ui {
+namespace memo::ui {
 
 namespace {
     bool isAButton(MemoCreateView::SubView subView);
@@ -80,11 +79,6 @@ MemoCreateView::MemoCreateView(const Size& size, const Position& position, IComp
 }
 
 MemoCreateView::~MemoCreateView() = default;
-
-void MemoCreateView::refresh()
-{
-    BaseView::refresh();
-}
 
 void MemoCreateView::readInput()
 {
@@ -235,5 +229,4 @@ namespace {
     }
 } // namespace
 
-} // namespace ui
-} // namespace memo
+} // namespace memo::ui
