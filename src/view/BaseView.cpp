@@ -25,6 +25,8 @@ BaseView::BaseView(const Size& size, const Position& position, IComponent* paren
 
 BaseView::~BaseView()
 {
+    this->parentRequestOnRefresh();
+    this->setParent(nullptr);
 }
 
 void BaseView::saveState()
