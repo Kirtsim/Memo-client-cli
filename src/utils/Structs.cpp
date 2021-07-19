@@ -35,7 +35,7 @@ bool Size::operator==(const Size& other) const
 
 bool Size::operator!=(const Size& other) const
 {
-    return width != other.width && height != other.height;
+    return !(*this == other);
 }
 
 Position::Position() : x(0), y(0)
@@ -55,7 +55,7 @@ bool Position::operator==(const Position& other) const
 
 bool Position::operator!=(const Position& other) const
 {
-    return x != other.x && y != other.y;
+    return !(*this == other);
 }
 
 Rect::Rect(const Position& pos)
