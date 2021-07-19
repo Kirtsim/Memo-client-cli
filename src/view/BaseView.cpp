@@ -39,6 +39,7 @@ void BaseView::refresh()
 
     if (needsRefresh_)
     {
+        beforeViewResized();
         window_->setSize(getSize());
         window_->setPosition(getAbsPosition());
 
