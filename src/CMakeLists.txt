@@ -25,6 +25,7 @@ target_sources(${exe_lib}
         ${src_dir}/remote/ListMemoResponseData.cpp
         ${src_dir}/remote/AddMemoRequest.cpp
         ${src_dir}/remote/AddMemoResponseData.cpp
+        ${src_dir}/remote/TagService.cpp
         ${src_dir}/remote/utils/ModelUtils.cpp
         ${src_dir}/remote/factory/MemoCallFactory.cpp
         ${src_dir}/utils/Structs.cpp
@@ -74,6 +75,7 @@ target_sources(${exe_lib}
         ${src_dir}/remote/ListMemoResponseData.hpp
         ${src_dir}/remote/AddMemoRequest.hpp
         ${src_dir}/remote/AddMemoResponseData.hpp
+        ${src_dir}/remote/TagService.hpp
         ${src_dir}/remote/utils/ModelUtils.hpp
         ${src_dir}/remote/utils/Mapping.hpp
         ${src_dir}/remote/factory/MemoCallFactory.hpp

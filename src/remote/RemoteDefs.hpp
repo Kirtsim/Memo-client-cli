@@ -20,4 +20,14 @@ using AddMemoResponse = IServiceResponse<AddMemoResponseData>;
 using AddMemoResponseImpl = ServiceResponseImpl<AddMemoResponseData>;
 using AddMemoResponsePtr = std::shared_ptr<AddMemoResponse>;
 
+
+class ListTagsResponseData;
+using ListTagsResponse = IServiceResponse<ListTagsResponseData>;
+using ListTagsResponseImpl = ServiceResponseImpl<ListTagsResponseData>;
+using ListTagsResponsePtr = std::shared_ptr<ListTagsResponse>;
+
+class AddTagResponseData;
+using AddTagResponse = IServiceResponse<AddTagResponseData>;
+using AddTagResponseImpl = ServiceResponseImpl<AddTagResponseData>;
+using AddTagResponsePtr = std::shared_ptr<AddTagResponse>;
 } // namespace memo::remote
