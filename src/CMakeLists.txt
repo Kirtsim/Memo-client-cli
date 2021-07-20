@@ -34,6 +34,7 @@ target_sources(${exe_lib}
         ${src_dir}/remote/AddTagCall.cpp
         ${src_dir}/remote/utils/ModelUtils.cpp
         ${src_dir}/remote/factory/MemoCallFactory.cpp
+        ${src_dir}/remote/factory/TagCallFactory.cpp
         ${src_dir}/utils/Structs.cpp
         ${src_dir}/utils/ModelMapper.cpp
         ${src_dir}/remote/utils/Mapping.cpp
@@ -91,6 +92,7 @@ target_sources(${exe_lib}
         ${src_dir}/remote/utils/ModelUtils.hpp
         ${src_dir}/remote/utils/Mapping.hpp
         ${src_dir}/remote/factory/MemoCallFactory.hpp
+        ${src_dir}/remote/factory/TagCallFactory.hpp
         ${src_dir}/utils/Enums.hpp
         ${src_dir}/utils/Structs.hpp
         ${src_dir}/utils/ModelMapper.hpp
