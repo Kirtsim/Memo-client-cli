@@ -24,6 +24,8 @@ public:
 class MemoServiceImpl : public IMemoService
 {
 public:
+    ~MemoServiceImpl() override;
+
     static std::shared_ptr<MemoServiceImpl> Create(std::unique_ptr<MemoCallFactory> callFactory);
 
     explicit MemoServiceImpl(std::unique_ptr<MemoCallFactory> callFactory);

@@ -16,6 +16,8 @@
 
 namespace memo::remote {
 
+MemoServiceImpl::~MemoServiceImpl() = default;
+
 std::shared_ptr<MemoServiceImpl> MemoServiceImpl::Create(std::unique_ptr<MemoCallFactory> callFactory)
 {
     return std::make_shared<MemoServiceImpl>(std::move(callFactory));
