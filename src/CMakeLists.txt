@@ -30,6 +30,8 @@ target_sources(${exe_lib}
         ${src_dir}/remote/AddTagRequest.cpp
         ${src_dir}/remote/ListTagsResponseData.cpp
         ${src_dir}/remote/AddTagResponseData.cpp
+        ${src_dir}/remote/ListTagsCall.cpp
+        ${src_dir}/remote/AddTagCall.cpp
         ${src_dir}/remote/utils/ModelUtils.cpp
         ${src_dir}/remote/factory/MemoCallFactory.cpp
         ${src_dir}/utils/Structs.cpp
@@ -84,6 +86,8 @@ target_sources(${exe_lib}
         ${src_dir}/remote/AddTagRequest.hpp
         ${src_dir}/remote/ListTagsResponseData.hpp
         ${src_dir}/remote/AddTagResponseData.hpp
+        ${src_dir}/remote/ListTagsCall.hpp
+        ${src_dir}/remote/AddTagCall.hpp
         ${src_dir}/remote/utils/ModelUtils.hpp
         ${src_dir}/remote/utils/Mapping.hpp
         ${src_dir}/remote/factory/MemoCallFactory.hpp
