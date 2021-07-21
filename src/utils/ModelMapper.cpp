@@ -3,7 +3,7 @@
 namespace memo {
 namespace Memo {
 
-model::Memo ToModel(const proto::Memo& proto, std::map<unsigned long, model::TagPtr>& tags)
+model::Memo ToModel(const proto::Memo& proto, const std::map<unsigned long, model::TagPtr>& tags)
 {
     model::Memo memo;
     memo.setId(proto.id());
@@ -12,7 +12,7 @@ model::Memo ToModel(const proto::Memo& proto, std::map<unsigned long, model::Tag
     for (const auto& tagId : proto.tag_ids())
     {
         auto iter = tags.find(tagId);
-        if (iter != std::end(tags))
+        if (iter != std::end(tags) && iter->second)
             memo.addTag(iter->second);
     }
     memo.setTimestamp(proto.timestamp());
@@ -43,18 +43,24 @@ namespace Tag {
 model::Tag ToModel(const proto::Tag& proto)
 {
     model::Tag tag;
+    tag.setId(proto.id());
     tag.setName(proto.name());
-    tag.setColor(proto.color());
     tag.setTimestamp(proto.timestamp());
+    const auto& protoColour = proto.colour();
+    model::Colour colour { protoColour.red(), protoColour.green(), protoColour.blue() };
+    tag.setColour(colour);
     return tag;
 }
 
-proto::Tag ToProto(const model::Tag& proto)
+proto::Tag ToProto(const model::Tag& model)
 {
     proto::Tag tag;
-    tag.set_name(proto.name());
-    tag.set_color(proto.color());
-    tag.set_timestamp(proto.timestamp());
+    tag.set_name(model.name());
+    tag.set_timestamp(model.timestamp());
+    const auto& modelColour = model.colour();
+    tag.mutable_colour()->set_red(modelColour.red);
+    tag.mutable_colour()->set_green(modelColour.green);
+    tag.mutable_colour()->set_blue(modelColour.blue);
     return tag;
 }
 

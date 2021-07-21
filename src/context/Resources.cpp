@@ -1,23 +1,26 @@
 #include "context/Resources.hpp"
-#include "remote/MemoDao.hpp"
 
 namespace memo {
 
 std::shared_ptr<ResourcesImpl> ResourcesImpl::Create(
-    const ControllerManagerPtr& controllerManager,
-    const MemoDaoPtr& memoDao)
+        const ControllerManagerPtr& controllerManager,
+        const IMemoServicePtr& memoService,
+        const ITagServicePtr& tagService)
 {
     return std::make_shared<ResourcesImpl>(
         controllerManager,
-        memoDao
+        memoService,
+        tagService
     );
 }
 
 ResourcesImpl::ResourcesImpl(
     const ControllerManagerPtr& controllerManager,
-    const MemoDaoPtr& memoDao)
-    : controllerManager_(controllerManager)
-    , memoDao_(memoDao)
+    const IMemoServicePtr& memoService,
+    const ITagServicePtr& tagService)
+: controllerManager_(controllerManager)
+    , memoService_(memoService)
+    , tagService_(tagService)
 {
 }
 
@@ -26,8 +29,13 @@ const ControllerManagerPtr& ResourcesImpl::controllerManager()
     return controllerManager_;
 }
 
-const MemoDaoPtr& ResourcesImpl::memoDao()
+const IMemoServicePtr& ResourcesImpl::memoService()
 {
-    return memoDao_;
+    return memoService_;
+}
+
+const ITagServicePtr& ResourcesImpl::tagService()
+{
+    return tagService_;
 }
 } // namespace memo

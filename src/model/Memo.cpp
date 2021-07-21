@@ -1,5 +1,6 @@
 #include "model/Memo.hpp"
 #include "model/Tag.hpp"
+#include <set>
 
 namespace memo::model {
 
@@ -58,4 +59,17 @@ void Memo::setTimestamp(const unsigned long timestamp)
     timestamp_ = timestamp;
 }
 
+bool Memo::operator==(const Memo& other) const
+{
+    return id_ == other.id_
+        && timestamp_ == other.timestamp_
+        && title_ == other.title_
+        && description_ == other.description_
+        && memo::utils::CompareTags(tags_, other.tags_);
+}
+
+bool Memo::operator!=(const Memo& other) const
+{
+    return !(*this == other);
+}
 } // namespace memo::model

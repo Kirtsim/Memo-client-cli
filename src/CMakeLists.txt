@@ -18,12 +18,26 @@ target_sources(${exe_lib}
         ${src_dir}/ncurses/keys.cpp
         ${src_dir}/ncurses/SubWindow.cpp
         ${src_dir}/ncurses/Window.cpp
-        ${src_dir}/remote/ListMemoCall.cpp
-        ${src_dir}/remote/MemoCreateCall.cpp
-        ${src_dir}/remote/MemoDao.cpp
+        ${src_dir}/remote/ListMemosCall.cpp
+        ${src_dir}/remote/AddMemoCall.cpp
+        ${src_dir}/remote/MemoService.cpp
+        ${src_dir}/remote/ListMemoRequest.cpp
+        ${src_dir}/remote/ListMemoResponseData.cpp
+        ${src_dir}/remote/AddMemoRequest.cpp
+        ${src_dir}/remote/AddMemoResponseData.cpp
+        ${src_dir}/remote/TagService.cpp
+        ${src_dir}/remote/ListTagsRequest.cpp
+        ${src_dir}/remote/AddTagRequest.cpp
+        ${src_dir}/remote/ListTagsResponseData.cpp
+        ${src_dir}/remote/AddTagResponseData.cpp
+        ${src_dir}/remote/ListTagsCall.cpp
+        ${src_dir}/remote/AddTagCall.cpp
+        ${src_dir}/remote/utils/ModelUtils.cpp
         ${src_dir}/remote/factory/MemoCallFactory.cpp
+        ${src_dir}/remote/factory/TagCallFactory.cpp
         ${src_dir}/utils/Structs.cpp
         ${src_dir}/utils/ModelMapper.cpp
+        ${src_dir}/remote/utils/Mapping.cpp
         ${src_dir}/view/BaseComponent.cpp
         ${src_dir}/view/BaseView.cpp
         ${src_dir}/view/MemoCreateView.cpp
@@ -37,8 +51,12 @@ target_sources(${exe_lib}
         ${src_dir}/view/widget/ListView.cpp
         ${src_dir}/view/widget/TextEditView.cpp
         ${src_dir}/view/widget/TextView.cpp
+        ${src_dir}/view/dialog/ConfirmDialog.cpp
         ${src_dir}/model/Memo.cpp
         ${src_dir}/model/Tag.cpp
+    PUBLIC
+        ${src_dir}/remote/RemoteDefs.hpp
+        ${src_dir}/remote/ServiceEnums.hpp
     INTERFACE
         ${src_dir}/Client.hpp
         ${src_dir}/context/Resources.hpp
@@ -56,10 +74,25 @@ target_sources(${exe_lib}
         ${src_dir}/ncurses/keys.hpp
         ${src_dir}/remote/Call.hpp
         ${src_dir}/remote/BaseCall.hpp
-        ${src_dir}/remote/ListMemoCall.hpp
-        ${src_dir}/remote/MemoCreateCall.hpp
-        ${src_dir}/remote/MemoDao.hpp
+        ${src_dir}/remote/ListMemosCall.hpp
+        ${src_dir}/remote/AddMemoCall.hpp
+        ${src_dir}/remote/MemoService.hpp
+        ${src_dir}/remote/ServiceResponse.hpp
+        ${src_dir}/remote/ListMemoRequest.hpp
+        ${src_dir}/remote/ListMemoResponseData.hpp
+        ${src_dir}/remote/AddMemoRequest.hpp
+        ${src_dir}/remote/AddMemoResponseData.hpp
+        ${src_dir}/remote/TagService.hpp
+        ${src_dir}/remote/ListTagsRequest.hpp
+        ${src_dir}/remote/AddTagRequest.hpp
+        ${src_dir}/remote/ListTagsResponseData.hpp
+        ${src_dir}/remote/AddTagResponseData.hpp
+        ${src_dir}/remote/ListTagsCall.hpp
+        ${src_dir}/remote/AddTagCall.hpp
+        ${src_dir}/remote/utils/ModelUtils.hpp
+        ${src_dir}/remote/utils/Mapping.hpp
         ${src_dir}/remote/factory/MemoCallFactory.hpp
+        ${src_dir}/remote/factory/TagCallFactory.hpp
         ${src_dir}/utils/Enums.hpp
         ${src_dir}/utils/Structs.hpp
         ${src_dir}/utils/ModelMapper.hpp
@@ -77,6 +110,7 @@ target_sources(${exe_lib}
         ${src_dir}/view/widget/ListView.hpp
         ${src_dir}/view/widget/TextEditView.hpp
         ${src_dir}/view/widget/TextView.hpp
+        ${src_dir}/view/dialog/ConfirmDialog.hpp
         ${src_dir}/model/Memo.hpp
         ${src_dir}/model/Tag.hpp
         ${src_dir}/model/ModelDefs.hpp

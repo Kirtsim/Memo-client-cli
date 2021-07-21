@@ -1,12 +1,18 @@
 #include "controller/MemoCreateController.hpp"
 #include "view/widget/TextEditView.hpp"
+#include "view/dialog/ConfirmDialog.hpp"
 #include "view/tools/StringTools.hpp"
 #include "manager/ControllerManager.hpp"
-#include "remote/MemoDao.hpp"
+#include "remote/MemoService.hpp"
+#include "remote/AddMemoRequest.hpp"
+#include "remote/ServiceResponse.hpp"
+#include "model/Memo.hpp"
 #include "model/Tag.hpp"
 #include "model/ModelDefs.hpp"
 
 #include "ncurses/keys.hpp"
+
+#include <ctime>
 
 namespace memo::ctrl {
 
@@ -89,27 +95,29 @@ bool MemoCreateController::saveMemoDetails()
 {
     if (!checkMemoTitleAvailability(view()->memoTitle()))
         return false;
+    auto memo = std::make_shared<model::Memo>();
+    memo->setTitle(view()->memoTitle());
+    memo->setDescription(view()->memoDescription());
+    memo->setTimestamp(static_cast<unsigned long>(std::time(nullptr)));
+    // TODO: also set the tags.
+    remote::AddMemoRequestBuilder requestBuilder;
+    requestBuilder.setRequestUuid("abcd-efgh-ijkl-mnop")
+                  .setMemo(memo);
+    auto memoService = getResources()->memoService();
+    if (!memoService) return false;
 
-    if (auto memoDao = getResources()->memoDao())
+    auto response = memoService->addMemo(requestBuilder.build());
+    if (!response || response->status() != remote::ResponseStatus::kSuccess)
     {
-        proto::Memo memo;
-        memo.set_title(view()->memoTitle());
-        memo.set_description(view()->memoDescription());
-
-        const auto tagsString = view()->memoTags();
-        const auto tagNames = tools::splitText(tagsString, "#");
-        const auto tags = fetchTags(tagNames);
-        for (const auto& tag : tags)
-        {
-            if (tag)
-                memo.add_tag_ids(tag->id());
-        }
-        const auto response = memoDao->add(memo);
-        // TODO: Do something with the ID
-        return response.IsInitialized()
-            && response.operation_status().status() == proto::OperationStatus::SUCCESS;
+        // TODO: Log a message.
+        ui::ConfirmDialog::Display("Memo could not be created.", getView().get());
+        return false;
     }
-    return false;
+
+    ui::ConfirmDialog::Display("Memo created successfully.", getView().get());
+    // TODO: update current memo. Add it to the list of memos held in memory. Inform the user
+    // about the success.
+    return true; //response->status() == remote::ResponseStatus::kSuccess;
 }
 
 std::vector<model::TagPtr> MemoCreateController::fetchTags(const std::vector<std::string>& /*tagNames*/) const

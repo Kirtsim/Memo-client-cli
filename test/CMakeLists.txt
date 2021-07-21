@@ -4,6 +4,7 @@ set(test_dir ${CMAKE_CURRENT_LIST_DIR})
 target_sources(${exe_test}
     PRIVATE
         ${test_dir}/main.cpp
+        ${test_dir}/remote/utils/TestModelUtils.inl
         ${test_dir}/view/tools/TestStringTools.inl
 )
 

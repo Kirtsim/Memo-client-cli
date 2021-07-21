@@ -18,11 +18,15 @@ public:
     void setDescription(const std::string& description);
 
     const std::vector<TagPtr>& tags() const;
-    void setTags(const std::vector<TagPtr>& tagNames);
+    void setTags(const std::vector<TagPtr>& tags);
     void addTag(const TagPtr& tagName);
 
     unsigned long timestamp() const;
     void setTimestamp(unsigned long timestamp);
+
+    bool operator==(const Memo& other) const;
+
+    bool operator!=(const Memo& other) const;
 
 private:
     unsigned long id_;
