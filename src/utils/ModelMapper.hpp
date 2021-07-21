@@ -19,7 +19,7 @@ namespace Tag {
 
 model::Tag ToModel(const proto::Tag& proto);
 
-proto::Tag ToProto(const model::Tag& proto);
+proto::Tag ToProto(const model::Tag& model);
 
 } // namespace Tag
 
