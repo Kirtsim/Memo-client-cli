@@ -1,5 +1,6 @@
 #include "remote/utils/ModelUtils.hpp"
 #include "MemoSvc.pb.h"
+#include "TagSvc.pb.h"
 #include "utils/ModelMapper.hpp"
 
 namespace memo::remote::utils {
@@ -31,6 +32,19 @@ std::map<unsigned long, model::TagPtr> ExtractMappedTags(const proto::ListMemosR
     {
         const auto tag = Tag::ToModel(protoTag);
         tags.insert({ id, std::make_shared<model::Tag>(tag) });
+    }
+    return tags;
+}
+
+std::vector<model::TagPtr> ExtractTags(const proto::ListTagsRs& tagResponse)
+{
+    std::vector<model::TagPtr> tags;
+
+    for (const auto& protoTag : tagResponse.tags())
+    {
+        const auto tag = Tag::ToModel(protoTag);
+        if (auto tagPtr = std::make_shared<model::Tag>(tag))
+            tags.emplace_back(tagPtr);
     }
     return tags;
 }

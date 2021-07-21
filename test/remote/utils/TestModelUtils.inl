@@ -4,6 +4,7 @@
 #include "model/Tag.hpp"
 #include "utils/ModelMapper.hpp"
 #include "MemoSvc.pb.h"
+#include "TagSvc.pb.h"
 #include <gtest/gtest.h>
 
 #include <iostream>
@@ -36,6 +37,8 @@ namespace {
     bool AreEqual(const model::MemoPtr& actual, const model::MemoPtr& expected, std::string& message);
 
     bool AreEqual(const TagMap& actual, const TagMap& expected, std::string& message);
+
+    bool AreEqual(const TagVector& actual, const TagVector& expected, std::string& message);
 
     bool AreEqual(const MemoVector& actual, const MemoVector& expected, std::string& message);
 
@@ -184,6 +187,31 @@ TEST(TestModelUtils, ExtractMemos_Response_is_missing_tag_Skip_that_tag)
     const auto actualMemos = remote::utils::ExtractMemos(grpcResponse);
     EXPECT_TRUE(AreEqual(actualMemos, expectedMemos, message)) << message;
 }
+
+TEST(TestModelUtils, ExtractTags_Return_proto_tags_converted_to_model_tags)
+{
+    const auto protoTagA = CreateProtoTag(1);
+    const auto protoTagB = CreateProtoTag(2);
+    const auto protoTagC = CreateProtoTag(3);
+    proto::ListTagsRs grpcResponse;
+    (*grpcResponse.add_tags()) = protoTagA;
+    (*grpcResponse.add_tags()) = protoTagB;
+    (*grpcResponse.add_tags()) = protoTagC;
+
+    const std::vector<model::TagPtr> expectedTags { ToTagPtr(protoTagA), ToTagPtr(protoTagB), ToTagPtr(protoTagC), };
+    const auto actualTags = remote::utils::ExtractTags(grpcResponse);
+
+    std::string message;
+    EXPECT_TRUE(AreEqual(actualTags, expectedTags, message)) << message;
+}
+
+TEST(TestModelUtils, ExtractTags_No_tags_in_response_Return_empty)
+{
+    proto::ListTagsRs grpcResponse;
+    const auto& actualTags = remote::utils::ExtractTags(grpcResponse);
+    EXPECT_EQ(actualTags.size(), 0ul);
+}
+
 namespace {
 
 model::TagPtr ToTagPtr(const proto::Tag& tag)
@@ -241,6 +269,24 @@ bool AreEqual(const TagMap& actual, const TagMap& expected, std::string& message
             return false;
         }
         if (!AreEqual(it->second, tagPtr, message))
+            return false;
+    }
+    return true;
+}
+
+bool AreEqual(const TagVector& actual, const TagVector& expected, std::string& message)
+{
+    if (actual.size() != expected.size())
+    {
+        message = std::string("Tag counts differ.")
+                  + "\n  Actual: " + std::to_string(actual.size())
+                  + "\n  Expected: " + std::to_string(expected.size());
+        return false;
+    }
+
+    for (size_t i = 0; i < expected.size(); ++i)
+    {
+        if (!AreEqual(actual[i], expected[i], message))
             return false;
     }
     return true;

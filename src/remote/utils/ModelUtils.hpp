@@ -5,6 +5,7 @@
 #include <vector>
 namespace memo::proto {
     class ListMemosRs;
+    class ListTagsRs;
 }
 namespace memo::remote::utils {
 
@@ -26,12 +27,15 @@ std::vector<model::MemoPtr> ExtractMemos(const proto::ListMemosRs& memoResponse)
 std::vector<model::MemoPtr> ExtractMemos(const proto::ListMemosRs& memoResponse,
                                          const std::map<unsigned long, model::TagPtr>& mappedTags);
 
-/// @brief Collects tags from a ListMemoRs an converts them into "model" tags.
+/// @brief Collects tags from a ListMemoRs and converts them into "model" tags.
 /// If the response comes without "proto" tags (still valid) the resulting map will
 /// be empty.
 /// @param memoResponse response from the ListMemos service call.
 /// @return a map where the key is the tag's id and the value is a tag pointer.
 std::map<unsigned long, model::TagPtr> ExtractMappedTags(const proto::ListMemosRs& memoResponse);
 
-
+/// @brief Collects tags from a ListTagsRs and converts them into a vector of 'model' tags.
+/// @param tagResponse Response containing 'proto' tags returned  by a server.
+/// @return a vector of model::Tag pointers. Does not return nullptr's.
+std::vector<model::TagPtr> ExtractTags(const proto::ListTagsRs& tagResponse);
 } // namespace memo::remote
