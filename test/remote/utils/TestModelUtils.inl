@@ -15,9 +15,14 @@ using namespace memo::remote;
 using namespace memo;
 
 using TagMap = std::map<unsigned long, model::TagPtr>;
+using TagVector = std::vector<model::TagPtr>;
 using MemoVector = std::vector<model::MemoPtr>;
 
 namespace {
+    model::TagPtr ToTagPtr(const proto::Tag& tag);
+
+    model::MemoPtr ToMemoPtr(const proto::Memo& memo, const TagMap& mappedTags);
+
     std::string PrettyPrint(const model::Tag& tag);
 
     std::string PrettyPrint(const model::Memo& memo);
@@ -47,8 +52,8 @@ TEST(TestModelUtils, extractMappedTags_Response_with_2_tags_Return_2_tags)
 
     auto mappedTags = remote::utils::ExtractMappedTags(grpcResponse);
 
-    auto expectedTagA = std::make_shared<model::Tag>(memo::Tag::ToModel(tagA));
-    auto expectedTagB = std::make_shared<model::Tag>(memo::Tag::ToModel(tagB));
+    auto expectedTagA = ToTagPtr(tagA);
+    auto expectedTagB = ToTagPtr(tagB);
 
     std::string failMsg;
     TagMap expectedTags { { tagA.id(), expectedTagA }, { tagB.id(), expectedTagB } };
@@ -75,11 +80,10 @@ TEST(TestModelUtils, ExtractMemos_All_response_tags_found_in_tag_map)
     (*grpcResponse.add_memos()) = protoMemoA;
     (*grpcResponse.add_memos()) = protoMemoB;
 
-    const TagMap mappedTags { {protoTagA.id(), std::make_shared<model::Tag>(Tag::ToModel(protoTagA)) },
-                              {protoTagB.id(), std::make_shared<model::Tag>(Tag::ToModel(protoTagB)) }};
+    const TagMap mappedTags { {protoTagA.id(), ToTagPtr(protoTagA) }, {protoTagB.id(), ToTagPtr(protoTagB) }};
     const MemoVector expectedMemos = {
-            std::make_shared<model::Memo>(Memo::ToModel(protoMemoA, mappedTags)),
-            std::make_shared<model::Memo>(Memo::ToModel(protoMemoB, mappedTags))
+            ToMemoPtr(protoMemoA, mappedTags),
+            ToMemoPtr(protoMemoB, mappedTags)
     };
 
     std::string failMsg;
@@ -95,8 +99,7 @@ TEST(TestModelUtils, ExtractMemos_Response_with_no_memos_Return_empty_list)
     grpcResponse.mutable_tags()->insert({ protoTagA.id(), protoTagA });
     grpcResponse.mutable_tags()->insert({ protoTagB.id(), protoTagB });
 
-    const TagMap mappedTags { {protoTagA.id(), std::make_shared<model::Tag>(Tag::ToModel(protoTagA)) },
-                              {protoTagB.id(), std::make_shared<model::Tag>(Tag::ToModel(protoTagB)) }};
+    const TagMap mappedTags { {protoTagA.id(), ToTagPtr(protoTagA) }, {protoTagB.id(), ToTagPtr(protoTagB) }};
 
     auto actualMemos = remote::utils::ExtractMemos(grpcResponse, mappedTags);
     EXPECT_EQ(actualMemos.size(), 0u);
@@ -113,9 +116,9 @@ TEST(TestModelUtils, ExtractMemos_Response_tag_not_found_in_provided_tag_map_Ret
     grpcResponse.mutable_tags()->insert({ protoTagB.id(), protoTagB });
     (*grpcResponse.add_memos()) = protoMemo;
 
-    const TagMap mappedTags {{ protoTagB.id(), std::make_shared<model::Tag>(Tag::ToModel(protoTagB)) }};
-    MemoVector expectedMemos { std::make_shared<model::Memo>(Memo::ToModel(protoMemo, mappedTags)) };
-    expectedMemos.front()->setTags({ std::make_shared<model::Tag>(Tag::ToModel(protoTagB)) });
+    const TagMap mappedTags {{ protoTagB.id(), ToTagPtr(protoTagB) }};
+    MemoVector expectedMemos { ToMemoPtr(protoMemo, mappedTags) };
+    expectedMemos.front()->setTags({ ToTagPtr(protoTagB) });
 
     std::string message;
     auto actualMemos = remote::utils::ExtractMemos(grpcResponse, mappedTags);
@@ -133,12 +136,11 @@ TEST(TestModelUtils, ExtractMemos_Tag_map_contains_nullptr_Return_memos_without_
     grpcResponse.mutable_tags()->insert({ protoTagB.id(), protoTagB });
     (*grpcResponse.add_memos()) = protoMemo;
 
-    const TagMap mappedTags { { protoTagA.id(), nullptr },
-                              { protoTagB.id(), std::make_shared<model::Tag>(Tag::ToModel(protoTagB)) }};
-    const TagMap expectedTags { { protoTagB.id(), std::make_shared<model::Tag>(Tag::ToModel(protoTagB)) } };
+    const TagMap mappedTags { { protoTagA.id(), nullptr }, { protoTagB.id(), ToTagPtr(protoTagB) }};
+    const TagMap expectedTags { { protoTagB.id(), ToTagPtr(protoTagB) } };
 
-    MemoVector expectedMemos { std::make_shared<model::Memo>(Memo::ToModel(protoMemo, expectedTags)) };
-    expectedMemos.front()->setTags({ std::make_shared<model::Tag>(Tag::ToModel(protoTagB)) });
+    MemoVector expectedMemos { ToMemoPtr(protoMemo, expectedTags) };
+    expectedMemos.front()->setTags({ ToTagPtr(protoTagB) });
 
     std::string message;
     const auto actualMemos = remote::utils::ExtractMemos(grpcResponse, mappedTags);
@@ -158,10 +160,8 @@ TEST(TestModelUtils, ExtractMemos_Base_scenario)
     (*grpcResponse.add_memos()) = protoMemoA;
     (*grpcResponse.add_memos()) = protoMemoB;
 
-    const TagMap mappedTags { { protoTagA.id(), std::make_shared<model::Tag>(Tag::ToModel(protoTagA)) },
-                              { protoTagB.id(), std::make_shared<model::Tag>(Tag::ToModel(protoTagB)) }};
-    const MemoVector expectedMemos = { std::make_shared<model::Memo>(Memo::ToModel(protoMemoA, mappedTags)),
-                                       std::make_shared<model::Memo>(Memo::ToModel(protoMemoB, mappedTags)) };
+    const TagMap mappedTags { { protoTagA.id(), ToTagPtr(protoTagA) }, { protoTagB.id(), ToTagPtr(protoTagB) }};
+    const MemoVector expectedMemos = { ToMemoPtr(protoMemoA, mappedTags), ToMemoPtr(protoMemoB, mappedTags) };
     std::string message;
     const auto actualMemos = remote::utils::ExtractMemos(grpcResponse);
     EXPECT_TRUE(AreEqual(actualMemos, expectedMemos, message)) << message;
@@ -178,14 +178,23 @@ TEST(TestModelUtils, ExtractMemos_Response_is_missing_tag_Skip_that_tag)
     (*grpcResponse.add_memos()) = protoMemoA;
     (*grpcResponse.add_memos()) = protoMemoB;
 
-    const TagMap mappedTags { { protoTagA.id(), std::make_shared<model::Tag>(Tag::ToModel(protoTagA)) } };
-    const MemoVector expectedMemos = { std::make_shared<model::Memo>(Memo::ToModel(protoMemoA, mappedTags)),
-                                       std::make_shared<model::Memo>(Memo::ToModel(protoMemoB, mappedTags)) };
+    const TagMap mappedTags { { protoTagA.id(), ToTagPtr(protoTagA) } };
+    const MemoVector expectedMemos = { ToMemoPtr(protoMemoA, mappedTags), ToMemoPtr(protoMemoB, mappedTags) };
     std::string message;
     const auto actualMemos = remote::utils::ExtractMemos(grpcResponse);
     EXPECT_TRUE(AreEqual(actualMemos, expectedMemos, message)) << message;
 }
 namespace {
+
+model::TagPtr ToTagPtr(const proto::Tag& tag)
+{
+    return std::make_shared<model::Tag>(Tag::ToModel(tag));
+}
+
+model::MemoPtr ToMemoPtr(const proto::Memo& memo, const TagMap& mappedTags)
+{
+    return std::make_shared<model::Memo>(Memo::ToModel(memo, mappedTags));
+}
 
 proto::Tag CreateProtoTag(unsigned long id)
 {
@@ -218,7 +227,7 @@ bool AreEqual(const TagMap& actual, const TagMap& expected, std::string& message
 {
     if (actual.size() != expected.size())
     {
-        message = std::string("Map sizes differs")
+        message = std::string("Map sizes differ.")
                 + "\n  Actual: " + std::to_string(actual.size())
                 + "\n  Expected: " + std::to_string(expected.size());
         return false;
