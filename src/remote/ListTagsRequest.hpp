@@ -1,12 +1,19 @@
 #pragma once
 #include "remote/ServiceEnums.hpp"
+#include "model/Tag.hpp"
 #include <string>
+#include <vector>
 
 namespace memo::remote {
 
 struct TagFilter
 {
-
+    std::string nameStartsWith;
+    std::string contains;
+    std::vector<model::Colour> colours;
+    std::vector<unsigned long> assignedToMemos;
+    unsigned long dateFrom;
+    unsigned long dateUntil;
 };
 
 class ListTagsRequest
