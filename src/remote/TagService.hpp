@@ -5,6 +5,7 @@ namespace memo::remote {
 
 class ListTagsRequest;
 class AddTagRequest;
+class ITagCallFactory;
 
 class ITagService
 {
@@ -23,8 +24,17 @@ public:
 class TagServiceImpl : public ITagService
 {
 public:
+    static std::shared_ptr<TagServiceImpl> Create(std::unique_ptr<ITagCallFactory> callFactory);
+
+    explicit TagServiceImpl(std::unique_ptr<ITagCallFactory> callFactory);
+
+    ~TagServiceImpl() override;
+
     ListTagsResponsePtr listTags(const ListTagsRequest& request) override;
 
     AddTagResponsePtr addTag(const AddTagRequest& request) override;
+
+private:
+    std::unique_ptr<ITagCallFactory> callFactory_;
 };
 } // namespace memo::remote
