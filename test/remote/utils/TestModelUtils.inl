@@ -44,7 +44,7 @@ namespace {
 
 } // namespace
 
-TEST(TestModelUtils, extractMappedTags_Response_with_2_tags_Return_2_tags)
+TEST(TestModelUtils, ExtractMappedTags_Response_with_2_tags_Return_2_tags)
 {
     const auto tagA = CreateProtoTag(1);
     const auto tagB = CreateProtoTag(2);
@@ -63,7 +63,7 @@ TEST(TestModelUtils, extractMappedTags_Response_with_2_tags_Return_2_tags)
     EXPECT_TRUE(AreEqual(mappedTags, expectedTags, failMsg)) << failMsg;
 }
 
-TEST(TestModelUtils, extractMappedTags_Response_with_no_tags_Return_empty_map)
+TEST(TestModelUtils, ExtractMappedTags_Response_with_no_tags_Return_empty_map)
 {
     proto::ListMemosRs grpcResponse;
     const auto mappedTags = remote::utils::ExtractMappedTags(grpcResponse);
