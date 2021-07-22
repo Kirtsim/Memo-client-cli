@@ -13,7 +13,7 @@ public:
     explicit TextEditView(const Size& size, IComponent* parent=nullptr);
     TextEditView(const Size& size, const Position& position, IComponent* parent=nullptr);
 
-    ~TextEditView();
+    ~TextEditView() override;
 
     void setTextAlignment(Align alignment) override;
 

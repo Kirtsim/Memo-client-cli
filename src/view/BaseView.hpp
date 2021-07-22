@@ -3,8 +3,7 @@
 #include <memory>
 #include <unordered_set>
 
-namespace memo {
-namespace ui {
+namespace memo::ui {
 
 class TextView;
 
@@ -67,5 +66,4 @@ private:
     std::unordered_set<View::Ptr> subViews_;
 };
 
-} // namespace ui
-} // namespace memo
+} // namespace memo::ui

@@ -1,8 +1,7 @@
 #include "view/BaseComponent.hpp"
 #include "ncurses/functions.hpp"
 
-namespace memo {
-namespace ui {
+namespace memo::ui {
 
 BaseComponent::BaseComponent(IComponent* parent) :
     BaseComponent(Size(), Position(), parent)
@@ -175,7 +174,6 @@ void BaseComponent::onPositionChanged(const Position& oldPos, const Position& ne
     #pragma GCC diagnostic pop
 #endif
 
-} // namespace ui
-} // namespace memo
+} // namespace memo::ui
 
 

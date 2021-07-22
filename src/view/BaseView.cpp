@@ -3,8 +3,7 @@
 #include "ncurses/functions.hpp"
 #include "view/widget/TextView.hpp"
 
-namespace memo {
-namespace ui {
+namespace memo::ui {
 
 BaseView::BaseView(IComponent* parent) :
     BaseView( curses::ScreenSize(),
@@ -179,5 +178,4 @@ void BaseView::displayContent() {}
 void BaseView::positionComponents() {}
 void BaseView::printForeground() {}
 
-} // namespace ui
-} // namespace memo
+} // namespace memo::ui

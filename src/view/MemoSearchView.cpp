@@ -5,8 +5,7 @@
 #include "tools/Tools.hpp"
 #include "utils/Enums.hpp"
 
-namespace memo {
-namespace ui {
+namespace memo::ui {
 
 MemoSearchView::MemoSearchView(IComponent* parent)
     : MemoSearchView(Size(), Position(), parent)
@@ -46,5 +45,4 @@ void MemoSearchView::refresh()
 {
     BaseView::refresh();
 }
-} // namespace ui
-} // namespace memo
+} // namespace memo::ui

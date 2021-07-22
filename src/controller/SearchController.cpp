@@ -19,6 +19,8 @@ public:
     {
     }
 
+    ~TestListItem() override = default;
+
     std::string text() const override
     {
         return text_;

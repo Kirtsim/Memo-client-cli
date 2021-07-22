@@ -23,6 +23,8 @@ public:
     explicit ListView(const Size& size, IComponent* parent=nullptr);
     ListView(const Size& size, const Position& position, IComponent* parent=nullptr);
 
+    ~ListView() override;
+
     void setItems(const std::vector<ListItemPtr>& items);
 
     const std::vector<ListItemPtr>& items() const;
@@ -39,7 +41,6 @@ public:
 
     size_t selectedPos() const;
 
-    void refresh() override;
 protected:
     void displayContent() override;
 

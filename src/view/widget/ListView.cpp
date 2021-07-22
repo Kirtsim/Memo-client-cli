@@ -23,6 +23,8 @@ ListView::ListView(const Size& size, const Position& position, IComponent* paren
 {
 }
 
+ListView::~ListView() = default;
+
 void ListView::setItems(const std::vector<ListItemPtr>& items)
 {
     items_ = items;
@@ -119,11 +121,6 @@ size_t ListView::maxVisibleItems() const
     if (height < 3)
         return 0;
     return height - 2;
-}
-
-void ListView::refresh()
-{
-    BaseView::refresh();
 }
 
 } // namespace ui
