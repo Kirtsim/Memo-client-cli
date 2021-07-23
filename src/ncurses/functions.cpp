@@ -4,8 +4,7 @@
 
 #include <ncurses.h>
 
-namespace memo {
-namespace curses {
+namespace memo::curses {
 
 void InitCurses()
 {
@@ -22,10 +21,18 @@ void Refresh()
     refresh();
 }
 
-void CursorVisible(bool visible)
+bool CursorVisible(bool visible)
 {
     const int visibility = visible ? 1 : 0;
-    curs_set(visibility);
+    const int previousState = curs_set(visibility);
+    return previousState == 1;
+}
+
+bool IsCursorVisible()
+{
+    const int previousState = curs_set(0);
+    curs_set(previousState);
+    return (previousState != ERR && previousState > 0);
 }
 
 Position CursorPosition(const IWindow& window)
@@ -146,5 +153,4 @@ Border DefaultBorder()
     };
 }
 
-} // namespace curses
-} // namespace memo
+} // namespace memo::curses

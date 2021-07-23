@@ -29,10 +29,17 @@ void CloseCurses();
 void Refresh();
 
 ///
-/// \brief Modifies the visibility of the cursor on screen.
+/// \brief Modifies the visibility of the cursor on the screen and returns it previous visibility.
 /// \param visible
+/// \return true if the cursor was visible before, false if it was not.
 ///
-void CursorVisible(bool visible);
+bool CursorVisible(bool visible);
+
+///
+/// \brief Checks is the cursor is visible on the screen.
+/// \return true if the cursor is visible, false otherwise.
+///
+bool IsCursorVisible();
 
 ///
 /// \brief Returns the cursor position in the given window
