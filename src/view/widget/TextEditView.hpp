@@ -1,10 +1,10 @@
 #pragma once
 #include "view/widget/TextView.hpp"
 
-namespace memo {
-namespace ui {
+namespace memo::ui {
 
 class KeyFilter;
+class OnTextChangedListener;
 
 class TextEditView : public TextView
 {
@@ -20,6 +20,8 @@ public:
     void readInput();
     void setKeyFilter(const std::shared_ptr<KeyFilter>& filter);
 
+    void setOnTextChangedListener(const std::shared_ptr<OnTextChangedListener>& listener);
+
 private:
     void processInputCharacter(int character);
     void printCharacter(int character);
@@ -33,6 +35,7 @@ private:
 private:
     Position cursorPosition_ = { PosX(1), PosY(1) };
     std::shared_ptr<KeyFilter> keyFilter_ = nullptr;
+    std::shared_ptr<OnTextChangedListener> textChangedListener_;
 };
 
 class KeyFilter
@@ -45,5 +48,11 @@ public:
     virtual bool filterKey(int key) = 0;
 };
 
-} // namespace ui
-} // namespace memo
+class OnTextChangedListener
+{
+public:
+    virtual ~OnTextChangedListener() = default;
+
+    virtual void onTextChanged(const std::string& text) = 0;
+};
+} // namespace memo::ui

@@ -40,7 +40,7 @@ namespace {
     inline int len(const std::string& str);
     inline int to_int(size_t value);
     inline size_t to_size_t(int value);
-
+    void callOnTextChangedListener(const std::shared_ptr<OnTextChangedListener>& listener, const std::string& text);
 } // namespace
 
 
@@ -108,6 +108,7 @@ void TextEditView::processInputCharacter(const int character)
     else if (character == curses::Key::kBackSpace)
     {
         applyBackSpace();
+        callOnTextChangedListener(textChangedListener_, text());
     }
     else if (character == curses::Key::kEnter)
     {
@@ -122,10 +123,14 @@ void TextEditView::processInputCharacter(const int character)
             ++cursPos.y;
             cursPos.x = textArea.x;
             curses::PositionCursor(getWindow(), cursPos);
+            callOnTextChangedListener(textChangedListener_, text());
         }
     }
     else
+    {
         printCharacter(character);
+        callOnTextChangedListener(textChangedListener_, text());
+    }
 }
 
 void TextEditView::printCharacter(int character)
@@ -337,6 +342,11 @@ void TextEditView::setKeyFilter(const std::shared_ptr<KeyFilter>& filter)
     keyFilter_ = filter;
 }
 
+void TextEditView::setOnTextChangedListener(const std::shared_ptr<OnTextChangedListener>& listener)
+{
+    textChangedListener_ = listener;
+}
+
 void TextEditView::setTextAlignment(Align) {}
 
 namespace {
@@ -397,6 +407,12 @@ namespace {
     size_t to_size_t(int value)
     {
         return static_cast<size_t>(value);
+    }
+
+    void callOnTextChangedListener(const std::shared_ptr<OnTextChangedListener>& listener, const std::string& text)
+    {
+        if (listener)
+            listener->onTextChanged(text);
     }
 } // namespace
 
