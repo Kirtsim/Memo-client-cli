@@ -1,7 +1,6 @@
 #pragma once
 
-namespace memo {
-namespace curses {
+namespace memo::curses {
 
 class Key
 {
@@ -16,7 +15,7 @@ public:
     static const int kTab;
     static const int kShiftTab;
     static const int kBackSpace;
-
+    static const int kSpace;
 
     Key() = delete;
     Key(const Key&) = delete;
@@ -24,5 +23,4 @@ public:
 
 };
 
-} // namespace curses
-} // namespace memo
+} // namespace memo::curses

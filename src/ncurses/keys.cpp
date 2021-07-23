@@ -14,6 +14,7 @@ const int Key::kEsc = 27;
 const int Key::kTab = 9;
 const int Key::kShiftTab = KEY_BTAB;
 const int Key::kBackSpace = 127;
+const int Key::kSpace = 32;
 
 
 } // namespace curses
