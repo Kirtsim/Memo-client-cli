@@ -5,21 +5,21 @@
 
 namespace memo::ui {
 
-class ConfirmDialog : public BaseView
+class MessageDialog : public BaseView
 {
 public:
     static const int kMaxWidth = 400;
 
     static void Display(const std::string& message, IComponent* parent=nullptr);
 
-    explicit ConfirmDialog(IComponent* parent=nullptr);
-    explicit ConfirmDialog(const Size& size, IComponent* parent=nullptr);
-    ConfirmDialog(const Size& size, const Position& position, IComponent* parent=nullptr);
-    ~ConfirmDialog() override;
+    explicit MessageDialog(IComponent* parent=nullptr);
+    explicit MessageDialog(const Size& size, IComponent* parent=nullptr);
+    MessageDialog(const Size& size, const Position& position, IComponent* parent=nullptr);
+    ~MessageDialog() override;
 
-    ConfirmDialog(const ConfirmDialog&) = delete;
-    ConfirmDialog(const ConfirmDialog&&) = delete;
-    ConfirmDialog& operator=(const ConfirmDialog&) = delete;
+    MessageDialog(const MessageDialog&) = delete;
+    MessageDialog(const MessageDialog&&) = delete;
+    MessageDialog& operator=(const MessageDialog&) = delete;
 
     void setMessage(const std::string& message);
     const std::string& message() const;

@@ -1,6 +1,6 @@
 #include "controller/MemoCreateController.hpp"
 #include "view/widget/TextEditView.hpp"
-#include "view/dialog/ConfirmDialog.hpp"
+#include "view/dialog/MessageDialog.hpp"
 #include "view/tools/StringTools.hpp"
 #include "manager/ControllerManager.hpp"
 #include "remote/MemoService.hpp"
@@ -110,11 +110,11 @@ bool MemoCreateController::saveMemoDetails()
     if (!response || response->status() != remote::ResponseStatus::kSuccess)
     {
         // TODO: Log a message.
-        ui::ConfirmDialog::Display("Memo could not be created.", getView().get());
+        ui::MessageDialog::Display("Memo could not be created.", getView().get());
         return false;
     }
 
-    ui::ConfirmDialog::Display("Memo created successfully.", getView().get());
+    ui::MessageDialog::Display("Memo created successfully.", getView().get());
     // TODO: update current memo. Add it to the list of memos held in memory. Inform the user
     // about the success.
     return true; //response->status() == remote::ResponseStatus::kSuccess;

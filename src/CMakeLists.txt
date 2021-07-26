@@ -51,7 +51,7 @@ target_sources(${exe_lib}
         ${src_dir}/view/widget/ListView.cpp
         ${src_dir}/view/widget/TextEditView.cpp
         ${src_dir}/view/widget/TextView.cpp
-        ${src_dir}/view/dialog/ConfirmDialog.cpp
+        ${src_dir}/view/dialog/MessageDialog.cpp
         ${src_dir}/model/Memo.cpp
         ${src_dir}/model/Tag.cpp
     PUBLIC
@@ -110,7 +110,7 @@ target_sources(${exe_lib}
         ${src_dir}/view/widget/ListView.hpp
         ${src_dir}/view/widget/TextEditView.hpp
         ${src_dir}/view/widget/TextView.hpp
-        ${src_dir}/view/dialog/ConfirmDialog.hpp
+        ${src_dir}/view/dialog/MessageDialog.hpp
         ${src_dir}/model/Memo.hpp
         ${src_dir}/model/Tag.hpp
         ${src_dir}/model/ModelDefs.hpp

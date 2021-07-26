@@ -1,30 +1,30 @@
-#include "view/dialog/ConfirmDialog.hpp"
+#include "view/dialog/MessageDialog.hpp"
 #include "view/tools/Tools.hpp"
 #include "ncurses/functions.hpp"
 #include "ncurses/keys.hpp"
 
 namespace memo::ui {
 
-void ConfirmDialog::Display(const std::string& message, IComponent* parent)
+void MessageDialog::Display(const std::string& message, IComponent* parent)
 {
-    ConfirmDialog dialog(parent);
+    MessageDialog dialog(parent);
     dialog.setMessage(message);
     if (parent)
         tools::Tools::centerComponent(dialog, Center::CENTER, *parent);
     dialog.display();
 }
 
-ConfirmDialog::ConfirmDialog(IComponent* parent)
-    : ConfirmDialog(Size(), Position(), parent)
+MessageDialog::MessageDialog(IComponent* parent)
+    : MessageDialog(Size(), Position(), parent)
 {
 }
 
-ConfirmDialog::ConfirmDialog(const Size& size, IComponent* parent)
-    : ConfirmDialog(size, Position(), parent)
+MessageDialog::MessageDialog(const Size& size, IComponent* parent)
+    : MessageDialog(size, Position(), parent)
 {
 }
 
-ConfirmDialog::ConfirmDialog(const Size& size, const Position& position, IComponent* parent)
+MessageDialog::MessageDialog(const Size& size, const Position& position, IComponent* parent)
     : BaseView(size, position, parent)
     , message_(std::make_shared<TextView>())
     , okButton_(std::make_shared<TextView>())
@@ -40,19 +40,19 @@ ConfirmDialog::ConfirmDialog(const Size& size, const Position& position, ICompon
     okButton_->resizeToText();
 }
 
-ConfirmDialog::~ConfirmDialog() = default;
+MessageDialog::~MessageDialog() = default;
 
-void ConfirmDialog::setMessage(const std::string& message)
+void MessageDialog::setMessage(const std::string& message)
 {
     message_->setText(message);
 }
 
-const std::string& ConfirmDialog::message() const
+const std::string& MessageDialog::message() const
 {
     return message_->text();
 }
 
-void ConfirmDialog::display()
+void MessageDialog::display()
 {
     refresh();
     curses::KeyPad(this->getWindow(), ENABLE);
@@ -65,7 +65,7 @@ void ConfirmDialog::display()
     curses::KeyPad(this->getWindow(), DISABLE);
 }
 
-void ConfirmDialog::beforeViewResized()
+void MessageDialog::beforeViewResized()
 {
     BaseView::beforeViewResized();
     message_->resizeToText();
@@ -82,17 +82,17 @@ void ConfirmDialog::beforeViewResized()
     updateComponentsPosition();
 }
 
-void ConfirmDialog::positionComponents()
+void MessageDialog::positionComponents()
 {
     BaseView::positionComponents();
 }
 
-void ConfirmDialog::onPositionChanged(const Position& oldPos, const Position& newPos)
+void MessageDialog::onPositionChanged(const Position& oldPos, const Position& newPos)
 {
     BaseView::onPositionChanged(oldPos, newPos);
 }
 
-void ConfirmDialog::updateComponentsPosition()
+void MessageDialog::updateComponentsPosition()
 {
     message_->setX(kPaddingHorizontal);
     message_->setY(kPaddingVertical);
