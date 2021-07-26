@@ -65,8 +65,9 @@ TextEditView::~TextEditView() = default;
 
 void TextEditView::readInput()
 {
+    focus();
     curses::KeyPad(getWindow(), ENABLE);
-    curses::CursorVisible(true);
+    const auto startCursorState = curses::CursorVisible(true);
 
     while (hasFocus())
     {
@@ -79,7 +80,7 @@ void TextEditView::readInput()
         getWindow().redraw();
     }
 
-    curses::CursorVisible(false);
+    curses::CursorVisible(startCursorState);
     curses::KeyPad(getWindow(), DISABLE);
 }
 
