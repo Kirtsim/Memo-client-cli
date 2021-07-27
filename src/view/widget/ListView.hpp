@@ -1,10 +1,10 @@
 #pragma once
 #include "view/BaseView.hpp"
 
+#include <string>
 #include <vector>
 
-namespace memo {
-namespace ui {
+namespace memo::ui {
 
 class ListItem
 {
@@ -37,6 +37,10 @@ public:
 
     bool selectPrev();
 
+    void setSelectionMark(const std::string& mark);
+
+    const std::string& selectionMark() const;
+
     ListItemPtr selected() const;
 
     size_t selectedPos() const;
@@ -47,13 +51,19 @@ protected:
 private:
     size_t maxVisibleItems() const;
 
+    size_t maxRowChars() const;
+
+    void displayTextRows(const std::vector<std::string>& items);
+
+    void clearDisplayedRows();
+
 private:    
     std::vector<ListItemPtr> items_;
+    std::string selectionMark_ = "* ";
 
     size_t firstVisItem_ = 0;
     size_t lastVisItem_ = 0;
     size_t selected_ = 0;
 };
 
-} // namespace ui
-} // namespace memo
+} // namespace memo::ui

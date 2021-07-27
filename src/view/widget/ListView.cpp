@@ -5,8 +5,11 @@
 #include <algorithm>
 #include <memory>
 
-namespace memo {
-namespace ui {
+namespace memo::ui {
+
+namespace {
+    const int kTotalBorderWidth = 2;
+} // namespace
 
 ListView::ListView(IComponent* parent)
     : ListView(Size(), Position(), parent)
@@ -27,6 +30,8 @@ ListView::~ListView() = default;
 
 void ListView::setItems(const std::vector<ListItemPtr>& items)
 {
+    clearDisplayedRows();
+
     items_ = items;
     selected_ = firstVisItem_ = 0;
 
@@ -81,6 +86,17 @@ bool ListView::selectPrev()
     return true;
 }
 
+void ListView::setSelectionMark(const std::string& mark)
+{
+    selectionMark_ = mark;
+    refreshOnRequest();
+}
+
+const std::string& ListView::selectionMark() const
+{
+    return selectionMark_;
+}
+
 ListItemPtr ListView::selected() const
 {
     if (items_.empty())
@@ -95,33 +111,59 @@ size_t ListView::selectedPos() const
 
 void ListView::displayContent()
 {
-    if (getWidth() - 4 <= 0 || items_.empty())
+    if (getWidth() - static_cast<int>(selectionMark_.size()) - kTotalBorderWidth <= 0 || items_.empty())
         return;
-    const size_t maxChars = static_cast<size_t>(getWidth()) - 4;
-    const size_t xStart = 1;
-    size_t yPos = 1;
-    
+
+    std::vector<std::string> textItems;
     for (size_t i = firstVisItem_; i <= lastVisItem_; ++i)
     {
         const auto& item = items_[i];
         if (!item)
             continue;
         
-        std::string text = (selected_ == i) ? "* " : "  ";
-        text += item->text().substr(0, maxChars);
-
-        displayText(text, { PosX(xStart), PosY(yPos) });
-        ++yPos;
+        std::string text = (selected_ == i) ? selectionMark_ : std::string(selectionMark_.size(), ' ');
+        text += item->text().substr(0, maxRowChars());
+        textItems.emplace_back(text);
     }
+    displayTextRows(textItems);
 }
 
 size_t ListView::maxVisibleItems() const
 {
-    const size_t height = static_cast<size_t>(getHeight());
+    const auto height = static_cast<size_t>(getHeight());
     if (height < 3)
         return 0;
     return height - 2;
 }
 
-} // namespace ui
-} // namespace memo
+void ListView::displayTextRows(const std::vector<std::string>& textRows)
+{
+    const size_t xStart = 1;
+    int yPos = 1;
+
+    for (const auto& text : textRows)
+    {
+        const std::string clearRow(maxRowChars(), ' ');
+        displayText(clearRow, { PosX(xStart), PosY(yPos) });
+        displayText(text, { PosX(xStart), PosY(yPos) });
+        ++yPos;
+    }
+}
+
+void ListView::clearDisplayedRows()
+{
+    const auto visibleCount = std::min(items_.size(), lastVisItem_ - firstVisItem_ + 1);
+    const std::string emptyRow(maxRowChars(), ' ');
+
+    std::vector<std::string> emptyRows(visibleCount, emptyRow);
+    displayTextRows(emptyRows);
+}
+
+size_t ListView::maxRowChars() const
+{
+    const int borders = 2;
+    const int maxChars = std::max(0, getWidth() - borders - static_cast<int>(selectionMark_.size()));
+    return static_cast<size_t>(maxChars);
+}
+
+} // namespace memo::ui
