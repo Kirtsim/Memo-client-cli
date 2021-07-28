@@ -29,6 +29,8 @@ public:
 
     const std::vector<ListItemPtr>& items() const;
 
+    std::vector<ListItemPtr> items();
+
     size_t itemCount() const;
 
     void select(size_t pos);

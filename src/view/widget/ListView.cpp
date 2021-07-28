@@ -44,6 +44,11 @@ const std::vector<ListItemPtr>& ListView::items() const
     return items_;
 }
 
+std::vector<ListItemPtr> ListView::items()
+{
+    return items_;
+}
+
 size_t ListView::itemCount() const
 {
     return items_.size();
