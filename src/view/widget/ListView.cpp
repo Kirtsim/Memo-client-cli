@@ -54,6 +54,11 @@ size_t ListView::itemCount() const
     return items_.size();
 }
 
+bool ListView::empty() const
+{
+    return items_.empty();
+}
+
 void ListView::select(size_t pos)
 {
     if (items_.size() < pos)

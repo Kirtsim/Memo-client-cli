@@ -33,6 +33,8 @@ public:
 
     size_t itemCount() const;
 
+    bool empty() const;
+
     void select(size_t pos);
 
     bool selectNext();
