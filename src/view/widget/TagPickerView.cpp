@@ -29,7 +29,7 @@ public:
     void onTextChanged(const std::string& text) override;
 
 private:
-    TagPickerView& tagPicker_; // TODO: this smells
+    TagPickerView& tagPicker_;
 };
 
 class SearchBarKeyFilter : public KeyFilter
@@ -39,7 +39,7 @@ public:
     ~SearchBarKeyFilter() override = default;
     bool filterKey(int key) override;
 private:
-    TagPickerView& tagPicker_; // TODO: this smells
+    TagPickerView& tagPicker_;
 };
 
 class TextItem : public ListItem
@@ -74,6 +74,10 @@ public:
     TagPickerView::FocusedView selectPrev();
 
     void setFocusables(const std::vector<Focusable>& focusables);
+
+private:
+    struct SelectFunctionParams { size_t currentIdx; size_t viewCount; };
+    TagPickerView::FocusedView  selectNew(const std::function<size_t(const SelectFunctionParams&)>& );
 
 private:
     size_t currentIdx_ = 0;
@@ -138,6 +142,8 @@ TagPickerView::TagPickerView(const Size& size, const Position& position, ICompon
     focusOperator_->setFocusables(focusables);
     initializeKeyMap();
 }
+
+TagPickerView::~TagPickerView() = default;
 
 void TagPickerView::initializeKeyMap()
 {
@@ -211,8 +217,6 @@ void TagPickerView::initializeKeyMap()
         return true;
     }));
 }
-
-TagPickerView::~TagPickerView() = default;
 
 std::string TagPickerView::searchQuery() const
 {
@@ -393,7 +397,6 @@ void TagPickerView::readSelectedTagsListInput()
 
 void TagPickerView::readCreateButtonInput()
 {
-    // TODO: think about reducing this "readXXX" code.
     curses::KeyPad(createButton_->getWindow(), ENABLE);
     const bool wasCursorVisible = curses::CursorVisible(false);
     createButton_->setBorder(selectedViewBorder());
@@ -487,34 +490,20 @@ TagPickerView::FocusedView ViewFocusOperator::viewInFocus() const
 
 TagPickerView::FocusedView ViewFocusOperator::selectNext()
 {
-    if (!focusables_.empty())
+    auto incrementIndex = [](const SelectFunctionParams& params)
     {
-        const auto startIdx = currentIdx_;
-        do
-        {
-            currentIdx_ = (currentIdx_ + 1) % focusables_.size();
-        }
-        while (currentIdx_ != startIdx && !focusables_[currentIdx_].isFocusable());
-
-        return focusables_[currentIdx_].view;
-    }
-    return TagPickerView::kNone;
+        return (params.currentIdx + 1) % params.viewCount;
+    };
+    return selectNew(incrementIndex);
 }
 
 TagPickerView::FocusedView ViewFocusOperator::selectPrev()
 {
-    if (!focusables_.empty())
+    auto decrementIndex = [](const SelectFunctionParams& params)
     {
-        const auto startIdx = currentIdx_;
-        do
-        {
-            currentIdx_ = std::min(currentIdx_ - 1, focusables_.size() - 1);
-        }
-        while (currentIdx_ != startIdx && !focusables_[currentIdx_].isFocusable());
-
-        return focusables_[currentIdx_].view;
-    }
-    return TagPickerView::kNone;
+        return std::min(params.currentIdx - 1, params.viewCount - 1);
+    };
+    return selectNew(decrementIndex);
 }
 
 void ViewFocusOperator::setFocusables(const std::vector<Focusable>& focusables)
@@ -524,6 +513,22 @@ void ViewFocusOperator::setFocusables(const std::vector<Focusable>& focusables)
     focusing_ = (!focusables_.empty());
 }
 
+TagPickerView::FocusedView ViewFocusOperator::selectNew(
+        const std::function<size_t(const SelectFunctionParams&)>& performIndexStep)
+{
+    if (!focusables_.empty())
+    {
+        const auto startIdx = currentIdx_;
+        do
+        {
+            currentIdx_ = performIndexStep({ currentIdx_, focusables_.size() });
+        }
+        while (currentIdx_ != startIdx && !focusables_[currentIdx_].isFocusable());
+
+        return focusables_[currentIdx_].view;
+    }
+    return TagPickerView::kNone;
+}
 
 ////////////////////////////////////////////////
 ///         QueryChangedListener
@@ -583,6 +588,7 @@ void TextItem::setSelected(bool select)
 }
 
 namespace {
+
 Border selectedViewBorder()
 {
     auto border = curses::DefaultBorder();
