@@ -149,7 +149,7 @@ Border DefaultBorder()
 {
     return {
         ACS_HLINE, ACS_VLINE, ACS_HLINE, ACS_VLINE,
-        { ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LLCORNER }
+        { ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER }
     };
 }
 
