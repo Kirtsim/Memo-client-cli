@@ -156,6 +156,7 @@ void TagPickerView::initializeKeyMap()
 
     keyMap_.insert(std::make_pair(curses::Key::kEnter, [&]()
     {
+        selectionConfirmed_ = (viewInFocus() == kConfirmButton);
         focusOperator_->stopFocus();
         return false;
     }));
@@ -275,7 +276,7 @@ bool TagPickerView::display()
         refresh();
     }
     parentRequestOnRefresh();
-    return false;
+    return selectionConfirmed_;
 }
 
 void TagPickerView::focusTagsList()

@@ -139,6 +139,8 @@ private:
     std::map<int, KeyFunction> keyMap_;
 
     std::unique_ptr<ViewFocusOperator> focusOperator_;
+
+    bool selectionConfirmed_ = false;
 };
 
 } // namespace memo::ui
