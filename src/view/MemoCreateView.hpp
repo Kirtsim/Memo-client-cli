@@ -44,7 +44,7 @@ public:
 
     const std::string& memoDescription() const;
 
-    const std::string& memoTags() const;
+    void displayTagNames(const std::vector<std::string>& tagNames);
 
 protected:
     void displayContent() override;
@@ -52,7 +52,7 @@ protected:
 private:
     std::shared_ptr<TextEditView> memoTitleTextEditView_;
     std::shared_ptr<TextEditView> memoDescriptionTextEditView_;
-    std::shared_ptr<TextEditView> memoTagsTextEditView_;
+    std::shared_ptr<TextView> tags_;
 
     std::shared_ptr<TextView> cancelButton_;
     std::shared_ptr<TextView> confirmButton_;

@@ -1,7 +1,9 @@
 #include "controller/MemoCreateController.hpp"
 #include "view/widget/TextEditView.hpp"
+#include "view/widget/TagPickerView.hpp"
 #include "view/dialog/MessageDialog.hpp"
 #include "view/tools/StringTools.hpp"
+#include "view/tools/Tools.hpp"
 #include "manager/ControllerManager.hpp"
 #include "remote/MemoService.hpp"
 #include "remote/AddMemoRequest.hpp"
@@ -15,6 +17,12 @@
 #include <ctime>
 
 namespace memo::ctrl {
+
+namespace {
+    std::vector<std::string> extractTagNames(const std::vector<model::TagPtr>& tags);
+    std::vector<std::string> extractTagNamesThatStartWithQuery(const std::vector<model::TagPtr>& tags,
+                                                               const std::string& query);
+} // namespace
 
 class TextEditKeyFilter : public ui::KeyFilter
 {
@@ -35,6 +43,17 @@ MemoCreateController::MemoCreateController(const ResourcesPtr_t& resources)
     auto view = std::make_shared<ui::MemoCreateView>();
     setView(view);
     view->registerKeyFilter(keyFilter_);
+    std::vector<std::string> tagNames { "under", "out", "understand", "outing", "underground", "outpost",
+                                        "school", "fun", "London", "laughter", "city", "nature", "person", "friend"};
+    auto id = 1ul;
+    for (const auto& tagName : tagNames)
+    {
+        auto tag = std::make_shared<model::Tag>();
+        tag->setId(id);
+        tag->setName(tagName);
+        tag->setTimestamp(id * 10);
+        tags_.emplace_back(tag);
+    }
 }
 
 MemoCreateController::~MemoCreateController()
@@ -61,6 +80,11 @@ bool MemoCreateController::processKey(int key)
     else if (key == curses::Key::kShiftTab)
     {
         view()->focusPrevSubView();
+        return true;
+    }
+    else if (key == curses::Key::kEnter && view()->subViewInFocus() == ui::MemoCreateView::kTagsArea)
+    {
+        pickTags();
         return true;
     }
     else if (key == curses::Key::kEsc)
@@ -134,6 +158,84 @@ void MemoCreateController::stop()
     getResources()->controllerManager()->pop();
 }
 
+void MemoCreateController::pickTags()
+{
+    auto tagPicker = std::make_shared<ui::TagPickerView>(getView().get());
+    tagPicker->setWidth(static_cast<int>(view()->getWidth() * 0.3));
+    tagPicker->setHeight(static_cast<int>(view()->getHeight() * 0.7));
+    ui::tools::Tools::centerComponent(*tagPicker, Center::CENTER, *view());
+
+    std::vector<model::TagPtr> tagSelection = selectedTags_;
+    const auto allTagNames = extractTagNames(tags_);
+    const auto allSelectedTagNames = extractTagNames((tagSelection));
+    tagPicker->displayTags(allTagNames);
+    tagPicker->displaySelectedTagNames(allSelectedTagNames);
+    tagPicker->setSearchBarChangedCallback([&](const std::string& query)
+    {
+        onTagSearchQueryChanged(query, tagPicker, tagSelection);
+    });
+
+    tagPicker->setTagSelectionChangedCallback([&](const std::string& tagName, bool selected)
+    {
+        onTagSelectionChanged(tagName, selected, tagPicker, tagSelection);
+    });
+
+    const auto tagsSelected = tagPicker->display();
+    if (tagsSelected)
+    {
+        selectedTags_ = tagSelection;
+        view()->displayTagNames(extractTagNames(selectedTags_));
+    }
+    view()->refreshOnRequest();
+    view()->refresh();
+}
+
+void MemoCreateController::onTagSearchQueryChanged(const std::string& query, const TagPickerViewPtr& tagPicker,
+                                                   const std::vector<model::TagPtr>& selectedTags)
+{
+    if (!tagPicker)
+        return;
+
+    const auto queriedTagNames = extractTagNamesThatStartWithQuery(tags_, query);
+    const auto selectedTagNames = extractTagNamesThatStartWithQuery(selectedTags, query);
+    tagPicker->displayTags(queriedTagNames);
+    tagPicker->displaySelectedTagNames(selectedTagNames);
+    tagPicker->refresh();
+}
+
+void MemoCreateController::onTagSelectionChanged(const std::string& tagName, bool selected,
+                                                 const TagPickerViewPtr& tagPicker,
+                                                 std::vector<model::TagPtr>& selectedTags)
+{
+    if (!tagPicker)
+        return;
+    if (selected)
+    {
+        auto selectedIter = std::find_if(selectedTags.begin(), selectedTags.end(),
+                                         [&tagName](const model::TagPtr& tag)
+                                         { return tag && tag->name() == tagName; });
+        const bool tagNotSelected = (selectedIter == std::end(selectedTags));
+        if (tagNotSelected)
+        {
+            auto tagIter = std::find_if(tags_.begin(), tags_.end(),
+                                        [&tagName](const model::TagPtr& tag)
+                                        { return tag && tag->name() == tagName; });
+            selectedTags.emplace_back(*tagIter);
+        }
+    }
+    else
+    {
+        auto iter = std::remove_if(selectedTags.begin(), selectedTags.end(),
+                                   [&tagName](const model::TagPtr& tag)
+                                   { return !tag || tag->name() == tagName; });
+        selectedTags.erase(iter, selectedTags.end());
+    }
+
+    const auto& query = tagPicker->searchQuery();
+    const auto selectedTagNames = extractTagNamesThatStartWithQuery(selectedTags, query);
+    tagPicker->displaySelectedTagNames(selectedTagNames);
+}
+
 TextEditKeyFilter::TextEditKeyFilter(MemoCreateController* controller)
     : controller_(controller)
 {
@@ -152,6 +254,31 @@ void TextEditKeyFilter::resetView()
 {
     controller_ = nullptr;
 }
+
+namespace {
+
+std::vector<std::string> extractTagNames(const std::vector<model::TagPtr>& tags)
+{
+    std::vector<std::string> tagNames;
+    std::transform(tags.begin(), tags.end(), std::back_inserter(tagNames),
+                   [](const model::TagPtr& tag) { return tag ? tag->name() : ""; });
+    return tagNames;
+}
+
+std::vector<std::string> extractTagNamesThatStartWithQuery(const std::vector<model::TagPtr>& tags,
+                                                           const std::string& query)
+{
+    const auto querySize = query.size();
+    auto startsWithQuery = [&query, querySize](const model::TagPtr& tag) {
+        return (tag && query == tag->name().substr(0, querySize));
+    };
+
+    std::vector<model::TagPtr> filteredTags;
+    std::copy_if(tags.begin(), tags.end(), std::back_inserter(filteredTags), startsWithQuery);
+
+    return extractTagNames(filteredTags);
+}
+} // namespace
 
 } // namespace memo::ctrl
 
