@@ -59,14 +59,16 @@ MemoCreateView::MemoCreateView(const Size& size, const Position& position, IComp
     tools::Tools::centerComponent(*tags_, Center::HORIZONTAL, *this);
 
     confirmButton_->setText(" Confirm ");
-    confirmButton_->resizeToText();
     confirmButton_->setY(tags_->getY() + tags_->getHeight() + 2);
     confirmButton_->setX(tags_->getX());
+    confirmButton_->setBorder(curses::DefaultBorder());
+    confirmButton_->resizeToText();
 
     cancelButton_->setText(" Cancel ");
-    cancelButton_->resizeToText();
     cancelButton_->setY(confirmButton_->getY());
     cancelButton_->setX(confirmButton_->getX() + confirmButton_->getWidth() + 2);
+    cancelButton_->setBorder(curses::DefaultBorder());
+    cancelButton_->resizeToText();
 
     registerSubView(memoTitleTextEditView_);
     registerSubView(memoDescriptionTextEditView_);
