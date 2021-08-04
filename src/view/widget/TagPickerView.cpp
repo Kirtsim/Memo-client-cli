@@ -260,6 +260,7 @@ void TagPickerView::setTagSelectionChangedCallback(const TagSelectionChangedCall
 
 bool TagPickerView::display()
 {
+    refreshOnRequest();
     refresh();
     while (viewInFocus() != kNone)
     {
