@@ -26,7 +26,7 @@ public:
     bool saveMemoDetails();
 
 private:
-    std::vector<model::TagPtr> fetchTags(const std::vector<std::string>& tagNames) const;
+    std::vector<model::TagPtr> fetchTags() const;
     bool processKey(int key);
     void stop();
 

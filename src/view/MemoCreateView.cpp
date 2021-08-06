@@ -10,11 +10,9 @@
 namespace memo::ui {
 
 namespace {
-    bool isAButton(MemoCreateView::SubView subView);
+    void selectView(const std::shared_ptr<View>& view);
 
-    void setButtonSelected(bool selected, const std::shared_ptr<TextView>& button);
-
-    void unselectView(const std::shared_ptr<View>& view, const MemoCreateView::SubView type);
+    void unselectView(const std::shared_ptr<View>& view);
 } // namespace
 
 MemoCreateView::MemoCreateView(IComponent* parent)
@@ -118,7 +116,7 @@ void MemoCreateView::focusSubView(const MemoCreateView::SubView subView)
     {
         auto currentView = subViewMapping_[subViewInFocus_];
         currentView->looseFocus();
-        unselectView(currentView, subViewInFocus_);
+        unselectView(currentView);
     }
 
     if (subView == kNone)
@@ -127,13 +125,9 @@ void MemoCreateView::focusSubView(const MemoCreateView::SubView subView)
     }
 
     auto viewToFocus = subViewMapping_[subView];
+    selectView(viewToFocus);
     subViewInFocus_ = subView;
 
-    if (subView == kCancelButton || subView == kConfirmButton)
-    {
-        auto button = std::dynamic_pointer_cast<TextView>(viewToFocus);
-        setButtonSelected(true, button);
-    }
     viewToFocus->focus();
 }
 
@@ -211,34 +205,26 @@ void MemoCreateView::displayTagNames(const std::vector<std::string>& tagNames)
 
 namespace {
 
-    bool isAButton(const MemoCreateView::SubView subView)
+    void selectView(const std::shared_ptr<View>& view)
     {
-        return subView == MemoCreateView::kCancelButton ||
-               subView == MemoCreateView::kConfirmButton;
-    }
-
-    void setButtonSelected(const bool selected, const std::shared_ptr<TextView>& button)
-    {
-        if (!button)
-            return;
-
-        auto text = button->text();
-        char selectionMark = selected ? '_' : ' ';
-        if (!text.empty())
+        if (view)
         {
-            text.front() = selectionMark;
-            text.back() = selectionMark;
-            button->setText(text);
-            button->refresh();
+            auto border = curses::DefaultBorder();
+            border.bottom = border.top = '-';
+            border.left = border.right = ':';
+            view->setBorder(border);
+            view->refreshOnRequest();
+            view->refresh();
         }
     }
 
-    void unselectView(const std::shared_ptr<View>& view, const MemoCreateView::SubView type)
+    void unselectView(const std::shared_ptr<View>& view)
     {
-        if (isAButton(type))
+        if (view)
         {
-            auto button = std::dynamic_pointer_cast<TextView>(view);
-            setButtonSelected(false, button);
+            view->setBorder(curses::DefaultBorder());
+            view->refreshOnRequest();
+            view->refresh();
         }
     }
 } // namespace

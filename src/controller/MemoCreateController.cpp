@@ -9,8 +9,10 @@
 #include "remote/AddMemoRequest.hpp"
 #include "remote/ServiceResponse.hpp"
 #include "model/Memo.hpp"
-#include "model/Tag.hpp"
 #include "model/ModelDefs.hpp"
+#include "remote/TagService.hpp"
+#include "remote/ListTagsRequest.hpp"
+#include "remote/ListTagsResponseData.hpp"
 
 #include "ncurses/keys.hpp"
 
@@ -43,17 +45,7 @@ MemoCreateController::MemoCreateController(const ResourcesPtr_t& resources)
     auto view = std::make_shared<ui::MemoCreateView>();
     setView(view);
     view->registerKeyFilter(keyFilter_);
-    std::vector<std::string> tagNames { "under", "out", "understand", "outing", "underground", "outpost",
-                                        "school", "fun", "London", "laughter", "city", "nature", "person", "friend"};
-    auto id = 1ul;
-    for (const auto& tagName : tagNames)
-    {
-        auto tag = std::make_shared<model::Tag>();
-        tag->setId(id);
-        tag->setName(tagName);
-        tag->setTimestamp(id * 10);
-        tags_.emplace_back(tag);
-    }
+    tags_ = fetchTags();
 }
 
 MemoCreateController::~MemoCreateController()
@@ -144,11 +136,26 @@ bool MemoCreateController::saveMemoDetails()
     return true; //response->status() == remote::ResponseStatus::kSuccess;
 }
 
-std::vector<model::TagPtr> MemoCreateController::fetchTags(const std::vector<std::string>& /*tagNames*/) const
+std::vector<model::TagPtr> MemoCreateController::fetchTags() const
 {
-    // TODO:
-    //auto tagDao = getResources()->TagDao();
-    return {};
+    auto service = getResources()->tagService();
+    if (!service)
+    {
+        // TODO: Log a message.
+        return {};
+    }
+    remote::ListTagsRequestBuilder requestBuilder;
+    requestBuilder.setUuid("memo-create-controller-fetch-tags") // TODO: generate a real uuid.
+                  .setView(remote::ModelView::kMinimalView);
+    auto response = service->listTags(requestBuilder.build());
+    if (!response || response->status() == remote::ResponseStatus::kError)
+    {
+        // TODO: Log a message.
+        return {};
+    }
+
+    const auto& responseData = response->data();
+    return responseData.tags();
 }
 
 void MemoCreateController::stop()
