@@ -115,7 +115,7 @@ bool MemoCreateController::saveMemoDetails()
     memo->setTitle(view()->memoTitle());
     memo->setDescription(view()->memoDescription());
     memo->setTimestamp(static_cast<unsigned long>(std::time(nullptr)));
-    // TODO: also set the tags.
+    memo->setTags(selectedTags_);
     remote::AddMemoRequestBuilder requestBuilder;
     requestBuilder.setRequestUuid("abcd-efgh-ijkl-mnop")
                   .setMemo(memo);
