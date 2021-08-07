@@ -50,9 +50,13 @@ protected:
     void displayContent() override;
 
 private:
+    void layoutComponents();
+
+private:
     std::shared_ptr<TextEditView> memoTitleTextEditView_;
     std::shared_ptr<TextEditView> memoDescriptionTextEditView_;
     std::shared_ptr<TextView> tags_;
+    std::shared_ptr<TextView> tagsAreaHintLabel_;
 
     std::shared_ptr<TextView> cancelButton_;
     std::shared_ptr<TextView> confirmButton_;

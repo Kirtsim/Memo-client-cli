@@ -30,6 +30,7 @@ MemoCreateView::MemoCreateView(const Size& size, const Position& position, IComp
     , memoTitleTextEditView_(std::make_shared<TextEditView>())
     , memoDescriptionTextEditView_(std::make_shared<TextEditView>())
     , tags_(std::make_shared<TextView>())
+    , tagsAreaHintLabel_(std::make_shared<TextView>())
     , cancelButton_(std::make_shared<TextView>())
     , confirmButton_(std::make_shared<TextView>())
 {
@@ -39,6 +40,35 @@ MemoCreateView::MemoCreateView(const Size& size, const Position& position, IComp
     subViewMapping_[kConfirmButton]   = confirmButton_;
     subViewMapping_[kCancelButton]    = cancelButton_;
 
+    memoTitleTextEditView_->setBorder(curses::DefaultBorder());
+    memoDescriptionTextEditView_->setBorder(curses::DefaultBorder());
+    tags_->setBorder(curses::DefaultBorder());
+
+    tagsAreaHintLabel_->setText("Press <Enter> to modify.");
+    tagsAreaHintLabel_->resizeToText();
+
+    confirmButton_->setText(" Confirm ");
+    confirmButton_->setBorder(curses::DefaultBorder());
+    confirmButton_->resizeToText();
+
+    cancelButton_->setText(" Cancel ");
+    cancelButton_->setBorder(curses::DefaultBorder());
+    cancelButton_->resizeToText();
+
+    registerSubView(memoTitleTextEditView_);
+    registerSubView(memoDescriptionTextEditView_);
+    registerSubView(tags_);
+    registerSubView(tagsAreaHintLabel_);
+    registerSubView(cancelButton_);
+    registerSubView(confirmButton_);
+
+    layoutComponents();
+}
+
+MemoCreateView::~MemoCreateView() = default;
+
+void MemoCreateView::layoutComponents()
+{
     const int textViewWidth = static_cast<int>(this->getWidth() * 0.5);
     memoTitleTextEditView_->setWidth(textViewWidth);
     memoTitleTextEditView_->setHeight(3);
@@ -56,31 +86,15 @@ MemoCreateView::MemoCreateView(const Size& size, const Position& position, IComp
     tags_->setY(memoDescriptionTextEditView_->getY() + memoDescriptionTextEditView_->getHeight() + 2);
     tools::Tools::centerComponent(*tags_, Center::HORIZONTAL, *this);
 
-    confirmButton_->setText(" Confirm ");
+    tagsAreaHintLabel_->setY(tags_->getY() + tags_->getHeight());
+    tagsAreaHintLabel_->setX(tags_->getX() + tags_->getWidth() - tagsAreaHintLabel_->getWidth());
+
     confirmButton_->setY(tags_->getY() + tags_->getHeight() + 2);
     confirmButton_->setX(tags_->getX());
-    confirmButton_->setBorder(curses::DefaultBorder());
-    confirmButton_->resizeToText();
 
-    cancelButton_->setText(" Cancel ");
     cancelButton_->setY(confirmButton_->getY());
     cancelButton_->setX(confirmButton_->getX() + confirmButton_->getWidth() + 2);
-    cancelButton_->setBorder(curses::DefaultBorder());
-    cancelButton_->resizeToText();
-
-    registerSubView(memoTitleTextEditView_);
-    registerSubView(memoDescriptionTextEditView_);
-    registerSubView(tags_);
-    registerSubView(cancelButton_);
-    registerSubView(confirmButton_);
-
-    auto border = curses::DefaultBorder();
-    memoTitleTextEditView_->setBorder(border);
-    memoDescriptionTextEditView_->setBorder(border);
-    tags_->setBorder(border);
 }
-
-MemoCreateView::~MemoCreateView() = default;
 
 void MemoCreateView::readInput()
 {
@@ -161,6 +175,7 @@ MemoCreateView::SubView MemoCreateView::focusPrevSubView()
 
 void MemoCreateView::displayContent()
 {
+    layoutComponents();
     auto position = memoTitleTextEditView_->getAbsPosition();
     position.x += 1;
     position.y -= 1;
