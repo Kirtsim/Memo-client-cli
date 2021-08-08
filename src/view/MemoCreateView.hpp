@@ -8,6 +8,7 @@ namespace memo::ui {
 
 class TextView;
 class TextEditView;
+class ButtonView;
 class KeyFilter;
 
 class MemoCreateView : public BaseView
@@ -58,8 +59,8 @@ private:
     std::shared_ptr<TextView> tags_;
     std::shared_ptr<TextView> tagsAreaHintLabel_;
 
-    std::shared_ptr<TextView> cancelButton_;
-    std::shared_ptr<TextView> confirmButton_;
+    std::shared_ptr<ButtonView> cancelButton_;
+    std::shared_ptr<ButtonView> confirmButton_;
 
     std::shared_ptr<KeyFilter> keyFilter_ = nullptr;
     SubView subViewInFocus_ = kNone;

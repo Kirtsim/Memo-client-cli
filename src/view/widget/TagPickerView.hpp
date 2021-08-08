@@ -10,7 +10,7 @@
 namespace memo::ui {
 
 class TextEditView;
-class TextView;
+class ButtonView;
 class ListView;
 class ViewFocusOperator;
 
@@ -129,9 +129,9 @@ private:
     std::shared_ptr<TextEditView> searchBar_;
     std::shared_ptr<ListView> tagsList_;
     std::shared_ptr<ListView> selectedTagsList_;
-    std::shared_ptr<TextView> confirmButton_;
-    std::shared_ptr<TextView> cancelButton_;
-    std::shared_ptr<TextView> createButton_;
+    std::shared_ptr<ButtonView> confirmButton_;
+    std::shared_ptr<ButtonView> cancelButton_;
+    std::shared_ptr<ButtonView> createButton_;
     SearchBarChangedCallback searchQueryChangedCallback_;
     TagSelectionChangedCallback tagSelectionChangedCallback_;
     CreateButtonClickedCallback createButtonClickedCallback_;

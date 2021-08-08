@@ -1,6 +1,6 @@
 #include "view/widget/TagPickerView.hpp"
 #include "view/widget/TextEditView.hpp"
-#include "view/widget/TextView.hpp"
+#include "view/widget/ButtonView.hpp"
 #include "view/widget/ListView.hpp"
 #include "view/dialog/ConfirmDialog.hpp"
 #include "ncurses/functions.hpp"
@@ -100,9 +100,9 @@ TagPickerView::TagPickerView(const Size& size, const Position& position, ICompon
     , searchBar_(std::make_shared<TextEditView>(this))
     , tagsList_(std::make_shared<ListView>(this))
     , selectedTagsList_(std::make_shared<ListView>(this))
-    , confirmButton_(std::make_shared<TextView>(this))
-    , cancelButton_(std::make_shared<TextView>(this))
-    , createButton_(std::make_shared<TextView>(this))
+    , confirmButton_(std::make_shared<ButtonView>(this))
+    , cancelButton_(std::make_shared<ButtonView>(this))
+    , createButton_(std::make_shared<ButtonView>(this))
     , focusOperator_(std::make_unique<ViewFocusOperator>())
 {
     this->setBorder(Border::NoBorder());
@@ -118,17 +118,19 @@ TagPickerView::TagPickerView(const Size& size, const Position& position, ICompon
     searchBar_->setBorder(curses::DefaultBorder());
 
     selectedTagsList_->setSelectionMark("  ");
-    auto buttonBorder = curses::DefaultBorder();
     confirmButton_->setText("  Confirm  ");
-    confirmButton_->setBorder(buttonBorder);
+    confirmButton_->setBorder(curses::DefaultBorder());
+    confirmButton_->setInFocusBorder(selectedViewBorder());
     confirmButton_->resizeToText();
 
     cancelButton_->setText("   Cancel  ");
-    cancelButton_->setBorder(buttonBorder);
+    cancelButton_->setBorder(curses::DefaultBorder());
+    cancelButton_->setInFocusBorder(selectedViewBorder());
     cancelButton_->resizeToText();
 
     createButton_->setText("   Create  ");
-    createButton_->setBorder(buttonBorder);
+    createButton_->setBorder(curses::DefaultBorder());
+    createButton_->setInFocusBorder(selectedViewBorder());
     createButton_->resizeToText();
 
     std::vector<ViewFocusOperator::Focusable> focusables {
@@ -401,7 +403,7 @@ void TagPickerView::readCreateButtonInput()
 {
     curses::KeyPad(createButton_->getWindow(), ENABLE);
     const bool wasCursorVisible = curses::CursorVisible(false);
-    createButton_->setBorder(selectedViewBorder());
+    createButton_->focus();
     ForceRefresh(createButton_);
 
     while (viewInFocus() == kCreateButton)
@@ -415,7 +417,7 @@ void TagPickerView::readCreateButtonInput()
         }
     }
 
-    createButton_->setBorder(curses::DefaultBorder());
+    createButton_->looseFocus();
     ForceRefresh(createButton_);
     curses::CursorVisible(wasCursorVisible);
     curses::KeyPad(createButton_->getWindow(), DISABLE);
@@ -425,7 +427,7 @@ void TagPickerView::readConfirmButtonInput()
 {
     curses::KeyPad(confirmButton_->getWindow(), ENABLE);
     const bool wasCursorVisible = curses::CursorVisible(false);
-    confirmButton_->setBorder(selectedViewBorder());
+    confirmButton_->focus();
     ForceRefresh(confirmButton_);
 
     while (viewInFocus() == kConfirmButton)
@@ -439,7 +441,7 @@ void TagPickerView::readConfirmButtonInput()
         }
     }
 
-    confirmButton_->setBorder(curses::DefaultBorder());
+    confirmButton_->looseFocus();
     ForceRefresh(confirmButton_);
     curses::CursorVisible(wasCursorVisible);
     curses::KeyPad(confirmButton_->getWindow(), DISABLE);
@@ -449,7 +451,7 @@ void TagPickerView::readCancelButtonInput()
 {
     curses::KeyPad(cancelButton_->getWindow(), ENABLE);
     const bool wasCursorVisible = curses::CursorVisible(false);
-    cancelButton_->setBorder(selectedViewBorder());
+    cancelButton_->focus();
     ForceRefresh(cancelButton_);
 
     while (viewInFocus() == kCancelButton)
@@ -463,7 +465,7 @@ void TagPickerView::readCancelButtonInput()
         }
     }
 
-    cancelButton_->setBorder(curses::DefaultBorder());
+    cancelButton_->looseFocus();
     ForceRefresh(cancelButton_);
     curses::CursorVisible(wasCursorVisible);
     curses::KeyPad(cancelButton_->getWindow(), DISABLE);

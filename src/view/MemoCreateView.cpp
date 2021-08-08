@@ -1,5 +1,6 @@
 #include "view/MemoCreateView.hpp"
 #include "view/widget/TextView.hpp"
+#include "view/widget/ButtonView.hpp"
 #include "view/widget/TextEditView.hpp"
 #include "tools/Tools.hpp"
 #include "ncurses/functions.hpp"
@@ -31,8 +32,8 @@ MemoCreateView::MemoCreateView(const Size& size, const Position& position, IComp
     , memoDescriptionTextEditView_(std::make_shared<TextEditView>())
     , tags_(std::make_shared<TextView>())
     , tagsAreaHintLabel_(std::make_shared<TextView>())
-    , cancelButton_(std::make_shared<TextView>())
-    , confirmButton_(std::make_shared<TextView>())
+    , cancelButton_(std::make_shared<ButtonView>())
+    , confirmButton_(std::make_shared<ButtonView>())
 {
     subViewMapping_[kTitleArea]       = memoTitleTextEditView_;
     subViewMapping_[kDescriptionArea] = memoDescriptionTextEditView_;
