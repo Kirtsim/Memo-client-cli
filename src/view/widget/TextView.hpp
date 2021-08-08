@@ -4,8 +4,7 @@
 
 #include <string>
 
-namespace memo {
-namespace ui {
+namespace memo::ui {
 
 class TextView : public ui::BaseView
 {
@@ -14,7 +13,7 @@ public:
     explicit TextView(const Size& size, IComponent* parent=nullptr);
     TextView(const Size& size, const Position& position, IComponent* parent=nullptr);
 
-    ~TextView();
+    ~TextView() override;
 
     void setText(const std::string& text);
     const std::string& text() const;
@@ -22,13 +21,12 @@ public:
     virtual void setTextAlignment(Align alignment);
     Align textAlignment() const;
 
-    int length();
-    bool empty();
+    size_t textLength() const;
+    bool empty() const;
 
     void resizeToText();
 
 protected:
-    void displayContent() override;
     void printForeground() override;
     Rect computeAvailableTextArea();
 
@@ -37,5 +35,4 @@ private:
     Align textAlignment_ = Align::TOP_LEFT;
 };
 
-} // namespace ui
-} // namespace memo
+} // namespace memo::ui

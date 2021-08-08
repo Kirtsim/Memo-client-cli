@@ -3,8 +3,6 @@
 #include "ncurses/functions.hpp"
 #include "ncurses/Window.hpp"
 
-#include <vector>
-
 namespace memo::ui {
 
 namespace {
@@ -56,19 +54,14 @@ Align TextView::textAlignment() const
     return textAlignment_;
 }
 
-int TextView::length()
+size_t TextView::textLength() const
 {
     return text_.size();
 }
 
-bool TextView::empty()
+bool TextView::empty() const
 {
     return text_.empty();
-}
-
-void TextView::displayContent()
-{
-    curses::PrintText("This is a TextView", getWindow(), { PosX(1), PosY(0) });
 }
 
 void TextView::printForeground()
@@ -105,7 +98,6 @@ void TextView::printForeground()
         ++lineIdx;
         --linesLeft;
     }
-    auto pos = Position();
 }
 
 void TextView::resizeToText()
