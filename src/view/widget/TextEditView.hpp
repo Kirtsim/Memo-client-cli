@@ -3,7 +3,6 @@
 
 namespace memo::ui {
 
-class KeyFilter;
 class OnTextChangedListener;
 
 class TextEditView : public TextView
@@ -17,8 +16,7 @@ public:
 
     void setTextAlignment(Align alignment) override;
 
-    void readInput();
-    void setKeyFilter(const std::shared_ptr<KeyFilter>& filter);
+    void readInput() override;
 
     void setOnTextChangedListener(const std::shared_ptr<OnTextChangedListener>& listener);
 
@@ -34,18 +32,7 @@ private:
 
 private:
     Position cursorPosition_ = { PosX(1), PosY(1) };
-    std::shared_ptr<KeyFilter> keyFilter_ = nullptr;
     std::shared_ptr<OnTextChangedListener> textChangedListener_;
-};
-
-class KeyFilter
-{
-public:
-    virtual ~KeyFilter() = default;
-    /// Filters the input key. Returns true if the key was processed. The key
-    /// is then ignored by the View. If false is returned, the View will
-    /// process the key.
-    virtual bool filterKey(int key) = 0;
 };
 
 class OnTextChangedListener

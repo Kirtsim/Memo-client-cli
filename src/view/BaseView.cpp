@@ -1,7 +1,6 @@
 #include "view/BaseView.hpp"
 #include "ncurses/Window.hpp"
 #include "ncurses/functions.hpp"
-#include "view/widget/TextView.hpp"
 
 namespace memo::ui {
 
@@ -173,6 +172,30 @@ bool BaseView::hasFocus() const
     return hasFocus_;
 }
 
+void BaseView::readInput()
+{
+    curses::KeyPad(getWindow(), ENABLE);
+    const auto startCursorState = curses::CursorVisible(false);
+
+    auto key = curses::ReadChar(getWindow());
+    filterKey(key);
+
+    curses::CursorVisible(startCursorState);
+    curses::KeyPad(getWindow(), DISABLE);
+}
+
+void BaseView::setKeyFilter(const std::function<bool(int)>& filterFunction)
+{
+    filterKey_ = filterFunction;
+    onKeyFilterSet(filterFunction);
+}
+
+bool BaseView::filterKey(const int key)
+{
+    return (filterKey_ && filterKey_(key));
+}
+
+void BaseView::onKeyFilterSet(const std::function<bool(int)>& /*filterFunction*/) {};
 void BaseView::beforeViewResized() {}
 void BaseView::displayContent() {}
 void BaseView::positionComponents() {}

@@ -1,6 +1,7 @@
 #pragma once
 #include "view/BaseComponent.hpp"
 #include <memory>
+#include <functional>
 
 namespace memo {
 namespace curses {
@@ -16,7 +17,7 @@ public:
     explicit View(const Size& size, IComponent* parent=nullptr);
     View(const Size& size, const Position& position, IComponent* parent=nullptr);
 
-    virtual ~View() = default;
+    ~View() override = default;
 
     virtual void refresh() = 0;
     virtual void saveState() = 0;
@@ -25,6 +26,10 @@ public:
     virtual void focus() = 0;
     virtual void looseFocus() = 0;
     virtual bool hasFocus() const = 0;
+
+    virtual void readInput() = 0;
+
+    virtual void setKeyFilter(const std::function<bool(int)>& filterFunction) = 0;
 
     virtual void setVisible(bool visible) = 0;
     virtual bool isVisible() const = 0;

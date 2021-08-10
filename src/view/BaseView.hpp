@@ -27,6 +27,10 @@ public:
     virtual void looseFocus() override;
     virtual bool hasFocus() const override;
 
+    void readInput() override;
+
+    void setKeyFilter(const std::function<bool(int)>& filterFunction) override;
+
     void setVisible(bool visible) override;
     bool isVisible() const override;
 
@@ -44,6 +48,7 @@ protected:
     virtual void positionComponents();
     virtual void displayContent();
     virtual void printForeground();
+    virtual void onKeyFilterSet(const std::function<bool(int)>& filterFunction);
 
     void registerSubView(View::Ptr subView);
     void removeSubView(View::Ptr subView);
@@ -52,6 +57,8 @@ protected:
     Position getParentPosition() const;
 
     void parentRequestOnRefresh();
+
+    bool filterKey(int key);
 
 private:
     void applyBorder();
@@ -64,6 +71,7 @@ private:
     bool hasFocus_ = false;
     std::shared_ptr<curses::IWindow> window_;
     std::unordered_set<View::Ptr> subViews_;
+    std::function<bool(int)> filterKey_;
 };
 
 } // namespace memo::ui

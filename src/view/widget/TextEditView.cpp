@@ -72,10 +72,10 @@ void TextEditView::readInput()
     while (hasFocus())
     {
         const auto cursorPos = curses::CursorPosition(getWindow());
-        auto character = curses::ReadCharAt(getWindow(), cursorPos);
-        if (!keyFilter_ || !keyFilter_->filterKey(character))
+        auto key = curses::ReadCharAt(getWindow(), cursorPos);
+        if (!filterKey(key))
         {
-            processInputCharacter(character);
+            processInputCharacter(key);
         }
         getWindow().redraw();
     }
@@ -336,11 +336,6 @@ void TextEditView::applyBackSpace()
         newCursorPos.x = std::min(newCursorPos.x, textArea.x + textArea.width -1);
     }
     curses::PositionCursor(getWindow(), newCursorPos);
-}
-
-void TextEditView::setKeyFilter(const std::shared_ptr<KeyFilter>& filter)
-{
-    keyFilter_ = filter;
 }
 
 void TextEditView::setOnTextChangedListener(const std::shared_ptr<OnTextChangedListener>& listener)
