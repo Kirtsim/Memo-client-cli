@@ -3,8 +3,7 @@
 #include "view/home/MenuItem.hpp"
 #include <vector>
 
-namespace memo {
-namespace ui {
+namespace memo::ui {
     class TextView;
     class MenuView;
 
@@ -19,15 +18,13 @@ public:
     explicit HomeView(IComponent* parent=nullptr);
     explicit HomeView(const Size& size, IComponent* parent=nullptr);
     HomeView(const Size& size, const Position& position, IComponent* parent=nullptr);
-    ~HomeView();
+    ~HomeView() override;
 
     HomeView(const HomeView&) = delete;
     HomeView(const HomeView&&) = delete;
     HomeView& operator=(const HomeView&) = delete;
 
     const std::shared_ptr<MenuView>& getMenuView();
-
-    void focus() override;
 
     void setErrorStatus(const std::string& status);
 
@@ -42,5 +39,4 @@ private:
     std::shared_ptr<MenuView> menuView_;
 };
 
-} // namespace ui
-} // namespace memo
+} // namespace memo::ui

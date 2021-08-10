@@ -1,19 +1,10 @@
 #include "view/home/MenuView.hpp"
-#include "view/tools/Tools.hpp"
 #include "ncurses/SubWindow.hpp"
 
-#include <memory>
 #include <algorithm>
 #include <menu.h>
 
-namespace memo {
-namespace ui {
-
-const std::vector<std::string> MenuView::kMenuItemNames {
-    "List Memo",   "List Tag",
-    "Search Memo", "Search Tag",
-    "Create Memo", "Create Tag",
-};
+namespace memo::ui {
 
 MenuView::MenuView(IComponent* parent) :
     MenuView(Size(), Position(), parent)
@@ -25,7 +16,7 @@ MenuView::MenuView(const Size& size, IComponent* parent) :
 
 MenuView::MenuView(const Size& size, const Position& position, IComponent* parent) :
     BaseView(size, position, parent),
-    menuWindow_(std::make_unique<curses::SubWindow>(getWindow(), Position( PosX(1), PosY(1) ))),
+    menuWindow_(std::make_unique<curses::SubWindow>(BaseView::getWindow(), Position( PosX(1), PosY(1) ))),
     menu_(new_menu(nullptr)),
     menuWindowSize_(Size()),
     menuWindowPos_(Position()),
@@ -33,7 +24,7 @@ MenuView::MenuView(const Size& size, const Position& position, IComponent* paren
     selectionMark_(""),
     menuItemsChanged_(false)
 {
-    set_menu_win(menu_.get(), getWindow().cursesWindow());
+    set_menu_win(menu_.get(), BaseView::getWindow().cursesWindow());
     set_menu_sub(menu_.get(), menuWindow_->cursesWindow());
     // Do not show the item's description
     menu_opts_off(menu_.get(), O_SHOWDESC);
@@ -209,6 +200,4 @@ bool MenuView::Layout::operator!=(const Layout& other) const
     return rows != other.rows || cols != other.cols;
 }
 
-
-} // namespace ui
-} // namespace memo
+} // namespace memo::ui

@@ -5,8 +5,7 @@
 #include "ncurses/functions.hpp"
 #include "utils/Enums.hpp"
 
-namespace memo {
-namespace ui {
+namespace memo::ui {
 
 
 ///////////////////////////////////////////////////////////////
@@ -60,10 +59,6 @@ const std::shared_ptr<MenuView>& HomeView::getMenuView()
     return menuView_;
 }
 
-void HomeView::focus()
-{
-}
-
 void HomeView::setErrorStatus(const std::string& status)
 {
     errorStatus_->setText(status);
@@ -86,5 +81,4 @@ void HomeView::displayContent()
 
 }
 
-} // namespace ui
-} // namespace memo
+} // namespace memo::ui

@@ -4,7 +4,7 @@
 
 #include <string>
 #include <vector>
-#include <array>
+#include <memory>
 
 struct tagITEM;
 struct tagMENU;
@@ -17,9 +17,6 @@ namespace ui {
 
 class MenuView : public BaseView
 {
-    static const int MENU_ITEM_COUNT = 6;
-    static const std::vector<std::string> kMenuItemNames;
-
     class Layout
     {
     public:
@@ -36,7 +33,7 @@ public:
     explicit MenuView(IComponent* parent=nullptr);
     explicit MenuView(const Size& size, IComponent* parent=nullptr);
     MenuView(const Size& size, const Position& position, IComponent* parent=nullptr);
-    ~MenuView();
+    ~MenuView() override;
 
     void setMenuItems(const std::vector<MenuItem>& items);
     void setLayout(Rows rows, Cols cols);
