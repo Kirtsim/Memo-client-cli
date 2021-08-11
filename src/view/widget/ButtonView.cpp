@@ -3,6 +3,7 @@
 #include "view/tools/Tools.hpp"
 #include "ncurses/functions.hpp"
 #include "ncurses/IWindow.hpp"
+#include "ncurses/keys.hpp"
 
 namespace memo::ui {
 
@@ -24,6 +25,7 @@ ButtonView::ButtonView(const Size& size, const Position& position, IComponent* p
 {
     registerSubView(text_);
     text_->setBorder(outOfFocusBorder_);
+    buttonClickKeys_.insert(curses::Key::kEnter);
 }
 
 ButtonView::~ButtonView() = default;
@@ -55,6 +57,42 @@ void ButtonView::resizeToText()
     text_->resizeToText();
     setSize(text_->getSize());
     refreshOnRequest();
+}
+
+void ButtonView::setOnButtonClicked(const std::function<void(int)>& perform)
+{
+    onButtonClicked_ = perform;
+}
+
+void ButtonView::listenToKeys(const std::vector<int>& keys)
+{
+    buttonClickKeys_.clear();
+    buttonClickKeys_.insert(keys.begin(), keys.end());
+}
+
+void ButtonView::readInput()
+{
+    focus();
+    curses::KeyPad(getWindow(), ENABLE);
+    const auto wasCursorVisible = curses::CursorVisible(false);
+
+    while (hasFocus() && !buttonClickKeys_.empty())
+    {
+        const int key = curses::ReadChar(getWindow());
+        if (filterKey(key))
+            continue;
+
+        const bool buttonClicked = (buttonClickKeys_.find(key) != std::end(buttonClickKeys_));
+        if (buttonClicked)
+        {
+            if (onButtonClicked_)
+                onButtonClicked_(key);
+            looseFocus();
+        }
+    }
+
+    curses::CursorVisible(wasCursorVisible);
+    curses::KeyPad(getWindow(), DISABLE);
 }
 
 void ButtonView::displayContent()

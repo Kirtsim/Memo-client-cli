@@ -2,6 +2,10 @@
 #include "view/BaseView.hpp"
 #include "utils/Enums.hpp"
 
+#include <functional>
+#include <set>
+#include <vector>
+
 namespace memo::ui {
 class TextView;
 
@@ -30,6 +34,12 @@ public:
 
     void resizeToText();
 
+    void setOnButtonClicked(const std::function<void(int)>& perform);
+
+    void listenToKeys(const std::vector<int>& keys);
+
+    void readInput() override;
+
 protected:
     void onSizeChanged(const Size& oldSize, const Size& newSize) override;
 
@@ -38,6 +48,9 @@ protected:
 
 private:
     std::shared_ptr<TextView> text_;
+    std::function<void(int)> onButtonClicked_;
+
+    std::set<int> buttonClickKeys_;
 
     Border inFocusBorder_;
     Border outOfFocusBorder_;
