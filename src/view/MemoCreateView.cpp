@@ -4,6 +4,7 @@
 #include "view/widget/TextEditView.hpp"
 #include "tools/Tools.hpp"
 #include "ncurses/functions.hpp"
+#include "ncurses/keys.hpp"
 #include "utils/Enums.hpp"
 
 #include <sstream>
@@ -48,13 +49,24 @@ MemoCreateView::MemoCreateView(const Size& size, const Position& position, IComp
     tagsAreaHintLabel_->setText("Press <Enter> to modify.");
     tagsAreaHintLabel_->resizeToText();
 
+    const std::vector<int> clickOnKeys { curses::Key::kEnter, curses::Key::kSpace };
     confirmButton_->setText(" Confirm ");
     confirmButton_->setBorder(curses::DefaultBorder());
     confirmButton_->resizeToText();
+    confirmButton_->listenToKeys(clickOnKeys);
+    confirmButton_->setOnButtonClicked([&](int/* key*/) {
+        if (onConfirmButtonClicked_)
+            onConfirmButtonClicked_();
+    });
 
     cancelButton_->setText(" Cancel ");
     cancelButton_->setBorder(curses::DefaultBorder());
     cancelButton_->resizeToText();
+    cancelButton_->listenToKeys(clickOnKeys);
+    cancelButton_->setOnButtonClicked([&](int/* key*/) {
+        if (onCancelButtonClicked_)
+            onCancelButtonClicked_();
+    });
 
     registerSubView(memoTitleTextEditView_);
     registerSubView(memoDescriptionTextEditView_);
@@ -99,25 +111,12 @@ void MemoCreateView::layoutComponents()
 
 void MemoCreateView::readInput()
 {
-    auto focusedView = subViewMapping_[subViewInFocus_];
-
-    if (auto editText = std::dynamic_pointer_cast<TextEditView>(focusedView))
+    focus();
+    while (hasFocus())
     {
-        editText->readInput();
-        return;
+        auto focusedView = subViewMapping_[subViewInFocus_];
+        focusedView->readInput();
     }
-
-    curses::KeyPad(confirmButton_->getWindow(), ENABLE);
-    int key = curses::ReadChar(confirmButton_->getWindow());
-    curses::KeyPad(confirmButton_->getWindow(), DISABLE);
-    keyFilter_->filterKey(key);
-}
-
-void MemoCreateView::registerKeyFilter(const std::shared_ptr<KeyFilter>& keyFilter)
-{
-    memoTitleTextEditView_->setKeyFilter(keyFilter);
-    memoDescriptionTextEditView_->setKeyFilter(keyFilter);
-    keyFilter_ = keyFilter;
 }
 
 void MemoCreateView::focusSubView(const MemoCreateView::SubView subView)
@@ -174,25 +173,6 @@ MemoCreateView::SubView MemoCreateView::focusPrevSubView()
     return newSubView;
 }
 
-void MemoCreateView::displayContent()
-{
-    layoutComponents();
-    auto position = memoTitleTextEditView_->getAbsPosition();
-    position.x += 1;
-    position.y -= 1;
-    curses::PrintText("Title", getWindow(), position);
-
-    position.y = memoDescriptionTextEditView_->getAbsY() - 1;
-    curses::PrintText("Description", getWindow(), position);
-
-    position.y = tags_->getAbsY() - 1;
-    curses::PrintText("Tags", getWindow(), position);
-
-    position.x = 2;
-    position.y = getHeight() - 2;
-    curses::PrintText("Press 'ESC' to go back.", getWindow(), position);
-}
-
 const std::string& MemoCreateView::memoTitle() const
 {
     return memoTitleTextEditView_->text();
@@ -217,6 +197,43 @@ void MemoCreateView::displayTagNames(const std::vector<std::string>& tagNames)
     tags_->setText(stream.str());
 
     refreshOnRequest();
+}
+void MemoCreateView::doOnConfirmButtonClicked(const std::function<void()>& functionCall)
+{
+    onConfirmButtonClicked_ = functionCall;
+}
+
+void MemoCreateView::doOnCancelButtonClicked(const std::function<void()>& functionCall)
+{
+    onCancelButtonClicked_ = functionCall;
+}
+
+void MemoCreateView::displayContent()
+{
+    layoutComponents();
+    auto position = memoTitleTextEditView_->getAbsPosition();
+    position.x += 1;
+    position.y -= 1;
+    curses::PrintText("Title", getWindow(), position);
+
+    position.y = memoDescriptionTextEditView_->getAbsY() - 1;
+    curses::PrintText("Description", getWindow(), position);
+
+    position.y = tags_->getAbsY() - 1;
+    curses::PrintText("Tags", getWindow(), position);
+
+    position.x = 2;
+    position.y = getHeight() - 2;
+    curses::PrintText("Press 'ESC' to go back.", getWindow(), position);
+}
+
+void MemoCreateView::onKeyFilterSet(const std::function<bool(int)>& filterFunction)
+{
+    memoTitleTextEditView_->setKeyFilter(filterFunction);
+    memoDescriptionTextEditView_->setKeyFilter(filterFunction);
+    tags_->setKeyFilter(filterFunction);
+    confirmButton_->setKeyFilter(filterFunction);
+    cancelButton_->setKeyFilter(filterFunction);
 }
 
 namespace {

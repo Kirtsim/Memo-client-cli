@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include <array>
+#include <functional>
 
 namespace memo::ui {
 
@@ -31,9 +32,7 @@ public:
     MemoCreateView(const MemoCreateView&&) = delete;
     MemoCreateView& operator=(const MemoCreateView&) = delete;
 
-    void readInput();
-
-    void registerKeyFilter(const std::shared_ptr<KeyFilter>& keyFilter);
+    void readInput() override;
 
     void focusSubView(SubView subView);
     SubView subViewInFocus() const;
@@ -47,8 +46,14 @@ public:
 
     void displayTagNames(const std::vector<std::string>& tagNames);
 
+    void doOnConfirmButtonClicked(const std::function<void()>& functionCall);
+
+    void doOnCancelButtonClicked(const std::function<void()>& functionCall);
+
 protected:
     void displayContent() override;
+
+    void onKeyFilterSet(const std::function<bool(int)>& filterFunction) override;
 
 private:
     void layoutComponents();
@@ -65,6 +70,9 @@ private:
     std::shared_ptr<KeyFilter> keyFilter_ = nullptr;
     SubView subViewInFocus_ = kNone;
     std::array<std::shared_ptr<View>, kSubViewCount> subViewMapping_;
+
+    std::function<void()> onConfirmButtonClicked_;
+    std::function<void()> onCancelButtonClicked_;
 };
 
 } // namespace memo::ui
