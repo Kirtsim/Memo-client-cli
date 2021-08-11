@@ -40,8 +40,6 @@ private:
                                std::vector<model::TagPtr>& selectedTags);
 
 private:
-    friend class TextEditKeyFilter;
-    std::shared_ptr<TextEditKeyFilter> keyFilter_;
     std::vector<model::TagPtr> tags_;
     std::vector<model::TagPtr> selectedTags_;
     bool run_ = true;
