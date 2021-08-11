@@ -32,16 +32,6 @@ private:
     TagPickerView& tagPicker_;
 };
 
-class SearchBarKeyFilter : public KeyFilter
-{
-public:
-    explicit SearchBarKeyFilter(TagPickerView& tagPicker);
-    ~SearchBarKeyFilter() override = default;
-    bool filterKey(int key) override;
-private:
-    TagPickerView& tagPicker_;
-};
-
 class TextItem : public ListItem
 {
 public:
@@ -113,7 +103,7 @@ TagPickerView::TagPickerView(const Size& size, const Position& position, ICompon
     registerSubView(cancelButton_);
     registerSubView(createButton_);
     searchBar_->setSize({ Height(kSearchBarHeight), Width(size.width) });
-    searchBar_->setKeyFilter(std::make_shared<SearchBarKeyFilter>(*this));
+    searchBar_->setKeyFilter([&](int key) { return processSearchBarKey(key); });
     searchBar_->setOnTextChangedListener(std::make_shared<QueryChangedListener>(*this));
     searchBar_->setBorder(curses::DefaultBorder());
 
@@ -548,19 +538,6 @@ void QueryChangedListener::onTextChanged(const std::string& text)
 {
     if (auto callback = tagPicker_.searchQueryChangedCallback_)
         callback(text);
-}
-
-////////////////////////////////////////////////
-///         SearchBarKeyFilter
-////////////////////////////////////////////////
-SearchBarKeyFilter::SearchBarKeyFilter(TagPickerView& tagPicker)
-        : tagPicker_(tagPicker)
-{
-}
-
-bool SearchBarKeyFilter::filterKey(const int key)
-{
-    return tagPicker_.processSearchBarKey(key);
 }
 
 ////////////////////////////////////////////////
