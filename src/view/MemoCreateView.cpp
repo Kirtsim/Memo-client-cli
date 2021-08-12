@@ -12,6 +12,8 @@
 namespace memo::ui {
 
 namespace {
+    Border selectionBorder();
+
     void selectView(const std::shared_ptr<View>& view);
 
     void unselectView(const std::shared_ptr<View>& view);
@@ -52,6 +54,7 @@ MemoCreateView::MemoCreateView(const Size& size, const Position& position, IComp
     const std::vector<int> clickOnKeys { curses::Key::kEnter, curses::Key::kSpace };
     confirmButton_->setText(" Confirm ");
     confirmButton_->setBorder(curses::DefaultBorder());
+    confirmButton_->setInFocusBorder(selectionBorder());
     confirmButton_->resizeToText();
     confirmButton_->listenToKeys(clickOnKeys);
     confirmButton_->setOnButtonClicked([&](int/* key*/) {
@@ -61,6 +64,7 @@ MemoCreateView::MemoCreateView(const Size& size, const Position& position, IComp
 
     cancelButton_->setText(" Cancel ");
     cancelButton_->setBorder(curses::DefaultBorder());
+    cancelButton_->setInFocusBorder(selectionBorder());
     cancelButton_->resizeToText();
     cancelButton_->listenToKeys(clickOnKeys);
     cancelButton_->setOnButtonClicked([&](int/* key*/) {
@@ -238,14 +242,19 @@ void MemoCreateView::onKeyFilterSet(const std::function<bool(int)>& filterFuncti
 
 namespace {
 
+    Border selectionBorder()
+    {
+        auto border = curses::DefaultBorder();
+        border.bottom = border.top = '-';
+        border.left = border.right = ':';
+        return border;
+    }
+
     void selectView(const std::shared_ptr<View>& view)
     {
         if (view)
         {
-            auto border = curses::DefaultBorder();
-            border.bottom = border.top = '-';
-            border.left = border.right = ':';
-            view->setBorder(border);
+            view->setBorder(selectionBorder());
             view->refreshOnRequest();
             view->refresh();
         }
