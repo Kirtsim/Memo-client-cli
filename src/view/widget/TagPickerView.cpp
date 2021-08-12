@@ -51,23 +51,25 @@ class ViewFocusOperator
 public:
     struct Focusable
     {
-        TagPickerView::FocusedView view;
+        std::shared_ptr<View> view;
         std::function<bool()> isFocusable;
     };
 
     void stopFocus();
 
-    TagPickerView::FocusedView viewInFocus() const;
+    bool isFocusing() const;
 
-    TagPickerView::FocusedView selectNext();
+    std::shared_ptr<View> viewInFocus() const;
 
-    TagPickerView::FocusedView selectPrev();
+    std::shared_ptr<View> selectNext();
+
+    std::shared_ptr<View> selectPrev();
 
     void setFocusables(const std::vector<Focusable>& focusables);
 
 private:
     struct SelectFunctionParams { size_t currentIdx; size_t viewCount; };
-    TagPickerView::FocusedView  selectNew(const std::function<size_t(const SelectFunctionParams&)>& );
+    std::shared_ptr<View> selectNew(const std::function<size_t(const SelectFunctionParams&)>& );
 
 private:
     size_t currentIdx_ = 0;
@@ -108,28 +110,36 @@ TagPickerView::TagPickerView(const Size& size, const Position& position, ICompon
     searchBar_->setBorder(curses::DefaultBorder());
 
     selectedTagsList_->setSelectionMark("  ");
+
+    auto keyFilter = [&](int key) { return processKey(key); };
     confirmButton_->setText("  Confirm  ");
     confirmButton_->setBorder(curses::DefaultBorder());
     confirmButton_->setInFocusBorder(selectedViewBorder());
     confirmButton_->resizeToText();
+    confirmButton_->setOnButtonClicked([&](int /*key*/) { onConfirmButtonClicked(); });
+    confirmButton_->setKeyFilter(keyFilter);
 
     cancelButton_->setText("   Cancel  ");
     cancelButton_->setBorder(curses::DefaultBorder());
     cancelButton_->setInFocusBorder(selectedViewBorder());
     cancelButton_->resizeToText();
+    cancelButton_->setOnButtonClicked([&](int /*key*/) { onCancelButtonClicked(); });
+    cancelButton_->setKeyFilter(keyFilter);
 
     createButton_->setText("   Create  ");
     createButton_->setBorder(curses::DefaultBorder());
     createButton_->setInFocusBorder(selectedViewBorder());
     createButton_->resizeToText();
+    createButton_->setOnButtonClicked([&](int /*key*/) { onCreateButtonClicked(); });
+    createButton_->setKeyFilter(keyFilter);
 
     std::vector<ViewFocusOperator::Focusable> focusables {
-            { kSearchBar,        [ ]() { return true; } },
-            { kTagsList,         [&]() { return !tagsList_->empty(); } },
-            { kSelectedTagsList, [&]() { return !selectedTagsList_->empty(); } },
-            { kCreateButton,     [ ]() { return true; } },
-            { kConfirmButton,    [ ]() { return true; } },
-            { kCancelButton,     [ ]() { return true; } },
+            { searchBar_,        [ ]() { return true; } },
+            { tagsList_,         [&]() { return !tagsList_->empty(); } },
+            { selectedTagsList_, [&]() { return !selectedTagsList_->empty(); } },
+            { createButton_,     [ ]() { return true; } },
+            { confirmButton_,    [ ]() { return true; } },
+            { cancelButton_,     [ ]() { return true; } },
     };
     focusOperator_->setFocusables(focusables);
     initializeKeyMap();
@@ -142,24 +152,19 @@ void TagPickerView::initializeKeyMap()
     keyMap_.insert(std::make_pair(curses::Key::kEsc, [&]()
     {
         if (confirmCancelWithUser())
+        {
             focusOperator_->stopFocus();
-        return (viewInFocus() == kNone);
-    }));
-
-    keyMap_.insert(std::make_pair(curses::Key::kEnter, [&]()
-    {
-        selectionConfirmed_ = (viewInFocus() == kConfirmButton);
-        focusOperator_->stopFocus();
+            return true;
+        }
+        refreshOnRequest();
+        refresh();
         return false;
     }));
 
     keyMap_.insert(std::make_pair(curses::Key::kTab, [&]()
     {
-        auto oldView = focusOperator_->viewInFocus();
+        auto oldViewInFocus = focusOperator_->viewInFocus();
         focusOperator_->selectNext();
-
-        if (oldView == kSearchBar && viewInFocus() != kSearchBar)
-            searchBar_->looseFocus();
         return true;
     }));
 
@@ -167,15 +172,12 @@ void TagPickerView::initializeKeyMap()
     {
         auto oldView = focusOperator_->viewInFocus();
         focusOperator_->selectPrev();
-
-        if (oldView == kSearchBar && viewInFocus() != kSearchBar)
-            searchBar_->looseFocus();
         return true;
     }));
 
     keyMap_.insert(std::make_pair(curses::Key::kSpace, [&]()
     {
-        if (viewInFocus() == kTagsList)
+        if (viewInFocus() == tagsList_)
         {
             if (auto currentItem = std::dynamic_pointer_cast<TextItem>(tagsList_->selected()))
             {
@@ -194,18 +196,18 @@ void TagPickerView::initializeKeyMap()
 
     keyMap_.insert(std::make_pair(curses::Key::kUp, [&]()
     {
-        if (viewInFocus() == kTagsList)
+        if (viewInFocus() == tagsList_)
             tagsList_->selectPrev();
-        else if (viewInFocus() == kSelectedTagsList)
+        else if (viewInFocus() == selectedTagsList_)
             selectedTagsList_->selectPrev();
         return true;
     }));
 
     keyMap_.insert(std::make_pair(curses::Key::kDown, [&]()
     {
-        if (viewInFocus() == kTagsList)
+        if (viewInFocus() == tagsList_)
             tagsList_->selectNext();
-        else if (viewInFocus() == kSelectedTagsList)
+        else if (viewInFocus() == selectedTagsList_)
             selectedTagsList_->selectNext();
         return true;
     }));
@@ -254,18 +256,22 @@ bool TagPickerView::display()
 {
     refreshOnRequest();
     refresh();
-    while (viewInFocus() != kNone)
+    while (auto view = viewInFocus())
     {
-        switch(viewInFocus())
-        {
-            case kSearchBar: focusSearchBar(); break;
-            case kTagsList: focusTagsList(); break;
-            case kSelectedTagsList: focusSelectedTagsList(); break;
-            case kCreateButton: readCreateButtonInput(); break;
-            case kConfirmButton: readConfirmButtonInput(); break;
-            case kCancelButton: readCancelButtonInput(); break;
-            default: { focusOperator_->stopFocus(); }
-        }
+        if (view == searchBar_)
+            focusSearchBar();
+        else if (view == tagsList_)
+            focusTagsList();
+        else if (view == selectedTagsList_)
+            focusSelectedTagsList();
+        else if (view == createButton_)
+            readCreateButtonInput();
+        else if (view == confirmButton_)
+            readConfirmButtonInput();
+        else if (view == cancelButton_)
+            readCancelButtonInput();
+        else
+            focusOperator_->stopFocus();
         refresh();
     }
     parentRequestOnRefresh();
@@ -330,6 +336,11 @@ bool TagPickerView::confirmCancelWithUser()
     return ConfirmDialog::Display("Selected tags will be discarded. Continue?", this);
 }
 
+std::shared_ptr<View> TagPickerView::viewInFocus() const
+{
+    return focusOperator_->viewInFocus();
+}
+
 bool TagPickerView::processSearchBarKey(const int key)
 {
     auto keyIter = keyMap_.find(key);
@@ -337,7 +348,7 @@ bool TagPickerView::processSearchBarKey(const int key)
     {
         auto keyFunc = keyIter->second;
         keyFunc();
-        if (viewInFocus() != TagPickerView::kCancelButton)
+        if (viewInFocus() != cancelButton_)
             searchBar_->looseFocus();
         return true;
     }
@@ -349,7 +360,7 @@ void TagPickerView::readTagsListInput()
     curses::KeyPad(tagsList_->getWindow(), ENABLE);
     const bool wasCursorVisible = curses::CursorVisible(false);
 
-    while (viewInFocus() == kTagsList)
+    while (viewInFocus() == tagsList_)
     {
         auto key = curses::ReadChar(tagsList_->getWindow());
         auto keyIter = keyMap_.find(key);
@@ -371,7 +382,7 @@ void TagPickerView::readSelectedTagsListInput()
     const bool wasCursorVisible = curses::CursorVisible(false);
     selectedTagsList_->setSelectionMark("* ");
     ForceRefresh(selectedTagsList_);
-    while (viewInFocus() == kSelectedTagsList)
+    while (viewInFocus() == selectedTagsList_)
     {
         auto key = curses::ReadChar(selectedTagsList_->getWindow());
         auto keyIter = keyMap_.find(key);
@@ -396,7 +407,7 @@ void TagPickerView::readCreateButtonInput()
     createButton_->focus();
     ForceRefresh(createButton_);
 
-    while (viewInFocus() == kCreateButton)
+    while (viewInFocus() == createButton_)
     {
         auto key = curses::ReadChar(createButton_->getWindow());
         auto keyIter = keyMap_.find(key);
@@ -415,55 +426,51 @@ void TagPickerView::readCreateButtonInput()
 
 void TagPickerView::readConfirmButtonInput()
 {
-    curses::KeyPad(confirmButton_->getWindow(), ENABLE);
-    const bool wasCursorVisible = curses::CursorVisible(false);
-    confirmButton_->focus();
     ForceRefresh(confirmButton_);
-
-    while (viewInFocus() == kConfirmButton)
-    {
-        auto key = curses::ReadChar(confirmButton_->getWindow());
-        auto keyIter = keyMap_.find(key);
-        if (keyIter != std::end(keyMap_))
-        {
-            auto keyFunc = keyIter->second;
-            keyFunc();
-        }
-    }
-
-    confirmButton_->looseFocus();
+    confirmButton_->readInput();
     ForceRefresh(confirmButton_);
-    curses::CursorVisible(wasCursorVisible);
-    curses::KeyPad(confirmButton_->getWindow(), DISABLE);
 }
 
 void TagPickerView::readCancelButtonInput()
 {
-    curses::KeyPad(cancelButton_->getWindow(), ENABLE);
-    const bool wasCursorVisible = curses::CursorVisible(false);
-    cancelButton_->focus();
     ForceRefresh(cancelButton_);
-
-    while (viewInFocus() == kCancelButton)
-    {
-        auto key = curses::ReadChar(cancelButton_->getWindow());
-        auto keyIter = keyMap_.find(key);
-        if (keyIter != std::end(keyMap_))
-        {
-            auto keyFunc = keyIter->second;
-            keyFunc();
-        }
-    }
-
-    cancelButton_->looseFocus();
+    cancelButton_->readInput();
     ForceRefresh(cancelButton_);
-    curses::CursorVisible(wasCursorVisible);
-    curses::KeyPad(cancelButton_->getWindow(), DISABLE);
 }
 
-TagPickerView::FocusedView TagPickerView::viewInFocus()
+void TagPickerView::onCreateButtonClicked()
 {
-    return focusOperator_->viewInFocus();
+    if (createButtonClickedCallback_)
+        createButtonClickedCallback_(searchBar_->text());
+}
+
+void TagPickerView::onConfirmButtonClicked()
+{
+    selectionConfirmed_ = true;
+    confirmButton_->looseFocus();
+    focusOperator_->stopFocus();
+}
+
+void TagPickerView::onCancelButtonClicked()
+{
+    if (confirmCancelWithUser())
+    {
+        confirmButton_->looseFocus();
+        focusOperator_->stopFocus();
+    }
+}
+
+bool TagPickerView::processKey(int key)
+{
+    auto keyIter = keyMap_.find(key);
+    const bool keyRecognized = (keyIter != std::end(keyMap_));
+    if (keyRecognized)
+    {
+        auto& keyFunc = keyIter->second;
+        keyFunc();
+        return true;
+    }
+    return false;
 }
 
 ////////////////////////////////////////////////
@@ -472,17 +479,24 @@ TagPickerView::FocusedView TagPickerView::viewInFocus()
 
 void ViewFocusOperator::stopFocus()
 {
+    if (auto viewInFocus = this->viewInFocus())
+        viewInFocus->looseFocus();
     focusing_ = false;
 }
 
-TagPickerView::FocusedView ViewFocusOperator::viewInFocus() const
+bool ViewFocusOperator::isFocusing() const
+{
+    return focusing_;
+}
+
+std::shared_ptr<View> ViewFocusOperator::viewInFocus() const
 {
     if (focusing_ && currentIdx_ < focusables_.size())
         return focusables_[currentIdx_].view;
-    return TagPickerView::kNone;
+    return nullptr;
 }
 
-TagPickerView::FocusedView ViewFocusOperator::selectNext()
+std::shared_ptr<View> ViewFocusOperator::selectNext()
 {
     auto incrementIndex = [](const SelectFunctionParams& params)
     {
@@ -491,7 +505,7 @@ TagPickerView::FocusedView ViewFocusOperator::selectNext()
     return selectNew(incrementIndex);
 }
 
-TagPickerView::FocusedView ViewFocusOperator::selectPrev()
+std::shared_ptr<View> ViewFocusOperator::selectPrev()
 {
     auto decrementIndex = [](const SelectFunctionParams& params)
     {
@@ -507,11 +521,12 @@ void ViewFocusOperator::setFocusables(const std::vector<Focusable>& focusables)
     focusing_ = (!focusables_.empty());
 }
 
-TagPickerView::FocusedView ViewFocusOperator::selectNew(
+std::shared_ptr<View> ViewFocusOperator::selectNew(
         const std::function<size_t(const SelectFunctionParams&)>& performIndexStep)
 {
     if (!focusables_.empty())
     {
+        focusables_[currentIdx_].view->looseFocus();
         const auto startIdx = currentIdx_;
         do
         {
@@ -519,9 +534,10 @@ TagPickerView::FocusedView ViewFocusOperator::selectNew(
         }
         while (currentIdx_ != startIdx && !focusables_[currentIdx_].isFocusable());
 
+        focusables_[currentIdx_].view->focus();
         return focusables_[currentIdx_].view;
     }
-    return TagPickerView::kNone;
+    return nullptr;
 }
 
 ////////////////////////////////////////////////

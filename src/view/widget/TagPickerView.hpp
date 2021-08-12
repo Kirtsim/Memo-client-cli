@@ -118,11 +118,18 @@ private:
 
     bool confirmCancelWithUser();
 
-    FocusedView viewInFocus();
+    std::shared_ptr<View> viewInFocus() const;
+
+    void onCreateButtonClicked();
+
+    void onConfirmButtonClicked();
+
+    void onCancelButtonClicked();
+
+    bool processKey(int key);
 
 private:
     using KeyFunction = std::function<bool()>;
-    friend class SearchBarKeyFilter;
     friend class QueryChangedListener;
     friend class ViewFocusOperator;
 
