@@ -15,6 +15,10 @@ public:
 
     ~TextView() override;
 
+    TextView(const TextView&) = delete;
+    TextView(const TextView&&) = delete;
+    TextView& operator=(const TextView&) = delete;
+
     void setText(const std::string& text);
     const std::string& text() const;
 

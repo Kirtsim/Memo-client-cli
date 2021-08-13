@@ -18,6 +18,10 @@ public:
 
     ~ButtonView() override;
 
+    ButtonView(const ButtonView&) = delete;
+    ButtonView(const ButtonView&&) = delete;
+    ButtonView& operator=(const ButtonView&) = delete;
+
     void setText(const std::string& text);
     const std::string& text() const;
 

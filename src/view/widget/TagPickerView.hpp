@@ -42,6 +42,10 @@ public:
 
     ~TagPickerView() override;
 
+    TagPickerView(const TagPickerView&) = delete;
+    TagPickerView(const TagPickerView&&) = delete;
+    TagPickerView& operator=(const TagPickerView&) = delete;
+
     /// @brief A getter method for the search query that is being typed in the search bar.
     /// @return text (search query) currently displayed in the search bar.
     std::string searchQuery() const;

@@ -14,6 +14,10 @@ public:
 
     ~TextEditView() override;
 
+    TextEditView(const TextEditView&) = delete;
+    TextEditView(const TextEditView&&) = delete;
+    TextEditView& operator=(const TextEditView&) = delete;
+
     void setTextAlignment(Align alignment) override;
 
     void readInput() override;
