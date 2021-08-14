@@ -22,12 +22,16 @@ public:
     ~MemoCreateController() override;
 
     void processInput() override;
-    bool checkMemoTitleAvailability(const std::string& title);
-    bool saveMemoDetails();
 
 private:
     std::vector<model::TagPtr> fetchTags() const;
+
+    bool checkMemoTitleAvailability(const std::string& title);
+
+    bool saveMemoDetails();
+
     bool processKey(int key);
+
     void stop();
 
     void pickTags();
