@@ -132,7 +132,6 @@ std::vector<model::TagPtr> MemoCreateController::fetchTags() const
 
 void MemoCreateController::stop()
 {
-    run_ = false;
     view()->focusSubView(ui::MemoCreateView::kNone);
     view()->looseFocus();
     getResources()->controllerManager()->pop();

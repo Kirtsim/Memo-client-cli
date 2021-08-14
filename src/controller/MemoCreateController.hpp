@@ -46,7 +46,6 @@ private:
 private:
     std::vector<model::TagPtr> tags_;
     std::vector<model::TagPtr> selectedTags_;
-    bool run_ = true;
 };
 
 } // namespace memo::ctrl
