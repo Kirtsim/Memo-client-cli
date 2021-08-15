@@ -222,6 +222,11 @@ void TagPickerView::setTagSelectionChangedCallback(const TagSelectionChangedCall
     tagSelectionChangedCallback_ = callback;
 }
 
+void TagPickerView::setCreateButtonClickedCallback(const CreateButtonClickedCallback& callback)
+{
+    createButtonClickedCallback_ = callback;
+}
+
 bool TagPickerView::display()
 {
     refreshOnRequest();
@@ -372,40 +377,17 @@ void TagPickerView::readSelectedTagsListInput()
 
 void TagPickerView::readCreateButtonInput()
 {
-    curses::KeyPad(createButton_->getWindow(), ENABLE);
-    const bool wasCursorVisible = curses::CursorVisible(false);
-    createButton_->focus();
-    ForceRefresh(createButton_);
-
-    while (viewInFocus() == createButton_)
-    {
-        auto key = curses::ReadChar(createButton_->getWindow());
-        auto keyIter = keyMap_.find(key);
-        if (keyIter != std::end(keyMap_))
-        {
-            auto keyFunc = keyIter->second;
-            keyFunc();
-        }
-    }
-
-    createButton_->looseFocus();
-    ForceRefresh(createButton_);
-    curses::CursorVisible(wasCursorVisible);
-    curses::KeyPad(createButton_->getWindow(), DISABLE);
+    createButton_->readInput();
 }
 
 void TagPickerView::readConfirmButtonInput()
 {
-    ForceRefresh(confirmButton_);
     confirmButton_->readInput();
-    ForceRefresh(confirmButton_);
 }
 
 void TagPickerView::readCancelButtonInput()
 {
-    ForceRefresh(cancelButton_);
     cancelButton_->readInput();
-    ForceRefresh(cancelButton_);
 }
 
 void TagPickerView::onCreateButtonClicked()
