@@ -135,7 +135,6 @@ private:
 private:
     using KeyFunction = std::function<bool()>;
     friend class QueryChangedListener;
-    friend class ViewFocusOperator;
 
     std::shared_ptr<TextEditView> searchBar_;
     std::shared_ptr<ListView> tagsList_;

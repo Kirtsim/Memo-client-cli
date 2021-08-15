@@ -2,6 +2,7 @@
 #include "view/widget/TextEditView.hpp"
 #include "view/widget/ButtonView.hpp"
 #include "view/widget/ListView.hpp"
+#include "view/tools/ViewFocusOperator.hpp"
 #include "view/dialog/ConfirmDialog.hpp"
 #include "ncurses/functions.hpp"
 #include "ncurses/keys.hpp"
@@ -44,37 +45,6 @@ public:
 private:
     std::string text_;
     bool isSelected_ = false;
-};
-
-class ViewFocusOperator
-{
-public:
-    struct Focusable
-    {
-        std::shared_ptr<View> view;
-        std::function<bool()> isFocusable;
-    };
-
-    void stopFocus();
-
-    bool isFocusing() const;
-
-    std::shared_ptr<View> viewInFocus() const;
-
-    std::shared_ptr<View> selectNext();
-
-    std::shared_ptr<View> selectPrev();
-
-    void setFocusables(const std::vector<Focusable>& focusables);
-
-private:
-    struct SelectFunctionParams { size_t currentIdx; size_t viewCount; };
-    std::shared_ptr<View> selectNew(const std::function<size_t(const SelectFunctionParams&)>& );
-
-private:
-    size_t currentIdx_ = 0;
-    bool focusing_ = false;
-    std::vector<Focusable> focusables_;
 };
 
 TagPickerView::TagPickerView(IComponent* parent)
@@ -471,73 +441,6 @@ bool TagPickerView::processKey(int key)
         return true;
     }
     return false;
-}
-
-////////////////////////////////////////////////
-///         ViewFocusOperator
-////////////////////////////////////////////////
-
-void ViewFocusOperator::stopFocus()
-{
-    if (auto viewInFocus = this->viewInFocus())
-        viewInFocus->looseFocus();
-    focusing_ = false;
-}
-
-bool ViewFocusOperator::isFocusing() const
-{
-    return focusing_;
-}
-
-std::shared_ptr<View> ViewFocusOperator::viewInFocus() const
-{
-    if (focusing_ && currentIdx_ < focusables_.size())
-        return focusables_[currentIdx_].view;
-    return nullptr;
-}
-
-std::shared_ptr<View> ViewFocusOperator::selectNext()
-{
-    auto incrementIndex = [](const SelectFunctionParams& params)
-    {
-        return (params.currentIdx + 1) % params.viewCount;
-    };
-    return selectNew(incrementIndex);
-}
-
-std::shared_ptr<View> ViewFocusOperator::selectPrev()
-{
-    auto decrementIndex = [](const SelectFunctionParams& params)
-    {
-        return std::min(params.currentIdx - 1, params.viewCount - 1);
-    };
-    return selectNew(decrementIndex);
-}
-
-void ViewFocusOperator::setFocusables(const std::vector<Focusable>& focusables)
-{
-    focusables_ = focusables;
-    currentIdx_ = 0;
-    focusing_ = (!focusables_.empty());
-}
-
-std::shared_ptr<View> ViewFocusOperator::selectNew(
-        const std::function<size_t(const SelectFunctionParams&)>& performIndexStep)
-{
-    if (!focusables_.empty())
-    {
-        focusables_[currentIdx_].view->looseFocus();
-        const auto startIdx = currentIdx_;
-        do
-        {
-            currentIdx_ = performIndexStep({ currentIdx_, focusables_.size() });
-        }
-        while (currentIdx_ != startIdx && !focusables_[currentIdx_].isFocusable());
-
-        focusables_[currentIdx_].view->focus();
-        return focusables_[currentIdx_].view;
-    }
-    return nullptr;
 }
 
 ////////////////////////////////////////////////
