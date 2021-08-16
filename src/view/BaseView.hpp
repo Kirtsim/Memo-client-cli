@@ -53,8 +53,6 @@ protected:
     void registerSubView(View::Ptr subView);
     void removeSubView(View::Ptr subView);
     void displayText(const std::string& text, const Position& position);
-    Size getParentSize() const;
-    Position getParentPosition() const;
 
     void parentRequestOnRefresh();
 

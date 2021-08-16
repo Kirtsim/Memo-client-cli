@@ -19,7 +19,8 @@ BaseView::BaseView(const Size& size, const Position& position, IComponent* paren
     newBorder_(curses::DefaultBorder()),
     visible_(true),
     window_(std::make_shared<curses::Window>(position, size))
-{}
+{
+}
 
 BaseView::~BaseView()
 {
@@ -112,24 +113,6 @@ void BaseView::removeSubView(View::Ptr subView)
     subViews_.erase(subView);
     if (subView->getParent() == this)
         subView->setParent(nullptr);
-}
-
-Size BaseView::getParentSize() const
-{
-    auto parent = getParent();
-    if (parent)
-        return parent->getSize();
-
-    return curses::ScreenSize();
-}
-
-Position BaseView::getParentPosition() const
-{
-    auto parent = getParent();
-    if (parent)
-        return parent->getAbsPosition();
-
-    return {}; // x=0, y=0
 }
 
 void BaseView::onSizeChanged(const Size& oldSize, const Size& newSize)
