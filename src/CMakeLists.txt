@@ -42,6 +42,7 @@ target_sources(${exe_lib}
         ${src_dir}/view/BaseView.cpp
         ${src_dir}/view/MemoCreateView.cpp
         ${src_dir}/view/MemoSearchView.cpp
+        ${src_dir}/view/TagCreateView.cpp
         ${src_dir}/view/View.cpp
         ${src_dir}/view/home/HomeView.cpp
         ${src_dir}/view/home/MenuItem.cpp
@@ -105,6 +106,7 @@ target_sources(${exe_lib}
         ${src_dir}/view/BaseView.hpp
         ${src_dir}/view/MemoCreateView.hpp
         ${src_dir}/view/MemoSearchView.hpp
+        ${src_dir}/view/TagCreateView.hpp
         ${src_dir}/view/View.hpp
         ${src_dir}/view/home/HomeView.hpp
         ${src_dir}/view/home/MenuItem.hpp
