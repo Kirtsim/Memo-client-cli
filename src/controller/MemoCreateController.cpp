@@ -2,7 +2,6 @@
 #include "view/widget/TextEditView.hpp"
 #include "view/widget/TagPickerView.hpp"
 #include "view/dialog/MessageDialog.hpp"
-#include "view/tools/StringTools.hpp"
 #include "view/tools/Tools.hpp"
 #include "manager/ControllerManager.hpp"
 #include "remote/MemoService.hpp"
@@ -24,6 +23,7 @@ namespace {
     std::vector<std::string> extractTagNames(const std::vector<model::TagPtr>& tags);
     std::vector<std::string> extractTagNamesThatStartWithQuery(const std::vector<model::TagPtr>& tags,
                                                                const std::string& query);
+    bool containsTagWithName(const std::vector<model::TagPtr>& tags, const std::string& name);
 } // namespace
 
 MemoCreateController::MemoCreateController(const ResourcesPtr_t& resources)
@@ -149,13 +149,11 @@ void MemoCreateController::pickTags()
     const auto allSelectedTagNames = extractTagNames((tagSelection));
     tagPicker->displayTags(allTagNames);
     tagPicker->displaySelectedTagNames(allSelectedTagNames);
-    tagPicker->setSearchBarChangedCallback([&](const std::string& query)
-    {
+    tagPicker->setSearchBarChangedCallback([&](const std::string& query) {
         onTagSearchQueryChanged(query, tagPicker, tagSelection);
     });
 
-    tagPicker->setTagSelectionChangedCallback([&](const std::string& tagName, bool selected)
-    {
+    tagPicker->setTagSelectionChangedCallback([&](const std::string& tagName, bool selected) {
         onTagSelectionChanged(tagName, selected, tagPicker, tagSelection);
     });
 
@@ -190,11 +188,7 @@ void MemoCreateController::onTagSelectionChanged(const std::string& tagName, boo
         return;
     if (selected)
     {
-        auto selectedIter = std::find_if(selectedTags.begin(), selectedTags.end(),
-                                         [&tagName](const model::TagPtr& tag)
-                                         { return tag && tag->name() == tagName; });
-        const bool tagNotSelected = (selectedIter == std::end(selectedTags));
-        if (tagNotSelected)
+        if (!containsTagWithName(selectedTags, tagName))
         {
             auto tagIter = std::find_if(tags_.begin(), tags_.end(),
                                         [&tagName](const model::TagPtr& tag)
@@ -237,6 +231,14 @@ std::vector<std::string> extractTagNamesThatStartWithQuery(const std::vector<mod
     std::copy_if(tags.begin(), tags.end(), std::back_inserter(filteredTags), startsWithQuery);
 
     return extractTagNames(filteredTags);
+}
+
+bool containsTagWithName(const std::vector<model::TagPtr>& tags, const std::string& name)
+{
+    auto namesMatch = [&name](const model::TagPtr& tag) {
+        return tag && tag->name() == name;
+    };
+    return std::find_if(tags.begin(), tags.end(), namesMatch) != std::end(tags);
 }
 } // namespace
 
