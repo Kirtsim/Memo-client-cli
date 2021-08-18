@@ -191,8 +191,9 @@ void TagCreateView::initializeKeyMap()
     };
 }
 
-void TagCreateView::onKeyFilterSet(const std::function<bool(int)>& filterFunction)
+void TagCreateView::onKeyFilterSet(const std::function<bool(int)>&/* filterFunction*/)
 {
+    // filterKey(key) already calls the filterFunction.
     auto filter = [&](int key) { return filterKey(key) || processKey(key); };
     nameEditText_->setKeyFilter(filter);
     confirmButton_->setKeyFilter(filter);
