@@ -27,6 +27,14 @@ public:
 
     void setFocusables(const std::vector<Focusable>& focusables);
 
+    /// @brief Resets the focus and places it back on the first view.
+    /// Can be used in case the the ViewFocusOperator no longer focuses
+    /// any view or when there is a view already in focus. If the very
+    /// first view is already in focus, this method has no effect.
+    /// Similarly, if there are no views to focus, or none of the views
+    /// is focusable this method has no effect either.
+    void resetFocus();
+
 private:
     struct SelectFunctionParams { size_t currentIdx; size_t viewCount; };
     std::shared_ptr<View> selectNew(const std::function<size_t(const SelectFunctionParams&)>& );

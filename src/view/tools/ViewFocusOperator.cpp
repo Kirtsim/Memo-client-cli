@@ -24,19 +24,17 @@ std::shared_ptr<View> ViewFocusOperator::viewInFocus() const
 
 std::shared_ptr<View> ViewFocusOperator::selectNext()
 {
-    auto incrementIndex = [](const SelectFunctionParams& params)
-            {
+    auto incrementIndex = [](const SelectFunctionParams& params) {
         return (params.currentIdx + 1) % params.viewCount;
-            };
+    };
     return selectNew(incrementIndex);
 }
 
 std::shared_ptr<View> ViewFocusOperator::selectPrev()
 {
-    auto decrementIndex = [](const SelectFunctionParams& params)
-            {
+    auto decrementIndex = [](const SelectFunctionParams& params) {
         return std::min(params.currentIdx - 1, params.viewCount - 1);
-            };
+    };
     return selectNew(decrementIndex);
 }
 
@@ -59,9 +57,28 @@ std::shared_ptr<View> ViewFocusOperator::selectNew(const std::function<size_t(co
         }
         while (currentIdx_ != startIdx && !focusables_[currentIdx_].isFocusable());
 
-        focusables_[currentIdx_].view->focus();
-        return focusables_[currentIdx_].view;
+        if (focusables_[currentIdx_].isFocusable())
+        {
+            focusables_[currentIdx_].view->focus();
+            return focusables_[currentIdx_].view;
+        }
+
+        // At this point none of the views can be focused.
+        stopFocus();
     }
     return nullptr;
+}
+
+void ViewFocusOperator::resetFocus()
+{
+    if (focusables_.empty())
+        return;
+    if (currentIdx_ < focusables_.size())
+    {
+        focusables_[currentIdx_].view->looseFocus();
+    }
+    focusing_ = true;
+    currentIdx_ = focusables_.size() - 1;
+    selectNext();
 }
 } // namespace memo::ui
