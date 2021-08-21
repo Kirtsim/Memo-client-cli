@@ -229,6 +229,7 @@ void TagPickerView::setCreateButtonClickedCallback(const CreateButtonClickedCall
 
 bool TagPickerView::display()
 {
+    focusOperator_->resetFocus();
     refreshOnRequest();
     refresh();
     while (auto view = viewInFocus())
