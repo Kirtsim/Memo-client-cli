@@ -6,6 +6,7 @@
 namespace memo::ui {
     class TextEditView;
     class TagPickerView;
+    class TagCreateView;
 }
 namespace memo::ctrl {
 
@@ -26,6 +27,10 @@ public:
 private:
     std::vector<model::TagPtr> fetchTags() const;
 
+    void onConfirmNewTagButtonClicked(ui::TagCreateView& tagCreateView);
+
+    model::TagPtr createTag(const model::TagPtr& tag);
+
     bool checkMemoTitleAvailability(const std::string& title);
 
     bool saveMemoDetails();
@@ -42,6 +47,10 @@ private:
     void onTagSelectionChanged(const std::string& tagName, bool selected,
                                const TagPickerViewPtr& tagPicker,
                                std::vector<model::TagPtr>& selectedTags);
+
+    void onCreateTagButtonClicked(const std::string& suggestedTagName, ui::TagPickerView& tagPicker);
+
+    void onCreateNewTagNameChanged(const std::string& tagName, ui::TagCreateView& tagCreateView);
 
 private:
     std::vector<model::TagPtr> tags_;

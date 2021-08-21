@@ -1,17 +1,20 @@
 #include "controller/MemoCreateController.hpp"
+#include "view/TagCreateView.hpp"
 #include "view/widget/TextEditView.hpp"
 #include "view/widget/TagPickerView.hpp"
 #include "view/dialog/MessageDialog.hpp"
 #include "view/tools/Tools.hpp"
 #include "manager/ControllerManager.hpp"
 #include "remote/MemoService.hpp"
+#include "remote/TagService.hpp"
 #include "remote/AddMemoRequest.hpp"
+#include "remote/AddTagRequest.hpp"
 #include "remote/ServiceResponse.hpp"
 #include "model/Memo.hpp"
 #include "model/ModelDefs.hpp"
-#include "remote/TagService.hpp"
 #include "remote/ListTagsRequest.hpp"
 #include "remote/ListTagsResponseData.hpp"
+#include "remote/AddTagResponseData.hpp"
 
 #include "ncurses/keys.hpp"
 
@@ -157,6 +160,10 @@ void MemoCreateController::pickTags()
         onTagSelectionChanged(tagName, selected, tagPicker, tagSelection);
     });
 
+    tagPicker->setCreateButtonClickedCallback([&](const std::string& suggestedTagName) {
+        onCreateTagButtonClicked(suggestedTagName, *tagPicker);
+    });
+
     const auto tagsSelected = tagPicker->display();
     if (tagsSelected)
     {
@@ -207,6 +214,79 @@ void MemoCreateController::onTagSelectionChanged(const std::string& tagName, boo
     const auto& query = tagPicker->searchQuery();
     const auto selectedTagNames = extractTagNamesThatStartWithQuery(selectedTags, query);
     tagPicker->displaySelectedTagNames(selectedTagNames);
+}
+
+void MemoCreateController::onCreateTagButtonClicked(const std::string& suggestedTagName, ui::TagPickerView& tagPicker)
+{
+    ui::TagCreateView tagForm;
+    tagForm.setHeight(30);
+    tagForm.setWidth(static_cast<int>(view()->getWidth() * 0.25));
+    ui::tools::Tools::centerComponent(tagForm, CENTER, *view());
+    tagForm.setOnConfirmButtonClicked([&](int) { onConfirmNewTagButtonClicked(tagForm); });
+    tagForm.setOnCancelButtonClicked([&](int) { tagForm.looseFocus(); });
+    tagForm.setOnTagNameChanged([&](const std::string& tagName) { onCreateNewTagNameChanged(tagName, tagForm); });
+    tagForm.setTagName(suggestedTagName);
+    tagForm.setInfoTextVisible(containsTagWithName(tags_, suggestedTagName));
+    tagForm.refreshOnRequest();
+    tagForm.refresh();
+
+    tagForm.readInput();
+
+    view()->refreshOnRequest();
+    view()->refresh();
+    tagPicker.refreshOnRequest();
+    tagPicker.refresh();
+}
+
+void MemoCreateController::onConfirmNewTagButtonClicked(ui::TagCreateView& tagCreateView)
+{
+    const auto& tagName = tagCreateView.tagName();
+    if (tagName.empty() || containsTagWithName(tags_, tagName))
+        return;
+    auto tag = std::make_shared<model::Tag>();
+    tag->setName(tagName);
+    tag->setTimestamp(static_cast<unsigned long>(std::time(nullptr)));
+    if (auto newTag = createTag(tag))
+    {
+        tags_.emplace_back(newTag);
+        // TODO: update tagPickerView
+        ui::MessageDialog::Display("Tag \"" + tagName + "\" created.", view().get());
+    }
+    else
+    {
+        ui::MessageDialog::Display("Failed to create tag \"" + tagName + "\".", view().get());
+    }
+    tagCreateView.refreshOnRequest();
+    tagCreateView.refresh();
+}
+
+model::TagPtr MemoCreateController::createTag(const model::TagPtr& tag)
+{
+    if (!tag)
+        return nullptr;
+    auto service = getResources()->tagService();
+    if (!service)
+    {
+        //TODO: log
+        return nullptr;
+    }
+    remote::AddTagRequestBuilder requestBuilder;
+    requestBuilder.setUuid("memo-create-controller-add-tag")
+                  .setTag(tag);
+    auto response = service->addTag(requestBuilder.build());
+    if (!response || response->status() == remote::ResponseStatus::kError)
+    {
+        // TODO: log
+        return nullptr;
+    }
+
+    return response->data().tag();
+}
+
+void MemoCreateController::onCreateNewTagNameChanged(const std::string& tagName, ui::TagCreateView& tagCreateView)
+{
+    tagCreateView.setInfoTextVisible(containsTagWithName(tags_, tagName));
+    tagCreateView.refresh();
 }
 
 namespace {
