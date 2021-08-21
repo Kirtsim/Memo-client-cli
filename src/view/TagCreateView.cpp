@@ -84,6 +84,7 @@ TagCreateView::~TagCreateView() = default;
 void TagCreateView::readInput()
 {
     focus();
+    focusOperator_->resetFocus();
     while(hasFocus() && focusOperator_->isFocusing())
     {
         if (auto view = focusOperator_->viewInFocus())
