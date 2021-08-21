@@ -17,6 +17,7 @@ class MemoCreateController : public BaseController<ui::MemoCreateView>
 {
     using ResourcesPtr_t = std::shared_ptr<IResources>;
     using TagPickerViewPtr = std::shared_ptr<ui::TagPickerView>;
+    using TagCreateViewPtr = std::shared_ptr<ui::TagCreateView>;
 
 public:
     explicit MemoCreateController(const ResourcesPtr_t& resources);
@@ -27,7 +28,7 @@ public:
 private:
     std::vector<model::TagPtr> fetchTags() const;
 
-    void onConfirmNewTagButtonClicked(ui::TagCreateView& tagCreateView);
+    void onConfirmNewTagButtonClicked();
 
     model::TagPtr createTag(const model::TagPtr& tag);
 
@@ -41,20 +42,22 @@ private:
 
     void pickTags();
 
-    void onTagSearchQueryChanged(const std::string& query, const TagPickerViewPtr& tagPicker,
+    void onTagSearchQueryChanged(const std::string& query,
                                  const std::vector<model::TagPtr>& selectedTags);
 
     void onTagSelectionChanged(const std::string& tagName, bool selected,
-                               const TagPickerViewPtr& tagPicker,
                                std::vector<model::TagPtr>& selectedTags);
 
-    void onCreateTagButtonClicked(const std::string& suggestedTagName, ui::TagPickerView& tagPicker);
+    void onCreateTagButtonClicked(const std::string& suggestedTagName);
 
-    void onCreateNewTagNameChanged(const std::string& tagName, ui::TagCreateView& tagCreateView);
+    void onCreateNewTagNameChanged(const std::string& tagName);
 
 private:
     std::vector<model::TagPtr> tags_;
     std::vector<model::TagPtr> selectedTags_;
+
+    TagPickerViewPtr tagPickerView_;
+    TagCreateViewPtr createTagView_;
 };
 
 } // namespace memo::ctrl

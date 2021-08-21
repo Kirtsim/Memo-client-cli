@@ -31,9 +31,14 @@ namespace {
 
 MemoCreateController::MemoCreateController(const ResourcesPtr_t& resources)
     : BaseController(resources)
+    , tagPickerView_(std::make_shared<ui::TagPickerView>())
+    , createTagView_(std::make_shared<ui::TagCreateView>())
 {
     auto view = std::make_shared<ui::MemoCreateView>();
     setView(view);
+    tagPickerView_->setParent(view.get());
+    createTagView_->setParent(view.get());
+
     view->setKeyFilter([&](int key) { return processKey(key); });
     view->doOnCancelButtonClicked([&]() { stop(); });
     view->doOnConfirmButtonClicked([&]() {
@@ -142,29 +147,28 @@ void MemoCreateController::stop()
 
 void MemoCreateController::pickTags()
 {
-    auto tagPicker = std::make_shared<ui::TagPickerView>(getView().get());
-    tagPicker->setWidth(static_cast<int>(view()->getWidth() * 0.3));
-    tagPicker->setHeight(static_cast<int>(view()->getHeight() * 0.7));
-    ui::tools::Tools::centerComponent(*tagPicker, Center::CENTER, *view());
+    tagPickerView_->setWidth(static_cast<int>(view()->getWidth() * 0.3));
+    tagPickerView_->setHeight(static_cast<int>(view()->getHeight() * 0.7));
+    ui::tools::Tools::centerComponent(*tagPickerView_, Center::CENTER, *view());
 
     std::vector<model::TagPtr> tagSelection = selectedTags_;
     const auto allTagNames = extractTagNames(tags_);
     const auto allSelectedTagNames = extractTagNames((tagSelection));
-    tagPicker->displayTags(allTagNames);
-    tagPicker->displaySelectedTagNames(allSelectedTagNames);
-    tagPicker->setSearchBarChangedCallback([&](const std::string& query) {
-        onTagSearchQueryChanged(query, tagPicker, tagSelection);
+    tagPickerView_->displayTags(allTagNames);
+    tagPickerView_->displaySelectedTagNames(allSelectedTagNames);
+    tagPickerView_->setSearchBarChangedCallback([&](const std::string& query) {
+        onTagSearchQueryChanged(query, tagSelection);
     });
 
-    tagPicker->setTagSelectionChangedCallback([&](const std::string& tagName, bool selected) {
-        onTagSelectionChanged(tagName, selected, tagPicker, tagSelection);
+    tagPickerView_->setTagSelectionChangedCallback([&](const std::string& tagName, bool selected) {
+        onTagSelectionChanged(tagName, selected, tagSelection);
     });
 
-    tagPicker->setCreateButtonClickedCallback([&](const std::string& suggestedTagName) {
-        onCreateTagButtonClicked(suggestedTagName, *tagPicker);
+    tagPickerView_->setCreateButtonClickedCallback([&](const std::string& suggestedTagName) {
+        onCreateTagButtonClicked(suggestedTagName);
     });
 
-    const auto tagsSelected = tagPicker->display();
+    const auto tagsSelected = tagPickerView_->display();
     if (tagsSelected)
     {
         selectedTags_ = tagSelection;
@@ -174,25 +178,19 @@ void MemoCreateController::pickTags()
     view()->refresh();
 }
 
-void MemoCreateController::onTagSearchQueryChanged(const std::string& query, const TagPickerViewPtr& tagPicker,
+void MemoCreateController::onTagSearchQueryChanged(const std::string& query,
                                                    const std::vector<model::TagPtr>& selectedTags)
 {
-    if (!tagPicker)
-        return;
-
     const auto queriedTagNames = extractTagNamesThatStartWithQuery(tags_, query);
     const auto selectedTagNames = extractTagNamesThatStartWithQuery(selectedTags, query);
-    tagPicker->displayTags(queriedTagNames);
-    tagPicker->displaySelectedTagNames(selectedTagNames);
-    tagPicker->refresh();
+    tagPickerView_->displayTags(queriedTagNames);
+    tagPickerView_->displaySelectedTagNames(selectedTagNames);
+    tagPickerView_->refresh();
 }
 
 void MemoCreateController::onTagSelectionChanged(const std::string& tagName, bool selected,
-                                                 const TagPickerViewPtr& tagPicker,
                                                  std::vector<model::TagPtr>& selectedTags)
 {
-    if (!tagPicker)
-        return;
     if (selected)
     {
         if (!containsTagWithName(selectedTags, tagName))
@@ -211,36 +209,35 @@ void MemoCreateController::onTagSelectionChanged(const std::string& tagName, boo
         selectedTags.erase(iter, selectedTags.end());
     }
 
-    const auto& query = tagPicker->searchQuery();
+    const auto& query = tagPickerView_->searchQuery();
     const auto selectedTagNames = extractTagNamesThatStartWithQuery(selectedTags, query);
-    tagPicker->displaySelectedTagNames(selectedTagNames);
+    tagPickerView_->displaySelectedTagNames(selectedTagNames);
 }
 
-void MemoCreateController::onCreateTagButtonClicked(const std::string& suggestedTagName, ui::TagPickerView& tagPicker)
+void MemoCreateController::onCreateTagButtonClicked(const std::string& suggestedTagName)
 {
-    ui::TagCreateView tagForm;
-    tagForm.setHeight(30);
-    tagForm.setWidth(static_cast<int>(view()->getWidth() * 0.25));
-    ui::tools::Tools::centerComponent(tagForm, CENTER, *view());
-    tagForm.setOnConfirmButtonClicked([&](int) { onConfirmNewTagButtonClicked(tagForm); });
-    tagForm.setOnCancelButtonClicked([&](int) { tagForm.looseFocus(); });
-    tagForm.setOnTagNameChanged([&](const std::string& tagName) { onCreateNewTagNameChanged(tagName, tagForm); });
-    tagForm.setTagName(suggestedTagName);
-    tagForm.setInfoTextVisible(containsTagWithName(tags_, suggestedTagName));
-    tagForm.refreshOnRequest();
-    tagForm.refresh();
+    createTagView_->setHeight(30);
+    createTagView_->setWidth(static_cast<int>(view()->getWidth() * 0.25));
+    ui::tools::Tools::centerComponent(*createTagView_, CENTER, *view());
+    createTagView_->setOnConfirmButtonClicked([&](int) { onConfirmNewTagButtonClicked(); });
+    createTagView_->setOnCancelButtonClicked([&](int) { createTagView_->looseFocus(); });
+    createTagView_->setOnTagNameChanged([&](const std::string& tagName) { onCreateNewTagNameChanged(tagName); });
+    createTagView_->setTagName(suggestedTagName);
+    createTagView_->setInfoTextVisible(containsTagWithName(tags_, suggestedTagName));
+    createTagView_->refreshOnRequest();
+    createTagView_->refresh();
 
-    tagForm.readInput();
+    createTagView_->readInput();
 
     view()->refreshOnRequest();
     view()->refresh();
-    tagPicker.refreshOnRequest();
-    tagPicker.refresh();
+    tagPickerView_->refreshOnRequest();
+    tagPickerView_->refresh();
 }
 
-void MemoCreateController::onConfirmNewTagButtonClicked(ui::TagCreateView& tagCreateView)
+void MemoCreateController::onConfirmNewTagButtonClicked()
 {
-    const auto& tagName = tagCreateView.tagName();
+    const auto& tagName = createTagView_->tagName();
     if (tagName.empty() || containsTagWithName(tags_, tagName))
         return;
     auto tag = std::make_shared<model::Tag>();
@@ -256,8 +253,8 @@ void MemoCreateController::onConfirmNewTagButtonClicked(ui::TagCreateView& tagCr
     {
         ui::MessageDialog::Display("Failed to create tag \"" + tagName + "\".", view().get());
     }
-    tagCreateView.refreshOnRequest();
-    tagCreateView.refresh();
+    createTagView_->refreshOnRequest();
+    createTagView_->refresh();
 }
 
 model::TagPtr MemoCreateController::createTag(const model::TagPtr& tag)
@@ -283,10 +280,10 @@ model::TagPtr MemoCreateController::createTag(const model::TagPtr& tag)
     return response->data().tag();
 }
 
-void MemoCreateController::onCreateNewTagNameChanged(const std::string& tagName, ui::TagCreateView& tagCreateView)
+void MemoCreateController::onCreateNewTagNameChanged(const std::string& tagName)
 {
-    tagCreateView.setInfoTextVisible(containsTagWithName(tags_, tagName));
-    tagCreateView.refresh();
+    createTagView_->setInfoTextVisible(containsTagWithName(tags_, tagName));
+    createTagView_->refresh();
 }
 
 namespace {
