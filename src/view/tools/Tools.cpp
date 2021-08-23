@@ -1,19 +1,17 @@
 #include "view/tools/Tools.hpp"
 #include "view/IComponent.hpp"
 
-namespace memo {
-namespace ui {
-namespace tools {
+namespace memo::ui::tools {
 
-void Tools::centerComponent(ui::IComponent& component, const Center centerType,
-                            const ui::IComponent& parent)
+void CenterComponent(ui::IComponent& component, const Center centerType,
+                     const ui::IComponent& parent)
 {
-    const Bounds& bounds = componentBoundaries(parent);
-    centerComponent(component, centerType, bounds);
+    const Bounds& bounds = ComponentBoundaries(parent);
+    CenterComponent(component, centerType, bounds);
 }
 
-void Tools::centerComponent(ui::IComponent& component, const Center centerType,
-                            const Bounds& bounds)
+void CenterComponent(ui::IComponent& component, const Center centerType,
+                     const Bounds& bounds)
 {
     if ((centerType & Center::HORIZONTAL) == Center::HORIZONTAL)
     {
@@ -28,7 +26,7 @@ void Tools::centerComponent(ui::IComponent& component, const Center centerType,
     }
 }
 
-Bounds Tools::componentBoundaries(const ui::IComponent& component)
+Bounds ComponentBoundaries(const ui::IComponent& component)
 {
     Bounds bounds;
     bounds.startX = component.getAbsX();
@@ -38,6 +36,4 @@ Bounds Tools::componentBoundaries(const ui::IComponent& component)
     return bounds;
 }
 
-} // namespace tools
-} // namespace ui
-} // namespace memo
+} // namespace memo::ui::tools

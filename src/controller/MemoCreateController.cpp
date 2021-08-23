@@ -149,7 +149,7 @@ void MemoCreateController::pickTags()
 {
     tagPickerView_->setWidth(static_cast<int>(view()->getWidth() * 0.3));
     tagPickerView_->setHeight(static_cast<int>(view()->getHeight() * 0.7));
-    ui::tools::Tools::centerComponent(*tagPickerView_, Center::CENTER, *view());
+    ui::tools::CenterComponent(*tagPickerView_, Center::CENTER, *view());
 
     std::vector<model::TagPtr> tagSelection = selectedTags_;
     const auto allTagNames = extractTagNames(tags_);
@@ -218,7 +218,7 @@ void MemoCreateController::onCreateTagButtonClicked(const std::string& suggested
 {
     createTagView_->setHeight(30);
     createTagView_->setWidth(static_cast<int>(view()->getWidth() * 0.25));
-    ui::tools::Tools::centerComponent(*createTagView_, CENTER, *view());
+    ui::tools::CenterComponent(*createTagView_, CENTER, *view());
     createTagView_->setOnConfirmButtonClicked([&](int) { onConfirmNewTagButtonClicked(); });
     createTagView_->setOnCancelButtonClicked([&](int) { createTagView_->looseFocus(); });
     createTagView_->setOnTagNameChanged([&](const std::string& tagName) { onCreateNewTagNameChanged(tagName); });

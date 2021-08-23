@@ -71,13 +71,13 @@ void HomeView::displayContent()
     errorStatus_->setY(getHeight() - 2);
     windowTitle_->resizeToText();
     errorStatus_->resizeToText();
-    tools::Tools::centerComponent(*windowTitle_, Center::HORIZONTAL, *this);
-    tools::Tools::centerComponent(*errorStatus_, Center::HORIZONTAL, *this);
+    tools::CenterComponent(*windowTitle_, Center::HORIZONTAL, *this);
+    tools::CenterComponent(*errorStatus_, Center::HORIZONTAL, *this);
 
     Size minMenuSize = menuView_->getMinimumRequiredSize();
     menuView_->setWidth(minMenuSize.width + 4);
     menuView_->setHeight(minMenuSize.height + 4);
-    tools::Tools::centerComponent(*menuView_, Center::CENTER, *this);
+    tools::CenterComponent(*menuView_, Center::CENTER, *this);
 
 }
 

@@ -95,13 +95,13 @@ void MemoCreateView::layoutComponents()
     tags_->setHeight(5);
 
     memoTitleTextEditView_->setY(5);
-    tools::Tools::centerComponent(*memoTitleTextEditView_, Center::HORIZONTAL, *this);
+    tools::CenterComponent(*memoTitleTextEditView_, Center::HORIZONTAL, *this);
 
     memoDescriptionTextEditView_->setY(memoTitleTextEditView_->getY() + memoTitleTextEditView_->getHeight() + 2);
-    tools::Tools::centerComponent(*memoDescriptionTextEditView_, Center::HORIZONTAL, *this);
+    tools::CenterComponent(*memoDescriptionTextEditView_, Center::HORIZONTAL, *this);
 
     tags_->setY(memoDescriptionTextEditView_->getY() + memoDescriptionTextEditView_->getHeight() + 2);
-    tools::Tools::centerComponent(*tags_, Center::HORIZONTAL, *this);
+    tools::CenterComponent(*tags_, Center::HORIZONTAL, *this);
 
     tagsAreaHintLabel_->setY(tags_->getY() + tags_->getHeight());
     tagsAreaHintLabel_->setX(tags_->getX() + tags_->getWidth() - tagsAreaHintLabel_->getWidth());

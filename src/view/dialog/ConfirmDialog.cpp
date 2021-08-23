@@ -17,7 +17,7 @@ bool ConfirmDialog::Display(const std::string& message, IComponent* parent)
     ConfirmDialog dialog(parent);
     dialog.setMessage(message);
     if (parent)
-        tools::Tools::centerComponent(dialog, Center::CENTER, *parent);
+        tools::CenterComponent(dialog, Center::CENTER, *parent);
     return dialog.display();
 }
 
@@ -125,7 +125,7 @@ void ConfirmDialog::beforeViewResized()
 
     setSize({ Height(height), Width(width) });
     if (auto parent = getParent())
-        tools::Tools::centerComponent(*this, Center::CENTER, *parent);
+        tools::CenterComponent(*this, Center::CENTER, *parent);
     updateComponentsPosition();
 }
 

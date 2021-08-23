@@ -117,7 +117,7 @@ void TagCreateView::displayContent()
 {
     nameEditText_->setWidth(getWidth() - 2);
     nameEditText_->setY(1);
-    tools::Tools::centerComponent(*nameEditText_, HORIZONTAL, *this);
+    tools::CenterComponent(*nameEditText_, HORIZONTAL, *this);
 
     infoText_->setY(nameEditText_->getY() + nameEditText_->getHeight());
     infoText_->setX(getWidth() - infoText_->getWidth() - 1);

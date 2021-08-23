@@ -25,7 +25,7 @@ MemoSearchView::MemoSearchView(const Size& size, const Position& position, IComp
 
     memoListView_->setWidth(size.width * 0.5);
     memoListView_->setHeight(size.height * 0.5);
-    tools::Tools::centerComponent(*memoListView_, Center::CENTER, *this);
+    tools::CenterComponent(*memoListView_, Center::CENTER, *this);
 }
 
 const ListViewPtr& MemoSearchView::memoListView()

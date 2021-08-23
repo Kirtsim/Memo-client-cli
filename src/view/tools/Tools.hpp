@@ -1,11 +1,8 @@
 #pragma once
 #include "utils/Enums.hpp"
 
-namespace memo {
-namespace ui {
-    class IComponent;
-namespace tools {
-
+namespace memo::ui { class IComponent; }
+namespace memo::ui::tools {
 
 struct Bounds
 {
@@ -13,26 +10,15 @@ struct Bounds
     int startX, endX;
 };
 
-class Tools
-{
-public:
-    Tools() = delete;
-    Tools(const Tools&) = delete;
-    Tools(const Tools&&) = delete;
-    Tools& operator=(const Tools&&) = delete;
+/// Center the given ui component within a parent component
+void CenterComponent(ui::IComponent& component, Center centerType,
+                            const ui::IComponent& parent);
 
-    /// Center the given ui component within a parent component
-    static void centerComponent(ui::IComponent& component, Center centerType,
-                                const ui::IComponent& parent);
+/// Center the given ui component within the specified bounds
+void CenterComponent(ui::IComponent& component, Center centerType,
+                            const Bounds& bounds);
 
-    /// Center the given ui component within the specified bounds
-    static void centerComponent(ui::IComponent& component, Center centerType,
-                                const Bounds& bounds);
+/// Retrieves the ui component's bounds
+Bounds ComponentBoundaries(const ui::IComponent& component);
 
-    /// Retrieves the ui component's bounds
-    static Bounds componentBoundaries(const ui::IComponent& component);
-};
-
-} // namespace tools
-} // namespace ui
-} // namespace memo
+} // namespace memo::ui::tools

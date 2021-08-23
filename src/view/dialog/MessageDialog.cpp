@@ -10,7 +10,7 @@ void MessageDialog::Display(const std::string& message, IComponent* parent)
     MessageDialog dialog(parent);
     dialog.setMessage(message);
     if (parent)
-        tools::Tools::centerComponent(dialog, Center::CENTER, *parent);
+        tools::CenterComponent(dialog, Center::CENTER, *parent);
     dialog.display();
 }
 
@@ -78,7 +78,7 @@ void MessageDialog::beforeViewResized()
 
     setSize({ Height(height), Width(width) });
     if (auto parent = getParent())
-        tools::Tools::centerComponent(*this, Center::CENTER, *parent); // TODO: use some center policy (a flag or sth). The user might not want it centered.
+        tools::CenterComponent(*this, Center::CENTER, *parent); // TODO: use some center policy (a flag or sth). The user might not want it centered.
     updateComponentsPosition();
 }
 
@@ -99,7 +99,7 @@ void MessageDialog::updateComponentsPosition()
 
     okButton_->setX(kPaddingHorizontal);
     okButton_->setY(message_->getY() + message_->getHeight() + kPaddingVertical);
-    tools::Tools::centerComponent(*okButton_, Center::HORIZONTAL, *this);
+    tools::CenterComponent(*okButton_, Center::HORIZONTAL, *this);
 }
 
 } // namespace memo::ui
