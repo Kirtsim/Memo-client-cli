@@ -76,8 +76,7 @@ void ButtonView::readInput()
     curses::KeyPad(getWindow(), ENABLE);
     const auto wasCursorVisible = curses::CursorVisible(false);
 
-    refreshOnRequest();
-    refresh();
+    tools::ForceRefresh(this);
     while (hasFocus() && !buttonClickKeys_.empty())
     {
         const int key = curses::ReadChar(getWindow());
@@ -93,8 +92,8 @@ void ButtonView::readInput()
         }
     }
 
-    refreshOnRequest();
-    refresh();
+
+    tools::ForceRefresh(this);
     curses::CursorVisible(wasCursorVisible);
     curses::KeyPad(getWindow(), DISABLE);
 }

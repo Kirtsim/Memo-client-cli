@@ -174,8 +174,7 @@ void MemoCreateController::pickTags()
         selectedTags_ = tagSelection;
         view()->displayTagNames(extractTagNames(selectedTags_));
     }
-    view()->refreshOnRequest();
-    view()->refresh();
+    ui::tools::ForceRefresh(view());
 }
 
 void MemoCreateController::onTagSearchQueryChanged(const std::string& query,
@@ -224,15 +223,12 @@ void MemoCreateController::onCreateTagButtonClicked(const std::string& suggested
     createTagView_->setOnTagNameChanged([&](const std::string& tagName) { onCreateNewTagNameChanged(tagName); });
     createTagView_->setTagName(suggestedTagName);
     createTagView_->setInfoTextVisible(containsTagWithName(tags_, suggestedTagName));
-    createTagView_->refreshOnRequest();
-    createTagView_->refresh();
+    ui::tools::ForceRefresh(createTagView_);
 
     createTagView_->readInput();
 
-    view()->refreshOnRequest();
-    view()->refresh();
-    tagPickerView_->refreshOnRequest();
-    tagPickerView_->refresh();
+    ui::tools::ForceRefresh(view());
+    ui::tools::ForceRefresh(tagPickerView_);
 }
 
 void MemoCreateController::onConfirmNewTagButtonClicked()
@@ -253,8 +249,7 @@ void MemoCreateController::onConfirmNewTagButtonClicked()
     {
         ui::MessageDialog::Display("Failed to create tag \"" + tagName + "\".", view().get());
     }
-    createTagView_->refreshOnRequest();
-    createTagView_->refresh();
+    ui::tools::ForceRefresh(createTagView_);
 }
 
 model::TagPtr MemoCreateController::createTag(const model::TagPtr& tag)

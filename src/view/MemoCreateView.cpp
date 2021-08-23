@@ -255,8 +255,7 @@ namespace {
         if (view)
         {
             view->setBorder(selectionBorder());
-            view->refreshOnRequest();
-            view->refresh();
+            tools::ForceRefresh(view);
         }
     }
 
@@ -265,8 +264,7 @@ namespace {
         if (view)
         {
             view->setBorder(curses::DefaultBorder());
-            view->refreshOnRequest();
-            view->refresh();
+            tools::ForceRefresh(view);
         }
     }
 } // namespace

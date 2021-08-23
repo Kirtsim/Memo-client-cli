@@ -3,6 +3,7 @@
 #include "view/widget/ButtonView.hpp"
 #include "view/widget/ListView.hpp"
 #include "view/tools/ViewFocusOperator.hpp"
+#include "view/tools/Tools.hpp"
 #include "view/dialog/ConfirmDialog.hpp"
 #include "ncurses/functions.hpp"
 #include "ncurses/keys.hpp"
@@ -15,7 +16,6 @@ namespace {
     const int kSearchBarHeight = 3;
 
     Border selectedViewBorder();
-    void ForceRefresh(const std::shared_ptr<View>& view);
 
     std::vector<std::string> extractTagNames(const std::vector<ListItemPtr>& items);
     std::vector<ListItemPtr> toListItems(const std::vector<std::string>& tagNames);
@@ -126,8 +126,7 @@ void TagPickerView::initializeKeyMap()
             focusOperator_->stopFocus();
             return true;
         }
-        refreshOnRequest();
-        refresh();
+        tools::ForceRefresh(this);
         return false;
     }));
 
@@ -155,10 +154,10 @@ void TagPickerView::initializeKeyMap()
                 if (tagSelectionChangedCallback_)
                 {
                     tagSelectionChangedCallback_(currentItem->tagName(), newSelectionState);
-                    ForceRefresh(selectedTagsList_);
+                    tools::ForceRefresh(selectedTagsList_);
                 }
                 currentItem->setSelected(newSelectionState);
-                ForceRefresh(tagsList_);
+                tools::ForceRefresh(tagsList_);
             }
         }
         return true;
@@ -230,8 +229,7 @@ void TagPickerView::setCreateButtonClickedCallback(const CreateButtonClickedCall
 bool TagPickerView::display()
 {
     focusOperator_->resetFocus();
-    refreshOnRequest();
-    refresh();
+    tools::ForceRefresh(this);
     while (auto view = viewInFocus())
     {
         if (view == searchBar_)
@@ -257,28 +255,28 @@ bool TagPickerView::display()
 void TagPickerView::focusTagsList()
 {
     tagsList_->setBorder(selectedViewBorder());
-    ForceRefresh(tagsList_);
+    tools::ForceRefresh(tagsList_);
     readTagsListInput();
     tagsList_->setBorder(curses::DefaultBorder());
-    ForceRefresh(tagsList_);
+    tools::ForceRefresh(tagsList_);
 }
 
 void TagPickerView::focusSelectedTagsList()
 {
     selectedTagsList_->setBorder(selectedViewBorder());
-    ForceRefresh(selectedTagsList_);
+    tools::ForceRefresh(selectedTagsList_);
     readSelectedTagsListInput();
     selectedTagsList_->setBorder(curses::DefaultBorder());
-    ForceRefresh(selectedTagsList_);
+    tools::ForceRefresh(selectedTagsList_);
 }
 
 void TagPickerView::focusSearchBar()
 {
     searchBar_->setBorder(selectedViewBorder());
-    ForceRefresh(searchBar_);
+    tools::ForceRefresh(searchBar_);
     searchBar_->readInput();
     searchBar_->setBorder(curses::DefaultBorder());
-    ForceRefresh(searchBar_);
+    tools::ForceRefresh(searchBar_);
 }
 
 void TagPickerView::displayContent()
@@ -357,7 +355,7 @@ void TagPickerView::readSelectedTagsListInput()
     curses::KeyPad(selectedTagsList_->getWindow(), ENABLE);
     const bool wasCursorVisible = curses::CursorVisible(false);
     selectedTagsList_->setSelectionMark("* ");
-    ForceRefresh(selectedTagsList_);
+    tools::ForceRefresh(selectedTagsList_);
     while (viewInFocus() == selectedTagsList_)
     {
         auto key = curses::ReadChar(selectedTagsList_->getWindow());
@@ -371,7 +369,7 @@ void TagPickerView::readSelectedTagsListInput()
     }
 
     selectedTagsList_->setSelectionMark("  ");
-    ForceRefresh(selectedTagsList_);
+    tools::ForceRefresh(selectedTagsList_);
     curses::CursorVisible(wasCursorVisible);
     curses::KeyPad(selectedTagsList_->getWindow(), DISABLE);
 }
@@ -478,15 +476,6 @@ Border selectedViewBorder()
     border.bottom = border.top = '-';
     border.left = border.right = '|';
     return border;
-}
-
-void ForceRefresh(const std::shared_ptr<View>& view)
-{
-    if (view)
-    {
-        view->refreshOnRequest();
-        view->refresh();
-    }
 }
 
 std::vector<std::string> extractTagNames(const std::vector<ListItemPtr>& items)

@@ -1,5 +1,6 @@
 #include "view/tools/Tools.hpp"
 #include "view/IComponent.hpp"
+#include "view/View.hpp"
 
 namespace memo::ui::tools {
 
@@ -34,6 +35,20 @@ Bounds ComponentBoundaries(const ui::IComponent& component)
     bounds.endX = bounds.startX + component.getWidth();
     bounds.endY = bounds.startY + component.getHeight();
     return bounds;
+}
+
+void ForceRefresh(const std::shared_ptr<View>& view)
+{
+    ForceRefresh(view.get());
+}
+
+void ForceRefresh(View* view)
+{
+    if (view)
+    {
+        view->refreshOnRequest();
+        view->refresh();
+    }
 }
 
 } // namespace memo::ui::tools

@@ -1,7 +1,9 @@
 #pragma once
 #include "utils/Enums.hpp"
+#include <memory>
 
 namespace memo::ui { class IComponent; }
+namespace memo::ui { class View; }
 namespace memo::ui::tools {
 
 struct Bounds
@@ -20,5 +22,13 @@ void CenterComponent(ui::IComponent& component, Center centerType,
 
 /// Retrieves the ui component's bounds
 Bounds ComponentBoundaries(const ui::IComponent& component);
+
+/// @brief Makes the view refresh immediately.
+/// @param view View shared pointer that is to be refreshed.
+void ForceRefresh(const std::shared_ptr<View>& view);
+
+/// @brief Makes the view refresh immediately.
+/// @param view View shared pointer that is to be refreshed.
+void ForceRefresh(View* view);
 
 } // namespace memo::ui::tools
