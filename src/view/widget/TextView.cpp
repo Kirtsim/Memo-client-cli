@@ -92,12 +92,15 @@ void TextView::printForeground()
             textPos.x = (textArea.x + textArea.width) - lineWidth;
         textPos.x = std::max(textPos.x, textArea.x);
 
+        curses::PrintText(std::string(static_cast<size_t>(textArea.width), ' '), getWindow(), textPos);
         curses::PrintText(line, getWindow(), textPos);
 
         textPos.y++;
         ++lineIdx;
         --linesLeft;
     }
+    // TODO: Clear any leftover lines from a longer string that was printed before (this can happen if the TextView
+    //  is not resized to fit the text after the text has changed.
 }
 
 void TextView::resizeToText()
