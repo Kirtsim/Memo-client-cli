@@ -18,7 +18,7 @@ const std::string& Tag::name() const
     return name_;
 }
 
-const Colour& Tag::colour() const
+const Color& Tag::colour() const
 {
     return colour_;
 }
@@ -33,7 +33,7 @@ void Tag::setName(const std::string& name)
     name_ = name;
 }
 
-void Tag::setColour(const Colour& colour)
+void Tag::setColour(const Color& colour)
 {
     colour_ = colour;
 }
@@ -56,14 +56,14 @@ bool Tag::operator!=(const Tag& other) const
     return !(*this == other);
 }
 
-bool Colour::operator==(const Colour& other) const
+bool Color::operator==(const Color& other) const
 {
     return other.red == red
         && other.green == green
         && other.blue == blue;
 }
 
-bool Colour::operator!=(const Colour& other) const
+bool Color::operator!=(const Color& other) const
 {
     return !(*this == other);
 }

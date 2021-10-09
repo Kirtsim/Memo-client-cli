@@ -46,24 +46,41 @@ model::Tag ToModel(const proto::Tag& proto)
     tag.setId(proto.id());
     tag.setName(proto.name());
     tag.setTimestamp(proto.timestamp());
-    const auto& protoColour = proto.colour();
-    model::Colour colour { protoColour.red(), protoColour.green(), protoColour.blue() };
-    tag.setColour(colour);
+    tag.setColour(Int2Color(proto.color()));
     return tag;
 }
 
 proto::Tag ToProto(const model::Tag& model)
 {
     proto::Tag tag;
+    tag.set_id(model.id());
     tag.set_name(model.name());
     tag.set_timestamp(model.timestamp());
-    const auto& modelColour = model.colour();
-    tag.mutable_colour()->set_red(modelColour.red);
-    tag.mutable_colour()->set_green(modelColour.green);
-    tag.mutable_colour()->set_blue(modelColour.blue);
+    tag.set_color(Color2Int(model.colour()));
     return tag;
 }
 
 } // namespace Tag
 
+int Color2Int(const model::Color& color)
+{
+    int ones = ~0;
+    int redValue = (ones & color.red) << 16;
+    int greenValue = (ones & color.green) << 8;
+    int blueValue = (ones & color.blue);
+
+    return (redValue | greenValue | blueValue );
+}
+
+model::Color Int2Color(int colorValue)
+{
+    int ones = 0xFF; // 0000 0000  0000 0000  0000 0000  1111 1111
+    model::Color color;
+    color.blue = (colorValue & ones);
+    colorValue = colorValue >> 8;
+    color.green = (colorValue & ones);
+    colorValue = colorValue >> 8;
+    color.red = (colorValue & ones);
+    return color;
+}
 } // namespace memo

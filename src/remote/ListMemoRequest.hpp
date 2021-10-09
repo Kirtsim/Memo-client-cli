@@ -11,8 +11,8 @@ struct MemoFilter
     std::vector<std::string> titleContains;
     std::vector<std::string> contains;
     std::vector<unsigned long> taggedBy;
-    unsigned long dateFrom;
-    unsigned long dateUntil;
+    unsigned long dateFrom = -1ul;
+    unsigned long dateUntil = -1ul;
 };
 
 class ListMemoRequest

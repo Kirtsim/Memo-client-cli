@@ -23,5 +23,9 @@ proto::Tag ToProto(const model::Tag& model);
 
 } // namespace Tag
 
+int Color2Int(const model::Color& color);
+
+model::Color Int2Color(int colorValue);
+
 } // namespace memo
 

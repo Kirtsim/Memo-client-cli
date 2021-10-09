@@ -9,7 +9,6 @@
 #include "remote/AddTagResponseData.hpp"
 #include "remote/ListTagsRequest.hpp"
 #include "remote/AddTagRequest.hpp"
-#include "remote/utils/Mapping.hpp"
 #include "utils/ModelMapper.hpp"
 
 #include "TagSvc.pb.h"
@@ -44,15 +43,12 @@ ListTagsResponsePtr TagServiceImpl::listTags(const ListTagsRequest& request)
     grpcRequest.set_view(utils::Model2Proto(request.view()));
     grpcRequest.mutable_filter()->set_name_starts_with(request.filter().nameStartsWith);
     grpcRequest.mutable_filter()->set_contains(request.filter().contains);
-    for (const auto& colour : request.filter().colours)
-    {
-        auto protoColour = grpcRequest.mutable_filter()->mutable_colours()->Add();
-        protoColour->set_red(colour.red);
-        protoColour->set_green(colour.green);
-        protoColour->set_blue(colour.blue);
-    }
+    for (const auto& color : request.filter().colours)
+        grpcRequest.mutable_filter()->add_colours(Color2Int(color));
+
     for (const auto memoId : request.filter().assignedToMemos)
         grpcRequest.mutable_filter()->add_assigned_to_memos(memoId);
+
     grpcRequest.mutable_filter()->mutable_creation_time()->set_start(request.filter().dateFrom);
     grpcRequest.mutable_filter()->mutable_creation_time()->set_end(request.filter().dateUntil);
     if (!request.pageToken().empty())

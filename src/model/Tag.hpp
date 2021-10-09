@@ -4,15 +4,15 @@
 
 namespace memo::model {
 
-struct Colour
+struct Color
 {
-    int red;
-    int green;
-    int blue;
+    int red = 0;
+    int green = 0;
+    int blue = 0;
 
-    bool operator==(const Colour& other) const;
+    bool operator==(const Color& other) const;
 
-    bool operator!=(const Colour& other) const;
+    bool operator!=(const Color& other) const;
 };
 
 class Tag
@@ -24,8 +24,8 @@ public:
     const std::string& name() const;
     void setName(const std::string& name);
 
-    const Colour& colour() const;
-    void setColour(const Colour& colour);
+    const Color& colour() const;
+    void setColour(const Color& colour);
 
     unsigned long timestamp() const;
     void setTimestamp(unsigned long timestamp);
@@ -37,7 +37,7 @@ public:
 private:
     unsigned long id_;
     std::string name_;
-    Colour colour_;
+    Color colour_;
     unsigned long timestamp_;
 };
 } // namespace memo::model

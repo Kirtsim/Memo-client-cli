@@ -10,7 +10,7 @@ struct TagFilter
 {
     std::string nameStartsWith;
     std::string contains;
-    std::vector<model::Colour> colours;
+    std::vector<model::Color> colours;
     std::vector<unsigned long> assignedToMemos;
     unsigned long dateFrom;
     unsigned long dateUntil;
