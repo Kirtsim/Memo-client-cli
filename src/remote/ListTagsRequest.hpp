@@ -6,14 +6,13 @@
 
 namespace memo::remote {
 
-struct TagFilter
-{
+struct TagFilter {
     std::string nameStartsWith;
     std::string contains;
     std::vector<model::Color> colours;
     std::vector<unsigned long> assignedToMemos;
-    unsigned long dateFrom;
-    unsigned long dateUntil;
+    unsigned long dateFrom = -1ul;
+    unsigned long dateUntil = -1ul;
 };
 
 class ListTagsRequest
