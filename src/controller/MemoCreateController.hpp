@@ -10,9 +10,6 @@ namespace memo::ui {
 }
 namespace memo::ctrl {
 
-class TextEditKeyFilter;
-
-
 class MemoCreateController : public BaseController<ui::MemoCreateView>
 {
     using ResourcesPtr_t = std::shared_ptr<IResources>;
