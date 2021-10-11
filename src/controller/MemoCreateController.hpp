@@ -10,6 +10,8 @@ namespace memo::ui {
 }
 namespace memo::ctrl {
 
+class SortedTagCollection;
+
 class MemoCreateController : public BaseController<ui::MemoCreateView>
 {
     using ResourcesPtr_t = std::shared_ptr<IResources>;
@@ -23,7 +25,7 @@ public:
     void processInput() override;
 
 private:
-    std::vector<model::TagPtr> fetchTags() const;
+    void fetchTags();
 
     void onConfirmNewTagButtonClicked();
 
@@ -39,19 +41,17 @@ private:
 
     void pickTags();
 
-    void onTagSearchQueryChanged(const std::string& query,
-                                 const std::vector<model::TagPtr>& selectedTags);
+    void onTagSearchQueryChanged(const std::string& query, const SortedTagCollection& selectedTags);
 
-    void onTagSelectionChanged(const std::string& tagName, bool selected,
-                               std::vector<model::TagPtr>& selectedTags);
+    void onTagSelectionChanged(const std::string& tagName, bool selected, SortedTagCollection& selectedTags);
 
     void onCreateTagButtonClicked(const std::string& suggestedTagName);
 
     void onCreateNewTagNameChanged(const std::string& tagName);
 
 private:
-    std::vector<model::TagPtr> tags_;
-    std::vector<model::TagPtr> selectedTags_;
+    std::unique_ptr<SortedTagCollection> tagsCollection_;
+    std::unique_ptr<SortedTagCollection> selectedTagsCollection_;
 
     TagPickerViewPtr tagPickerView_;
     TagCreateViewPtr createTagView_;

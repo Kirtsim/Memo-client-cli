@@ -19,18 +19,45 @@
 #include "ncurses/keys.hpp"
 
 #include <ctime>
+#include <map>
 
 namespace memo::ctrl {
 
 namespace {
     std::vector<std::string> extractTagNames(const std::vector<model::TagPtr>& tags);
-    std::vector<std::string> extractTagNamesThatStartWithQuery(const std::vector<model::TagPtr>& tags,
-                                                               const std::string& query);
-    bool containsTagWithName(const std::vector<model::TagPtr>& tags, const std::string& name);
+    std::vector<std::string> extractTagNamesWithPrefix(const std::vector<model::TagPtr>& tags,
+                                                       const std::string& query);
 } // namespace
+
+class SortedTagCollection
+{
+public:
+    void add(const model::TagPtr& tag);
+
+    void add(const std::vector<model::TagPtr>& tags);
+
+    model::TagPtr remove(const std::string& name);
+
+    void clear();
+
+    model::TagPtr find(const std::string& name) const;
+
+    bool contains(const std::string& name) const;
+
+    std::vector<model::TagPtr> listAll() const;
+
+private:
+    std::string toLowercase(const std::string& str) const;
+
+private:
+    std::map<std::string, model::TagPtr> tags_;
+};
+
 
 MemoCreateController::MemoCreateController(const ResourcesPtr_t& resources)
     : BaseController(resources)
+    , tagsCollection_(std::make_unique<SortedTagCollection>())
+    , selectedTagsCollection_(std::make_unique<SortedTagCollection>())
     , tagPickerView_(std::make_shared<ui::TagPickerView>())
     , createTagView_(std::make_shared<ui::TagCreateView>())
 {
@@ -46,7 +73,17 @@ MemoCreateController::MemoCreateController(const ResourcesPtr_t& resources)
         stop();
     });
 
-    tags_ = fetchTags();
+    fetchTags();
+    auto newTag = [](const std::string& name) {
+        auto tag = std::make_shared<model::Tag>();
+        tag->setName(name);
+        return tag;
+    };
+    tagsCollection_->add(newTag("c"));
+    tagsCollection_->add(newTag("b"));
+    tagsCollection_->add(newTag("a"));
+    tagsCollection_->add(newTag("z"));
+    tagsCollection_->add(newTag("bb"));
 }
 
 MemoCreateController::~MemoCreateController() = default;
@@ -95,7 +132,7 @@ bool MemoCreateController::saveMemoDetails()
     memo->setTitle(view()->memoTitle());
     memo->setDescription(view()->memoDescription());
     memo->setTimestamp(static_cast<unsigned long>(std::time(nullptr)));
-    memo->setTags(selectedTags_);
+    memo->setTags(selectedTagsCollection_->listAll());
     remote::AddMemoRequestBuilder requestBuilder;
     requestBuilder.setRequestUuid("abcd-efgh-ijkl-mnop")
                   .setMemo(memo);
@@ -116,13 +153,13 @@ bool MemoCreateController::saveMemoDetails()
     return true; //response->status() == remote::ResponseStatus::kSuccess;
 }
 
-std::vector<model::TagPtr> MemoCreateController::fetchTags() const
+void MemoCreateController::fetchTags()
 {
     auto service = getResources()->tagService();
     if (!service)
     {
         // TODO: Log a message.
-        return {};
+        return;
     }
     remote::ListTagsRequestBuilder requestBuilder;
     requestBuilder.setUuid("memo-create-controller-fetch-tags") // TODO: generate a real uuid.
@@ -131,11 +168,11 @@ std::vector<model::TagPtr> MemoCreateController::fetchTags() const
     if (!response || response->status() == remote::ResponseStatus::kError)
     {
         // TODO: Log a message.
-        return {};
+        return;
     }
 
     const auto& responseData = response->data();
-    return responseData.tags();
+    tagsCollection_->add(responseData.tags());
 }
 
 void MemoCreateController::stop()
@@ -151,9 +188,9 @@ void MemoCreateController::pickTags()
     tagPickerView_->setHeight(static_cast<int>(view()->getHeight() * 0.7));
     ui::tools::CenterComponent(*tagPickerView_, Center::CENTER, *view());
 
-    std::vector<model::TagPtr> tagSelection = selectedTags_;
-    const auto allTagNames = extractTagNames(tags_);
-    const auto allSelectedTagNames = extractTagNames((tagSelection));
+    auto tagSelection = *selectedTagsCollection_;
+    const auto allTagNames = extractTagNames(tagsCollection_->listAll());
+    const auto allSelectedTagNames = extractTagNames((tagSelection.listAll()));
     tagPickerView_->displayTags(allTagNames);
     tagPickerView_->displaySelectedTagNames(allSelectedTagNames);
     tagPickerView_->setSearchBarChangedCallback([&](const std::string& query) {
@@ -171,45 +208,41 @@ void MemoCreateController::pickTags()
     const auto tagsSelected = tagPickerView_->display();
     if (tagsSelected)
     {
-        selectedTags_ = tagSelection;
-        view()->displayTagNames(extractTagNames(selectedTags_));
+        *selectedTagsCollection_ = tagSelection;
+        view()->displayTagNames(extractTagNames(tagSelection.listAll()));
     }
     ui::tools::ForceRefresh(view());
 }
 
 void MemoCreateController::onTagSearchQueryChanged(const std::string& query,
-                                                   const std::vector<model::TagPtr>& selectedTags)
+                                                   const SortedTagCollection& selectedTags)
 {
-    const auto queriedTagNames = extractTagNamesThatStartWithQuery(tags_, query);
-    const auto selectedTagNames = extractTagNamesThatStartWithQuery(selectedTags, query);
+    const auto queriedTagNames = extractTagNamesWithPrefix(tagsCollection_->listAll(), query);
+    const auto selectedTagNames = extractTagNamesWithPrefix(selectedTags.listAll(), query);
     tagPickerView_->displayTags(queriedTagNames);
     tagPickerView_->displaySelectedTagNames(selectedTagNames);
     tagPickerView_->refresh();
 }
 
 void MemoCreateController::onTagSelectionChanged(const std::string& tagName, bool selected,
-                                                 std::vector<model::TagPtr>& selectedTags)
+                                                 SortedTagCollection& selectedTags)
 {
     if (selected)
     {
-        if (!containsTagWithName(selectedTags, tagName))
+        if (!selectedTags.contains(tagName))
         {
-            auto tagIter = std::find_if(tags_.begin(), tags_.end(),
-                                        [&tagName](const model::TagPtr& tag)
-                                        { return tag && tag->name() == tagName; });
-            selectedTags.emplace_back(*tagIter);
+            const auto tag = tagsCollection_->find(tagName);
+            if (tag)
+                selectedTags.add(tag);
         }
     }
     else
     {
-        auto iter = std::remove_if(selectedTags.begin(), selectedTags.end(),
-                                   [&tagName](const model::TagPtr& tag)
-                                   { return !tag || tag->name() == tagName; });
-        selectedTags.erase(iter, selectedTags.end());
+        selectedTags.remove(tagName);
     }
 
     const auto& query = tagPickerView_->searchQuery();
-    const auto selectedTagNames = extractTagNamesThatStartWithQuery(selectedTags, query);
+    const auto selectedTagNames = extractTagNamesWithPrefix(selectedTags.listAll(), query);
     tagPickerView_->displaySelectedTagNames(selectedTagNames);
 }
 
@@ -222,7 +255,7 @@ void MemoCreateController::onCreateTagButtonClicked(const std::string& suggested
     createTagView_->setOnCancelButtonClicked([&](int) { createTagView_->looseFocus(); });
     createTagView_->setOnTagNameChanged([&](const std::string& tagName) { onCreateNewTagNameChanged(tagName); });
     createTagView_->setTagName(suggestedTagName);
-    createTagView_->setInfoTextVisible(containsTagWithName(tags_, suggestedTagName));
+    createTagView_->setInfoTextVisible(tagsCollection_->contains(suggestedTagName));
     ui::tools::ForceRefresh(createTagView_);
 
     createTagView_->readInput();
@@ -234,14 +267,14 @@ void MemoCreateController::onCreateTagButtonClicked(const std::string& suggested
 void MemoCreateController::onConfirmNewTagButtonClicked()
 {
     const auto& tagName = createTagView_->tagName();
-    if (tagName.empty() || containsTagWithName(tags_, tagName))
+    if (tagName.empty() || tagsCollection_->contains(tagName))
         return;
     auto tag = std::make_shared<model::Tag>();
     tag->setName(tagName);
     tag->setTimestamp(static_cast<unsigned long>(std::time(nullptr)));
     if (auto newTag = createTag(tag))
     {
-        tags_.emplace_back(newTag);
+        tagsCollection_->add(newTag);
         // TODO: update tagPickerView
         ui::MessageDialog::Display("Tag \"" + tagName + "\" created.", view().get());
     }
@@ -277,8 +310,69 @@ model::TagPtr MemoCreateController::createTag(const model::TagPtr& tag)
 
 void MemoCreateController::onCreateNewTagNameChanged(const std::string& tagName)
 {
-    createTagView_->setInfoTextVisible(containsTagWithName(tags_, tagName));
+    createTagView_->setInfoTextVisible(tagsCollection_->contains(tagName));
     createTagView_->refresh();
+}
+
+void SortedTagCollection::add(const model::TagPtr& tag)
+{
+    if (tag)
+    {
+        const auto key = toLowercase(tag->name());
+        tags_.insert_or_assign(key, tag);
+    }
+}
+
+void SortedTagCollection::add(const std::vector<model::TagPtr>& tags)
+{
+    for (const auto& tag : tags)
+        add(tag);
+}
+
+model::TagPtr SortedTagCollection::remove(const std::string& name)
+{
+    model::TagPtr removedTag = nullptr;
+    const auto key = toLowercase(name);
+    auto it = tags_.find(key);
+    if (it != std::end(tags_))
+    {
+        removedTag = it->second;
+        tags_.erase(it);
+    }
+    return removedTag;
+}
+
+void SortedTagCollection::clear()
+{
+    tags_.clear();
+}
+
+model::TagPtr SortedTagCollection::find(const std::string& name) const
+{
+    const auto it = tags_.find(toLowercase(name));
+    return (it != std::end(tags_)) ? it->second : nullptr;
+}
+
+bool SortedTagCollection::contains(const std::string& name) const
+{
+    return find(name) != nullptr;
+}
+
+std::vector<model::TagPtr> SortedTagCollection::listAll() const
+{
+    std::vector<model::TagPtr> sortedTags(tags_.size(), nullptr);
+    size_t index = 0;
+    for (auto iter = tags_.begin(); iter != std::end(tags_); ++iter)
+        sortedTags[index++] = iter->second;
+
+    return sortedTags;
+}
+
+std::string SortedTagCollection::toLowercase(const std::string& str) const
+{
+    std::string result = str;
+    std::transform(str.begin(), str.end(), result.begin(), [](const char c) { return std::tolower(c); });
+    return result;
 }
 
 namespace {
@@ -291,8 +385,7 @@ std::vector<std::string> extractTagNames(const std::vector<model::TagPtr>& tags)
     return tagNames;
 }
 
-std::vector<std::string> extractTagNamesThatStartWithQuery(const std::vector<model::TagPtr>& tags,
-                                                           const std::string& query)
+std::vector<std::string> extractTagNamesWithPrefix(const std::vector<model::TagPtr>& tags, const std::string& query)
 {
     const auto querySize = query.size();
     auto startsWithQuery = [&query, querySize](const model::TagPtr& tag) {
@@ -303,14 +396,6 @@ std::vector<std::string> extractTagNamesThatStartWithQuery(const std::vector<mod
     std::copy_if(tags.begin(), tags.end(), std::back_inserter(filteredTags), startsWithQuery);
 
     return extractTagNames(filteredTags);
-}
-
-bool containsTagWithName(const std::vector<model::TagPtr>& tags, const std::string& name)
-{
-    auto namesMatch = [&name](const model::TagPtr& tag) {
-        return tag && tag->name() == name;
-    };
-    return std::find_if(tags.begin(), tags.end(), namesMatch) != std::end(tags);
 }
 } // namespace
 
