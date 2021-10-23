@@ -74,16 +74,6 @@ MemoCreateController::MemoCreateController(const ResourcesPtr_t& resources)
     });
 
     fetchTags();
-    auto newTag = [](const std::string& name) {
-        auto tag = std::make_shared<model::Tag>();
-        tag->setName(name);
-        return tag;
-    };
-    tagsCollection_->add(newTag("c"));
-    tagsCollection_->add(newTag("b"));
-    tagsCollection_->add(newTag("a"));
-    tagsCollection_->add(newTag("z"));
-    tagsCollection_->add(newTag("bb"));
 }
 
 MemoCreateController::~MemoCreateController() = default;
